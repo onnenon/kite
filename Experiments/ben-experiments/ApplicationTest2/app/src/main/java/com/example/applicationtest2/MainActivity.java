@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +32,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
         */
+
+        Button sendButton = (Button) findViewById (R.id.send_button);
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                Toast.makeText(getApplicationContext(), "It works!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -56,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setCenterString() {
 
-        
+
 
     }
 }
