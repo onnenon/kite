@@ -31,15 +31,15 @@ public class MainActivity extends AppCompatActivity {
         */
 
         Button sendButton = (Button) findViewById (R.id.send_button);
-        final TextView centerText = (TextView) findViewById (R.id.center_string);
-        
+        final TextView centerText = (TextView) findViewById (R.id.center_string); // This needs to be declared as final for some reason.
+        final EditText typeText = (EditText) findViewById (R.id.typing_text); // This needs to be declared as final for some reason.
 
         sendButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
 
-                centerText.setText("It works!");
+                centerText.setText(typeText.getText());
             }
         });
     }
