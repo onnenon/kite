@@ -1,5 +1,6 @@
 package com.example.applicationtest2;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -34,12 +35,16 @@ public class MainActivity extends AppCompatActivity {
         final TextView centerText = (TextView) findViewById (R.id.center_string); // This needs to be declared as final for some reason.
         final EditText typeText = (EditText) findViewById (R.id.typing_text); // This needs to be declared as final for some reason.
 
+        // final ScrollView scroll = (ScrollView) findViewById (R.id.scrollView);
+
         sendButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
 
                 centerText.setText(typeText.getText());
+
+                // scroll.addView(new TextView((Context) typeText.getText()));
             }
         });
     }
