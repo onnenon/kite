@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView centerText = (TextView) findViewById (R.id.center_string); // This needs to be declared as final for some reason.
         final EditText typeText = (EditText) findViewById (R.id.typing_text); // This needs to be declared as final for some reason.
 
-        final ScrollView scroll = (ScrollView) findViewById (R.id.scrollView);
+        // final ScrollView scroll = (ScrollView) findViewById (R.id.scrollView);
 
         final TextView text1 = (TextView) findViewById (R.id.textView);
         final TextView text2 = (TextView) findViewById (R.id.textView2);
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
                 centerText.setText(typeText.getText());
 
-                scroll.addView(new TextView((Context) typeText.getText()));
+                // scroll.addView(new TextView((Context) typeText.getText()));
 
                 text1.setText(typeText.getText());
                 text2.setText(typeText.getText());
