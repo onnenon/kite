@@ -2,3 +2,5 @@ Flask
 Flask-SQLAlchemy
 Flask-Restful
 spylogger
+psycopg2 
+# -e .
