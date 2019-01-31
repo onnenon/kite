@@ -19,10 +19,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        FloatingActionButton menuButton = findViewById(R.id.menuButton);
+        menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        */
+
 
         Button sendButton = (Button) findViewById (R.id.send_button);
         final TextView centerText = (TextView) findViewById (R.id.center_string); // This needs to be declared as final for some reason.
@@ -50,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 centerText.setText(typeText.getText());
 
                 TextView newText = new TextView(getApplicationContext());
-
                 newText.setText(typeText.getText());
-
                 layout.addView(newText);
 
                 // text1.setText(typeText.getText());
