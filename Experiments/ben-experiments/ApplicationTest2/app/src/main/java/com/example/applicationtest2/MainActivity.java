@@ -1,6 +1,7 @@
 package com.example.applicationtest2;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -35,11 +36,11 @@ public class MainActivity extends AppCompatActivity {
         final TextView centerText = (TextView) findViewById (R.id.center_string); // This needs to be declared as final for some reason.
         final EditText typeText = (EditText) findViewById (R.id.typing_text); // This needs to be declared as final for some reason.
 
-        // final ScrollView scroll = (ScrollView) findViewById (R.id.scrollView);
+        final LinearLayout layout = (LinearLayout) findViewById (R.id.linear_layout);
 
-        final TextView text1 = (TextView) findViewById (R.id.textView);
-        final TextView text2 = (TextView) findViewById (R.id.textView2);
-        final TextView text3 = (TextView) findViewById (R.id.textView3);
+        // final TextView text1 = (TextView) findViewById (R.id.textView);
+        // final TextView text2 = (TextView) findViewById (R.id.textView2);
+        // final TextView text3 = (TextView) findViewById (R.id.textView3);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
 
@@ -48,11 +49,15 @@ public class MainActivity extends AppCompatActivity {
 
                 centerText.setText(typeText.getText());
 
-                // scroll.addView(new TextView((Context) typeText.getText()));
+                TextView newText = new TextView(getApplicationContext());
 
-                text1.setText(typeText.getText());
-                text2.setText(typeText.getText());
-                text3.setText(typeText.getText());
+                newText.setText(typeText.getText());
+
+                layout.addView(newText);
+
+                // text1.setText(typeText.getText());
+                // text2.setText(typeText.getText());
+                // text3.setText(typeText.getText());
             }
         });
     }
