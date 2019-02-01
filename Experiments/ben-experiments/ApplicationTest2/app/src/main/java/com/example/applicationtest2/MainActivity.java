@@ -12,6 +12,13 @@ import android.widget.*;
 
 public class MainActivity extends AppCompatActivity {
 
+    Button sendButton;
+    EditText typeText;
+
+    static TextView centerText;
+
+    LinearLayout layout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,11 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        Button sendButton = (Button) findViewById (R.id.send_button);
-        final TextView centerText = (TextView) findViewById (R.id.center_string); // This needs to be declared as final for some reason.
-        final EditText typeText = (EditText) findViewById (R.id.typing_text); // This needs to be declared as final for some reason.
+        sendButton = (Button) findViewById (R.id.send_button);
+        centerText = (TextView) findViewById (R.id.center_string); // This needs to be declared as final for some reason.
+        typeText = (EditText) findViewById (R.id.typing_text); // This needs to be declared as final for some reason.
 
-        final LinearLayout layout = (LinearLayout) findViewById (R.id.linear_layout);
+        layout = (LinearLayout) findViewById (R.id.linear_layout);
 
         // final TextView text1 = (TextView) findViewById (R.id.textView);
         // final TextView text2 = (TextView) findViewById (R.id.textView2);
@@ -47,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                centerText.setText(typeText.getText());
+                // centerText.setText(typeText.getText());
 
                 TextView newText = new TextView(getApplicationContext());
                 newText.setText(typeText.getText());
@@ -56,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
                 // text1.setText(typeText.getText());
                 // text2.setText(typeText.getText());
                 // text3.setText(typeText.getText());
+
+                JSONData getData = new JSONData();
+                getData.execute();
             }
         });
     }
