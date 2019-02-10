@@ -1,0 +1,4 @@
+#Tue Feb 05 20:20:04 CST 2019
+base.0=C\:\\Users\\benhu\\team_100\\HelloWorld\\HelloThereWorld\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\4
+path.0=classes.dex
+renamed.0=classes.dex

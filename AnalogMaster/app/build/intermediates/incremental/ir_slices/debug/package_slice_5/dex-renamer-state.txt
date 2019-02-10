@@ -1,0 +1,4 @@
+#Tue Feb 05 20:15:40 CST 2019
+base.0=C\:\\Users\\benhu\\team_100\\AnalogMaster\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\5
+path.0=classes.dex
+renamed.0=classes.dex
