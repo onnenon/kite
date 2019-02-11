@@ -13,6 +13,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -25,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText EnterUsername;
     private EditText EnterBio;
     private EditText NumPosts;
-    // private Switch AdminBool;
-    // private Switch ModerBool;
+    private Switch AdminBool;
+    private Switch ModerBool;
     private Button PostUser;
 
     private RequestQueue PostRequests;
@@ -40,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         EnterUsername = (EditText) findViewById(R.id.EnterUsername);
         EnterBio = (EditText) findViewById(R.id.EnterBio);
         NumPosts = (EditText) findViewById(R.id.NumPosts);
-        // AdminBool = (Switch) findViewById(R.id.AdminBool);
-        // ModerBool = (Switch) findViewById(R.id.ModerBool);
+        AdminBool = (Switch) findViewById(R.id.AdminBool);
+        ModerBool = (Switch) findViewById(R.id.ModerBool);
         PostUser = (Button) findViewById(R.id.PostUser);
 
         PostRequests = Volley.newRequestQueue(this);
@@ -63,30 +64,29 @@ public class MainActivity extends AppCompatActivity {
         // jsonParse material from video
         String URL = "http://kite.onn.sh/api/user";
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, URL, null,
+        StringRequest postRequest = new StringRequest(Request.Method.POST, URL,
 
-                new Response.Listener<JSONObject>() {
+                new Response.Listener<String>() {
 
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(String response) {
                         try {
-                            JSONArray jsonArray = response.getJSONArray("users");
 
-                            System.out.println(jsonArray.getJSONObject(0));
+                            String userName = EnterUsername.getText().toString();
+                            boolean isAdmin = AdminBool.isEnabled();
+                            boolean isMod = ModerBool.isEnabled();
+                            int postCount = Integer.parseInt(NumPosts.getText().toString());
+                            String bio = EnterBio.getText().toString();
 
-                            JSONObject user = jsonArray.getJSONObject(0);
+                            JSONObject newUser = new JSONObject();
 
-                            String userName = user.getString("username");
-                            boolean isAdmin = user.getBoolean("is_admin");
-                            boolean isMod = user.getBoolean("is_mod");
-                            int postCount = user.getInt("post_count");
-                            String bio = user.getString("bio");
+                            newUser.put("username", userName);
+                            newUser.put("is_admin", isAdmin);
+                            newUser.put("is_mod", isMod);
+                            newUser.put("post_count", postCount);
+                            newUser.put("bio", bio);
 
-                            EnterUsername.setText(userName);
-                            EnterBio.setText(bio);
-                            NumPosts.setText(Integer.toString(postCount));
-
-                            Status.setText(Boolean.toString(isAdmin) + ", " + Boolean.toString(isMod));
+                            System.out.println(newUser.toString());
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -101,6 +101,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        PostRequests.add(request);
+        PostRequests.add(postRequest);
     }
 }
