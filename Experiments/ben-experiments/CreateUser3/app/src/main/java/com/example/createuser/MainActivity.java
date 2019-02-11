@@ -7,7 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -19,6 +21,9 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private void jsonParse() {
 
         // jsonParse material from video
-        String URL = "http://kite.onn.sh/api/user";
+        final String URL = "http://kite.onn.sh/api/user";
 
         StringRequest postRequest = new StringRequest(Request.Method.POST, URL,
 
@@ -70,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(String response) {
+
+                        Toast.makeText(getApplication(), response, Toast.LENGTH_SHORT).show();
+
+                        /*
+
                         try {
 
                             String userName = EnterUsername.getText().toString();
@@ -86,20 +96,59 @@ public class MainActivity extends AppCompatActivity {
                             newUser.put("post_count", postCount);
                             newUser.put("bio", bio);
 
-                            System.out.println(newUser.toString());
+                            Status.setText("");
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
+                        */
                     }
                 },
                 new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
+
+                        Toast.makeText(MainActivity.this, error + "", Toast.LENGTH_SHORT).show();
+
+                        // error.printStackTrace();
                     }
-                });
+                })
+
+        {
+
+
+            @Override
+            protected Map<String, String> getParams() {
+
+                Map<String, String> params = new HashMap<String, String>();
+
+                String userName = EnterUsername.getText().toString();
+                boolean isAdmin = AdminBool.isEnabled();
+                boolean isMod = ModerBool.isEnabled();
+                int postCount = Integer.parseInt(NumPosts.getText().toString());
+                String bio = EnterBio.getText().toString();
+
+                params.put("username", userName);
+                params.put("is_admin", String.valueOf(isAdmin));
+                params.put("is_mod", String.valueOf(isMod));
+                params.put("post_count", String.valueOf(postCount));
+                params.put("bio", bio);
+
+                return params;
+            }
+
+            /*
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("users", "some");
+
+                return params;
+            }
+            */
+        };
 
         PostRequests.add(postRequest);
     }
