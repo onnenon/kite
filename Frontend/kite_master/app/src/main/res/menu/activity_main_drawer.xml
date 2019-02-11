@@ -7,32 +7,32 @@
         <item
             android:id="@+id/nav_forum"
             android:icon="@drawable/ic_menu_forum"
-            android:title="Forum" />
+            android:title="@string/nav_drawer_forum" />
         <item
             android:id="@+id/nav_search"
             android:icon="@drawable/ic_menu_search"
-            android:title="Search" />
+            android:title="@string/nav_drawer_settings" />
         <item
             android:id="@+id/nav_messages"
             android:icon="@drawable/ic_menu_messages"
-            android:title="Messages" />
+            android:title="@string/nav_drawer_messages" />
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_menu_profile"
-            android:title="Profile" />
+            android:title="@string/nav_drawer_profile" />
     </group>
 
-    <item android:title="Misc.">
+    <item android:title="@string/nav_drawer_category_misc">
         <menu>
             <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_menu_settings"
-                android:title="Settings"/>
+                android:title="@string/nav_drawer_settings"/>
 
             <item
                 android:id="@+id/nav_help"
                 android:icon="@drawable/ic_menu_help"
-                android:title="Help" />
+                android:title="@string/nav_drawer_help" />
         </menu>
     </item>
 
