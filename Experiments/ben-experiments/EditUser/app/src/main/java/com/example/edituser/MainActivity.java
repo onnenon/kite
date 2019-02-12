@@ -71,122 +71,37 @@ public class MainActivity extends AppCompatActivity {
         // jsonParse material from video
         final String URL = "http://kite.onn.sh/api/user";
 
-        StringRequest postRequest = new StringRequest(Request.Method.POST, URL,
+        JSONObject newUser = new JSONObject();
 
-                new Response.Listener<String>() {
+        String userName = EnterUsername.getText().toString();
+        String bio = EnterBio.getText().toString();
+
+        try {
+            newUser.put("username", userName);
+            newUser.put("password", "password");
+            newUser.put("bio", bio);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.PUT, URL, newUser,
+
+                new Response.Listener<JSONObject>() {
 
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(JSONObject response) {
 
-                        Toast.makeText(getApplication(), response, Toast.LENGTH_SHORT).show();
-
-                        /*
-
-                        try {
-
-                            String userName = EnterUsername.getText().toString();
-                            boolean isAdmin = AdminBool.isEnabled();
-                            boolean isMod = ModerBool.isEnabled();
-                            int postCount = Integer.parseInt(NumPosts.getText().toString());
-                            String bio = EnterBio.getText().toString();
-
-                            JSONObject newUser = new JSONObject();
-
-                            newUser.put("username", userName);
-                            newUser.put("is_admin", isAdmin);
-                            newUser.put("is_mod", isMod);
-                            newUser.put("post_count", postCount);
-                            newUser.put("bio", bio);
-
-                            Status.setText("");
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        */
+                        Toast.makeText(getApplication(), response + "", Toast.LENGTH_SHORT).show();
                     }
                 },
-                new Response.ErrorListener() {
 
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
                         Toast.makeText(MainActivity.this, error + "", Toast.LENGTH_SHORT).show();
-
-                        // error.printStackTrace();
                     }
-                })
-
-        {
-
-
-            /*
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> params = new HashMap<String, String>();
-
-                String userName = EnterUsername.getText().toString();
-                // boolean isAdmin = AdminBool.isEnabled();
-                // boolean isMod = ModerBool.isEnabled();
-                // int postCount = Integer.parseInt(NumPosts.getText().toString());
-                String bio = EnterBio.getText().toString();
-
-                params.put("username", userName);
-                // params.put("is_admin", String.valueOf(isAdmin));
-                // params.put("is_mod", String.valueOf(isMod));
-                // params.put("post_count", String.valueOf(postCount));
-                params.put("password", "password");
-                params.put("bio", bio);
-
-                return params;
-            }
-            */
-
-            /*
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("users", "some");
-
-                return params;
-            }
-            */
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-
-                byte[] body = new byte[0];
-
-                String userName = EnterUsername.getText().toString();
-                String bio = EnterBio.getText().toString();
-
-                JSONObject newUser = new JSONObject();
-
-                try {
-
-                    newUser.put("username", userName);
-                    newUser.put("password", "password");
-                    newUser.put("bio", bio);
-
-                    body = newUser.toString().getBytes("UTF-8");
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-                return body;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json";
-            }
-        };
+                });
 
         PostRequests.add(postRequest);
     }

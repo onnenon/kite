@@ -1,4 +1,4 @@
-package com.example.createuser;
+package com.example.deleteuser;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, URL, newUser,
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.DELETE, URL, newUser,
 
                 new Response.Listener<JSONObject>() {
 
