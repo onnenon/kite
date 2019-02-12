@@ -1,4 +1,4 @@
-package com.example.createuser;
+package com.example.edituser;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -71,42 +71,6 @@ public class MainActivity extends AppCompatActivity {
         // jsonParse material from video
         final String URL = "http://kite.onn.sh/api/user";
 
-        JSONObject newUser = new JSONObject();
-
-        String userName = EnterUsername.getText().toString();
-        String bio = EnterBio.getText().toString();
-
-        try {
-            newUser.put("username", userName);
-            newUser.put("password", "password");
-            newUser.put("bio", bio);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, URL, newUser,
-
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        Toast.makeText(getApplication(), response + "", Toast.LENGTH_SHORT).show();
-                    }
-                },
-
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.this, error + "", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        /*
-
         StringRequest postRequest = new StringRequest(Request.Method.POST, URL,
 
                 new Response.Listener<String>() {
@@ -116,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Toast.makeText(getApplication(), response, Toast.LENGTH_SHORT).show();
 
-
+                        /*
 
                         try {
 
@@ -140,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-
+                        */
                     }
                 },
                 new Response.ErrorListener() {
@@ -157,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         {
 
 
-
+            /*
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -178,9 +142,9 @@ public class MainActivity extends AppCompatActivity {
 
                 return params;
             }
+            */
 
-
-
+            /*
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
@@ -188,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
                 return params;
             }
-
+            */
 
             @Override
             public byte[] getBody() throws AuthFailureError {
@@ -223,8 +187,6 @@ public class MainActivity extends AppCompatActivity {
                 return "application/json";
             }
         };
-
-        */
 
         PostRequests.add(postRequest);
     }
