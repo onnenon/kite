@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private void jsonParse() {
 
         // jsonParse material from video
-        final String URL = "http://kite.onn.sh/api/user";
+        final String URL = "http://kite.onn.sh/api/user/Bobby";
 
         JSONObject newUser = new JSONObject();
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.PUT, URL, newUser,
+        JsonObjectRequest putRequest = new JsonObjectRequest(Request.Method.PUT, URL, newUser,
 
                 new Response.Listener<JSONObject>() {
 
@@ -103,6 +103,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        PostRequests.add(postRequest);
+        PostRequests.add(putRequest);
     }
 }
