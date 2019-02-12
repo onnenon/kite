@@ -2,6 +2,7 @@ package com.example.createuser;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -119,25 +121,28 @@ public class MainActivity extends AppCompatActivity {
         {
 
 
+            /*
             @Override
-            protected Map<String, String> getParams() {
+            protected Map<String, String> getParams() throws AuthFailureError {
 
                 Map<String, String> params = new HashMap<String, String>();
 
                 String userName = EnterUsername.getText().toString();
-                boolean isAdmin = AdminBool.isEnabled();
-                boolean isMod = ModerBool.isEnabled();
-                int postCount = Integer.parseInt(NumPosts.getText().toString());
+                // boolean isAdmin = AdminBool.isEnabled();
+                // boolean isMod = ModerBool.isEnabled();
+                // int postCount = Integer.parseInt(NumPosts.getText().toString());
                 String bio = EnterBio.getText().toString();
 
                 params.put("username", userName);
-                params.put("is_admin", String.valueOf(isAdmin));
-                params.put("is_mod", String.valueOf(isMod));
-                params.put("post_count", String.valueOf(postCount));
+                // params.put("is_admin", String.valueOf(isAdmin));
+                // params.put("is_mod", String.valueOf(isMod));
+                // params.put("post_count", String.valueOf(postCount));
+                params.put("password", "password");
                 params.put("bio", bio);
 
                 return params;
             }
+            */
 
             /*
             @Override
@@ -148,6 +153,39 @@ public class MainActivity extends AppCompatActivity {
                 return params;
             }
             */
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+
+                byte[] body = new byte[0];
+
+                String userName = EnterUsername.getText().toString();
+                String bio = EnterBio.getText().toString();
+
+                JSONObject newUser = new JSONObject();
+
+                try {
+
+                    newUser.put("username", userName);
+                    newUser.put("password", "password");
+                    newUser.put("bio", bio);
+
+                    body = newUser.toString().getBytes("UTF-8");
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                return body;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
         };
 
         PostRequests.add(postRequest);
