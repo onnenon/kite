@@ -3,6 +3,7 @@ package com.example.kite_master;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.support.v4.app.FragmentTransaction;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //add this line to display menu1 when the activity is loaded
+        displaySelectedScreen(R.id.nav_forum);
     }
 
     @Override
@@ -70,25 +76,45 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        displaySelectedScreen(item.getItemId());
+        return true;
+    }
 
-        if (id == R.id.nav_forum) {
-            // Handle the camera action
-            System.out.println("Opened Forum");
-        } else if (id == R.id.nav_search) {
-            System.out.println("Opened Search");
-        } else if (id == R.id.nav_messages) {
-            System.out.println("Opened Messages");
-        } else if (id == R.id.nav_profile) {
-            System.out.println("Opened Profile");
-        } else if (id == R.id.nav_settings) {
-            System.out.println("Opened Settings");
-        } else if (id == R.id.nav_help) {
-            System.out.println("Opened Help");
+    private void displaySelectedScreen(int itemId) {
+
+        //creating fragment object
+        Fragment fragment = null;
+
+        //initializing the fragment object which is selected
+        switch (itemId) {
+            case R.id.nav_forum:
+                fragment = new ForumFragment();
+                break;
+            case R.id.nav_search:
+                fragment = new SearchFragment();
+                break;
+            case R.id.nav_messages:
+                fragment = new MessagesFragment();
+                break;
+            case R.id.nav_profile:
+                fragment = new ProfileFragment();
+                break;
+            case R.id.nav_settings:
+                fragment = new SettingsFragment();
+                break;
+            case R.id.nav_help:
+                fragment = new HelpFragment();
+                break;
+        }
+
+        //replacing the fragment
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }
