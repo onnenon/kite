@@ -31,7 +31,6 @@ import java.io.UnsupportedEncodingException;
 public class MainActivity extends AppCompatActivity {
 
 
-    public RequestQueue jsonQueue;
     private TextView nametext;
     private TextView temptext;
     private TextView desctext;
