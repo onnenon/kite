@@ -15,9 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.FragmentTransaction;
 
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    int cur_screen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if(cur_screen != R.id.nav_forum) {
+            displaySelectedScreen(R.id.nav_forum);
         } else {
             super.onBackPressed();
         }
@@ -65,9 +68,6 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void displaySelectedScreen(int itemId) {
+
+        cur_screen = itemId;
 
         //creating fragment object
         Fragment fragment = null;
