@@ -1,4 +1,0 @@
-#Wed Feb 06 13:58:28 CST 2019
-base.0=/Users/josh/Coding/309Git/team_100/Experiments/User_Creation_Test/app/build/intermediates/transforms/dexMerger/debug/5
-path.0=classes.dex
-renamed.0=classes.dex
