@@ -104,6 +104,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.get_user_button:
                 System.out.println("Pushed get user");
+                getAllUsers();
                 break;
             case R.id.create_user_button:
                 System.out.println("Pushed create user");
@@ -173,6 +174,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        output_box.setText("Error - User may already exist");
                         Log.d("Error.Response", error.toString());
                     }
                 }
