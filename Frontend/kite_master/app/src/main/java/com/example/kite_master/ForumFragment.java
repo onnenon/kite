@@ -3,6 +3,7 @@ package com.example.kite_master;
 
 //standard imports
 
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 //json imports
@@ -35,33 +37,88 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 
-public class ForumFragment extends Fragment {
+public class ForumFragment extends Fragment implements View.OnClickListener {
 
-
+    //textviews
     private TextView output_box;
+    //textfields
+    private EditText create_uname;
+    private EditText create_pass;
+    private EditText create_bio;
+    //buttons
     private Button get_user_button;
-    private RequestQueue rqueue;
+    private Button create_user_button;
+    private Button update_user_button;
+    private Button delete_user_button;
+    private Button get_single_user_button;
+    //vars
+    private RequestQueue volleyqueue;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_forum, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View v = inflater.inflate(R.layout.fragment_forum, container, false);
+
+        //instantiate buttons
+        get_user_button = (Button) v.findViewById(R.id.get_user_button);
+        create_user_button = (Button) v.findViewById(R.id.create_user_button);
+        update_user_button = (Button) v.findViewById(R.id.update_user_button);
+        delete_user_button = (Button) v.findViewById(R.id.delete_user_button);
+        get_single_user_button = (Button) v.findViewById(R.id.get_single_user_button);
+        //set onclick listeners to self
+        get_user_button.setOnClickListener(this);
+        create_user_button.setOnClickListener(this);
+        update_user_button.setOnClickListener(this);
+        delete_user_button.setOnClickListener(this);
+        get_single_user_button.setOnClickListener(this);
+
+        //instantiate edit text
+        create_uname = (EditText) v.findViewById(R.id.create_uname);
+        create_pass = (EditText) v.findViewById(R.id.create_pass);
+        create_bio = (EditText) v.findViewById(R.id.create_bio);
+        output_box = (TextView) v.findViewById(R.id.output_box);
+
+        return v;
     }
 
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        rqueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        volleyqueue = Volley.newRequestQueue(getActivity().getApplicationContext());
         //you can set the title for your toolbar here for different fragments different titles
         getActivity().setTitle("Forum");
 
-        output_box = getView().findViewById(R.id.output_box);
+
 
         //getAllUsers();
         //createUser("joshua", "banana", "This is a bio");
 
 
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.get_user_button:
+                System.out.println("Pushed get user");
+                break;
+            case R.id.create_user_button:
+                System.out.println("Pushed create user");
+                createUser(create_uname.getText().toString(), create_pass.getText().toString(), create_bio.getText().toString());
+                break;
+            case R.id.update_user_button:
+                System.out.println("Pushed update user");
+                break;
+            case R.id.delete_user_button:
+                System.out.println("Pushed delete user");
+                break;
+            case R.id.get_single_user_button:
+                System.out.println("Pushed get single user");
+                break;
+        }
     }
 
 
@@ -85,7 +142,7 @@ public class ForumFragment extends Fragment {
                     }
                 }
         );
-        rqueue.add(getRequest);
+        volleyqueue.add(getRequest);
         return responseJson;
     }
 
@@ -135,7 +192,7 @@ public class ForumFragment extends Fragment {
                 }
             }
         };
-        rqueue.add(postRequest);
+        volleyqueue.add(postRequest);
     }
 
 
