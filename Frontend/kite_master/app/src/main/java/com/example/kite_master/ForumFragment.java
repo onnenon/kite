@@ -45,6 +45,8 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
     private EditText create_uname;
     private EditText create_pass;
     private EditText create_bio;
+    private EditText get_single_uname;
+    private EditText delete_user_text;
     //buttons
     private Button get_user_button;
     private Button create_user_button;
@@ -77,6 +79,9 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
         create_uname = (EditText) v.findViewById(R.id.create_uname);
         create_pass = (EditText) v.findViewById(R.id.create_pass);
         create_bio = (EditText) v.findViewById(R.id.create_bio);
+        get_single_uname = (EditText) v.findViewById(R.id.get_single_uname);
+        delete_user_text = (EditText) v.findViewById(R.id.delete_user_textedit);
+
         output_box = (TextView) v.findViewById(R.id.output_box);
 
         return v;
@@ -115,15 +120,17 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.delete_user_button:
                 System.out.println("Pushed delete user");
+                deleteUser(delete_user_text.getText().toString());
                 break;
             case R.id.get_single_user_button:
                 System.out.println("Pushed get single user");
+                getSingleUser(get_single_uname.getText().toString());
                 break;
         }
     }
 
 
-    public JSONObject getAllUsers() {
+    public void getAllUsers() {
 
         final JSONObject responseJson = new JSONObject();
         String URL = "http://10.0.2.2:5000/api/user";
@@ -139,12 +146,12 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         System.out.println("ERROR");
+                        output_box.setText("Something went wrong");
                         Log.d("Error.Response", error.toString());
                     }
                 }
         );
         volleyqueue.add(getRequest);
-        return responseJson;
     }
 
 
@@ -195,6 +202,65 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
             }
         };
         volleyqueue.add(postRequest);
+        create_uname.setText("");
+        create_pass.setText("");
+        create_bio.setText("");
+    }
+
+
+
+    public void getSingleUser(String username){
+
+        final JSONObject responseJson = new JSONObject();
+        String URL = "http://10.0.2.2:5000/api/user/" + username;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        output_box.setText(response.toString());
+                        System.out.println(response.toString());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        output_box.setText("This user doesnt exist");
+                        System.out.println("ERROR");
+                        Log.d("Error.Response", error.toString());
+                    }
+                }
+        );
+        volleyqueue.add(getRequest);
+        get_single_uname.setText("");
+
+    }
+
+
+    public void deleteUser(String username){
+
+        final JSONObject responseJson = new JSONObject();
+        String URL = "http://10.0.2.2:5000/api/user/" + username;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.DELETE, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        output_box.setText(response.toString());
+                        System.out.println(response.toString());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        output_box.setText("This user doesnt exist");
+                        System.out.println("ERROR");
+                        Log.d("Error.Response", error.toString());
+                    }
+                }
+        );
+        volleyqueue.add(getRequest);
+        delete_user_text.setText("");
+
+
     }
 
 

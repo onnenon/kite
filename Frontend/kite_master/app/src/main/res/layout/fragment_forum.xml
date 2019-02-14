@@ -115,7 +115,7 @@
         app:layout_constraintTop_toBottomOf="@+id/create_pass" />
 
     <EditText
-        android:id="@+id/editText7"
+        android:id="@+id/delete_user_textedit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -136,11 +136,11 @@
         android:text="Delete User"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toEndOf="@+id/editText7"
+        app:layout_constraintStart_toEndOf="@+id/delete_user_textedit"
         app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
 
     <EditText
-        android:id="@+id/editText8"
+        android:id="@+id/get_single_uname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -149,7 +149,7 @@
         android:hint="Username"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText7" />
+        app:layout_constraintTop_toBottomOf="@+id/delete_user_textedit" />
 
     <Button
         android:id="@+id/get_single_user_button"
@@ -160,7 +160,7 @@
         android:layout_marginEnd="8dp"
         android:text="Get User"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editText8"
+        app:layout_constraintStart_toEndOf="@+id/get_single_uname"
         app:layout_constraintTop_toBottomOf="@+id/delete_user_button" />
 
     <CheckBox
