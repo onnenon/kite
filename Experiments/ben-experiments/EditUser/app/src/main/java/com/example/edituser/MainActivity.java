@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private void jsonParse() {
 
         // jsonParse material from video
-        final String URL = "http://kite.onn.sh/api/user/Bobby";
+        final String URL = "http://kite.onn.sh/api/user/AndroidStudio";
 
         JSONObject newUser = new JSONObject();
 
@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
         String bio = EnterBio.getText().toString();
 
         try {
-            newUser.put("username", userName);
-            newUser.put("password", "password");
+            // newUser.put("username", userName);
+            // newUser.put("password", "password");
             newUser.put("bio", bio);
         }
         catch (JSONException e) {
