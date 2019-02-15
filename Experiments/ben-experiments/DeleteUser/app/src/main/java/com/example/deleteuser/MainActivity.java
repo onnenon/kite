@@ -68,24 +68,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void jsonParse() {
 
-        // jsonParse material from video
-        final String URL = "http://kite.onn.sh/api/user";
-
-        JSONObject newUser = new JSONObject();
-
         String userName = EnterUsername.getText().toString();
-        String bio = EnterBio.getText().toString();
 
-        try {
-            newUser.put("username", userName);
-            newUser.put("password", "password");
-            newUser.put("bio", bio);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
+        final String URL = "http://kite.onn.sh/api/user/" + userName;
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.DELETE, URL, newUser,
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.DELETE, URL, null,
 
                 new Response.Listener<JSONObject>() {
 
