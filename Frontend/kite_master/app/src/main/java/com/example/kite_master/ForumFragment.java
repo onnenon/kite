@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -53,6 +54,8 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
     private Button update_user_button;
     private Button delete_user_button;
     private Button get_single_user_button;
+    private CheckBox modCheckBox;
+    private CheckBox adminCheckBox;
     //vars
     private RequestQueue volleyqueue;
 
@@ -75,6 +78,10 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
         delete_user_button.setOnClickListener(this);
         get_single_user_button.setOnClickListener(this);
 
+        //instantiate check boxes
+        adminCheckBox = (CheckBox) v.findViewById(R.id.adminCheckBox);
+        modCheckBox = (CheckBox) v.findViewById(R.id.modCheckBox);
+
         //instantiate edit text
         create_uname = (EditText) v.findViewById(R.id.create_uname);
         create_pass = (EditText) v.findViewById(R.id.create_pass);
@@ -93,13 +100,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         volleyqueue = Volley.newRequestQueue(getActivity().getApplicationContext());
         //you can set the title for your toolbar here for different fragments different titles
-        getActivity().setTitle("Forum");
-
-
-
-        //getAllUsers();
-        //createUser("joshua", "banana", "This is a bio");
-
+        getActivity().setTitle("Api Tests");
 
     }
 
@@ -117,6 +118,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.update_user_button:
                 System.out.println("Pushed update user");
+                updateUser(create_uname.getText().toString(), create_pass.getText().toString(), create_bio.getText().toString(), modCheckBox.isChecked(), adminCheckBox.isChecked());
                 break;
             case R.id.delete_user_button:
                 System.out.println("Pushed delete user");
@@ -152,6 +154,60 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
                 }
         );
         volleyqueue.add(getRequest);
+    }
+
+
+    public void updateUser(String username, String password, String bio, boolean isMod, boolean isAdmin) {
+        String URL = "http://10.0.2.2:5000/api/user/" + username;
+
+        JSONObject jsonBody = new JSONObject();
+
+        try {
+            jsonBody.put("password", password);
+            jsonBody.put("bio", bio);
+            jsonBody.put("is_admin", isAdmin);
+            jsonBody.put("is_mod", isMod);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final String requestBody = jsonBody.toString();
+
+        StringRequest postRequest = new StringRequest(Request.Method.PUT, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        output_box.setText(response.toString());
+                        System.out.println(response.toString());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        output_box.setText("Error - User may already exist");
+                        Log.d("Error.Response", error.toString());
+                    }
+                }
+        ) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+        volleyqueue.add(postRequest);
+        create_uname.setText("");
+        create_pass.setText("");
+        create_bio.setText("");
     }
 
 
@@ -208,8 +264,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
     }
 
 
-
-    public void getSingleUser(String username){
+    public void getSingleUser(String username) {
 
         final JSONObject responseJson = new JSONObject();
         String URL = "http://10.0.2.2:5000/api/user/" + username;
@@ -236,7 +291,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public void deleteUser(String username){
+    public void deleteUser(String username) {
 
         final JSONObject responseJson = new JSONObject();
         String URL = "http://10.0.2.2:5000/api/user/" + username;
