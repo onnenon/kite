@@ -76,10 +76,17 @@ public class MainActivity extends AppCompatActivity {
         String userName = EnterUsername.getText().toString();
         String bio = EnterBio.getText().toString();
 
+        boolean isModer = ModerBool.isChecked();
+        boolean isAdmin = AdminBool.isChecked();
+
+        // Status.setText(String.valueOf(ModerBool.isChecked()));
+
         try {
             // newUser.put("username", userName);
             // newUser.put("password", "password");
             newUser.put("bio", bio);
+            newUser.put("is_admin", isAdmin);
+            newUser.put("is_mod", isModer);
         }
         catch (JSONException e) {
             e.printStackTrace();
