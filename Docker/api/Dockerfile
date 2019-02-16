@@ -15,4 +15,4 @@ RUN \
 
 EXPOSE 5000
 
-CMD ["gunicorn", "-w 2", "-b 0.0.0.0:5000", "forum_api:create_app()"]
+CMD ["gunicorn", "-w 2", "-b 0.0.0.0:5000", "forum_api:app"]
