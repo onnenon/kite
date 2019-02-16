@@ -162,6 +162,11 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
     public void createUser(String username, String password, String bio) {
         String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user";
 
+        if (username.equals("") || password.equals("") || bio.equals("")) {
+            Toast.makeText(getActivity(), "Please fill out all fields!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         JSONObject jsonBody = new JSONObject();
 
         try {
@@ -210,12 +215,19 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
 
     //send put request to update password, bio, admin and mod status
     public void updateUser(String username, String password, String bio, boolean isMod, boolean isAdmin) {
+
+
         String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user/" + username;
 
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("password", password);
-            jsonBody.put("bio", bio);
+
+            if (username.equals("")) {
+                Toast.makeText(getActivity(), "Please enter a username", Toast.LENGTH_LONG).show();
+                return;
+            }
+            if (!password.equals("")) jsonBody.put("password", password);
+            if (!bio.equals("")) jsonBody.put("bio", bio);
             jsonBody.put("is_admin", isAdmin);
             jsonBody.put("is_mod", isMod);
         } catch (JSONException e) {
@@ -262,6 +274,11 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
     //delete a single user given a username
     public void deleteUser(String username) {
 
+        if (username.equals("")) {
+            Toast.makeText(getActivity(), "Please enter a username", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user/" + username;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.DELETE, URL, null,
                 new Response.Listener<JSONObject>() {
@@ -288,6 +305,11 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
 
     //get info for a single user given a username
     public void getSingleUser(String username) {
+
+        if (username.equals("")) {
+            Toast.makeText(getActivity(), "Please enter a username", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user/" + username;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
