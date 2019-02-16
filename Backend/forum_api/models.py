@@ -1,11 +1,10 @@
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.dialects.postgresql import UUID
-
 from forum_api import db
 from forum_api.settings import LOGGER
 from forum_api.utils import get_uuid
+from sqlalchemy.dialects.postgresql import UUID
 
 
 class User(db.Model):
@@ -86,4 +85,3 @@ class Reply(db.Model):
             "post_id": self.post_id,
             "date": self.date_,
         }
-
