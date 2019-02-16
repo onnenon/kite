@@ -266,6 +266,8 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
         create_username.setText("");
         create_pass.setText("");
         create_bio.setText("");
+        adminCheckBox.setChecked(false);
+        modCheckBox.setChecked(false);
 
         volleyqueue.add(postRequest);
 
