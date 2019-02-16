@@ -87,6 +87,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        SetBio.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String userName = EnterUsername.getText().toString();
+                String bio = EnterBio.getText().toString();
+
+                setBio(userName, bio);
+            }
+        });
+
         SetModer.setOnClickListener(new View.OnClickListener() {
 
             @Override
