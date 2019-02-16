@@ -10,11 +10,12 @@ services:
     ports:
       - 5432:5432
   api:
-    image: "koozie/kite"
+    restart: always
+    image: "koozie/kite-dev"
     depends_on:
       - db
     environment:
-      FLASK_APP: "forum_api"
+      FLASK_APP: "forum_api:create_app()"
       API_DB_HOST: "db"
       API_DB_PORT: "5432"
       API_DB_USERNAME: "admin"
