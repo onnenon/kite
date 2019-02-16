@@ -64,6 +64,17 @@ public class MainActivity extends AppCompatActivity {
 
         Requests = Volley.newRequestQueue(this);
 
+        GetUserInfo.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String userName = EnterUsername.getText().toString();
+
+                getUserInfo(userName);
+            }
+        });
+
         SetBio.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -108,15 +119,6 @@ public class MainActivity extends AppCompatActivity {
                 String userName = EnterUsername.getText().toString();
 
                 deleteUser(userName);
-            }
-        });
-
-        GetUserInfo.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                jsonParse();
             }
         });
     }
@@ -170,7 +172,41 @@ public class MainActivity extends AppCompatActivity {
 
     private void getUserInfo(String userName) {
 
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL + "/" + userName, null,
 
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+
+                            JSONObject user = response.getJSONObject("user");
+
+                            String userName = user.getString("username");
+                            boolean isAdmin = user.getBoolean("is_admin");
+                            boolean isMod = user.getBoolean("is_mod");
+                            int postCount = user.getInt("post_count");
+                            String bio = user.getString("bio");
+
+                            Status.setText(userName + "\n" + Boolean.toString(isAdmin) + "\n" + Boolean.toString(isMod) + "\n" + Integer.toString(postCount) + "\n" + bio);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        // Toast.makeText(getApplication(), response + "", Toast.LENGTH_SHORT).show();
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MainActivity.this, error + "", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        Requests.add(getRequest);
     }
 
     private void setModeratorStatus(String userName, boolean isModer) {
