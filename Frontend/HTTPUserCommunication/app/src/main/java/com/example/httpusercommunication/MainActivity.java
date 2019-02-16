@@ -29,16 +29,18 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView Status;
+    private TextView UserInfo;
     private EditText EnterUsername;
+    private EditText EnterPassword;
     private EditText EnterBio;
-    private EditText NumPosts;
     private Switch AdminBool;
     private Switch ModerBool;
 
+    private Button SetPassword;
     private Button SetBio;
     private Button SetModer;
     private Button SetAdmin;
+    private Button SetAll;
     private Button DeleteUser;
     private Button GetUserInfo;
 
@@ -50,15 +52,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Status = (TextView) findViewById(R.id.Status);
+        UserInfo = (TextView) findViewById(R.id.UserInfo);
         EnterUsername = (EditText) findViewById(R.id.EnterUsername);
+        EnterPassword = (EditText) findViewById(R.id.EnterPassword);
         EnterBio = (EditText) findViewById(R.id.EnterBio);
         AdminBool = (Switch) findViewById(R.id.AdminBool);
         ModerBool = (Switch) findViewById(R.id.ModerBool);
 
+        SetPassword = (Button) findViewById(R.id.SetPassword);
         SetBio = (Button) findViewById(R.id.SetBio);
         SetModer = (Button) findViewById(R.id.SetModer);
         SetAdmin = (Button) findViewById(R.id.SetAdmin);
+        SetAll = (Button) findViewById(R.id.SetAll);
         DeleteUser = (Button) findViewById(R.id.DeleteUser);
         GetUserInfo = (Button) findViewById(R.id.GetUserInfo);
 
@@ -75,15 +80,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        SetBio.setOnClickListener(new View.OnClickListener() {
+        SetPassword.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
                 String userName = EnterUsername.getText().toString();
-                String bio = EnterBio.getText().toString();
+                String password = EnterPassword.getText().toString();
 
-                setBio(userName, bio);
+                setPassword(userName, password);
             }
         });
 
@@ -123,6 +128,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        SetAll.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String userName = EnterUsername.getText().toString();
+                String password = EnterPassword.getText().toString();
+                String bio = EnterBio.getText().toString();
+                boolean isModer = ModerBool.isChecked();
+                boolean isAdmin = AdminBool.isChecked();
+
+                setAll(userName, password, bio, isModer, isAdmin);
+            }
+        });
+
         DeleteUser.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -133,53 +153,6 @@ public class MainActivity extends AppCompatActivity {
                 deleteUser(userName);
             }
         });
-    }
-
-    private void jsonParse() {
-
-        // jsonParse material from video
-        final String URL = "http://kite.onn.sh/api/user/AndroidStudio";
-
-        JSONObject newUser = new JSONObject();
-
-        String userName = EnterUsername.getText().toString();
-        String bio = EnterBio.getText().toString();
-
-        boolean isModer = ModerBool.isChecked();
-        boolean isAdmin = AdminBool.isChecked();
-
-        // Status.setText(String.valueOf(ModerBool.isChecked()));
-
-        try {
-            // newUser.put("username", userName);
-            // newUser.put("password", "password");
-            newUser.put("bio", bio);
-            newUser.put("is_admin", isAdmin);
-            newUser.put("is_mod", isModer);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest putRequest = new JsonObjectRequest(Request.Method.PUT, URL, newUser,
-
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        Toast.makeText(getApplication(), response + "", Toast.LENGTH_SHORT).show();
-                    }
-                },
-
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.this, error + "", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        Requests.add(putRequest);
     }
 
     private void getUserInfo(String userName) {
@@ -201,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                             int postCount = user.getInt("post_count");
                             String bio = user.getString("bio");
 
-                            Status.setText(userName + "\n" + Boolean.toString(isAdmin) + "\n" + Boolean.toString(isMod) + "\n" + Integer.toString(postCount) + "\n" + bio);
+                            UserInfo.setText(userName + "\n" + Boolean.toString(isAdmin) + "\n" + Boolean.toString(isMod) + "\n" + Integer.toString(postCount) + "\n" + bio);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -287,12 +260,81 @@ public class MainActivity extends AppCompatActivity {
         Requests.add(putRequest);
     }
 
+    private void setPassword(String userName, String newPassword) {
+
+        JSONObject newUser = new JSONObject();
+
+        try {
+            newUser.put("password", newPassword);
+
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest putRequest = new JsonObjectRequest(Request.Method.PUT, URL + "/" + userName, newUser,
+
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Toast.makeText(getApplication(), response + "", Toast.LENGTH_SHORT).show();
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MainActivity.this, error + "", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        Requests.add(putRequest);
+    }
+
     private void setBio(String userName, String newBio) {
 
         JSONObject newUser = new JSONObject();
 
         try {
             newUser.put("bio", newBio);
+
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest putRequest = new JsonObjectRequest(Request.Method.PUT, URL + "/" + userName, newUser,
+
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Toast.makeText(getApplication(), response + "", Toast.LENGTH_SHORT).show();
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MainActivity.this, error + "", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        Requests.add(putRequest);
+    }
+
+    private void setAll(String userName, String newPassword, String newBio, boolean isModer, boolean isAdmin) {
+
+        JSONObject newUser = new JSONObject();
+
+        try {
+            newUser.put("password", newPassword);
+            newUser.put("bio", newBio);
+            newUser.put("is_mod", isModer);
+            newUser.put("is_admin", isAdmin);
 
         }
         catch (JSONException e) {
