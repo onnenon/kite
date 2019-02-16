@@ -157,58 +157,8 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
         volleyqueue.add(getRequest);
     }
 
-    //send put request to update password, bio, admin and mod status
-    public void updateUser(String username, String password, String bio, boolean isMod, boolean isAdmin) {
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user/" + username;
 
-        JSONObject jsonBody = new JSONObject();
-        try {
-            jsonBody.put("password", password);
-            jsonBody.put("bio", bio);
-            jsonBody.put("is_admin", isAdmin);
-            jsonBody.put("is_mod", isMod);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        final String requestBody = jsonBody.toString();
-        StringRequest postRequest = new StringRequest(Request.Method.PUT, URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(getActivity(), response + " ", Toast.LENGTH_LONG).show();
-                        //System.out.println(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), error.toString() + " ", Toast.LENGTH_LONG).show();
-                        //System.out.println("ERROR" + error.toString());
-                    }
-                }
-        ) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() {
-                return requestBody.getBytes(StandardCharsets.UTF_8);
-            }
-        };
-
-        //reset fields
-        create_username.setText("");
-        create_pass.setText("");
-        create_bio.setText("");
-
-        volleyqueue.add(postRequest);
-
-    }
-
-
+    //create a single user
     public void createUser(String username, String password, String bio) {
         String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user";
 
@@ -258,14 +208,25 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
 
     }
 
-
-    public void getSingleUser(String username) {
-
+    //send put request to update password, bio, admin and mod status
+    public void updateUser(String username, String password, String bio, boolean isMod, boolean isAdmin) {
         String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user/" + username;
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
-                new Response.Listener<JSONObject>() {
+
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("password", password);
+            jsonBody.put("bio", bio);
+            jsonBody.put("is_admin", isAdmin);
+            jsonBody.put("is_mod", isMod);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final String requestBody = jsonBody.toString();
+        StringRequest postRequest = new StringRequest(Request.Method.PUT, URL,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(String response) {
                         Toast.makeText(getActivity(), response + " ", Toast.LENGTH_LONG).show();
                         //System.out.println(response);
                     }
@@ -273,19 +234,32 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), error.toString() + " ", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "User Doesn't Exist\n" + error.toString() + " ", Toast.LENGTH_LONG).show();
                         //System.out.println("ERROR" + error.toString());
                     }
                 }
-        );
-        //set field back to blank
-        get_single_username.setText("");
+        ) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
 
-        volleyqueue.add(getRequest);
+            @Override
+            public byte[] getBody() {
+                return requestBody.getBytes(StandardCharsets.UTF_8);
+            }
+        };
+
+        //reset fields
+        create_username.setText("");
+        create_pass.setText("");
+        create_bio.setText("");
+
+        volleyqueue.add(postRequest);
 
     }
 
-
+    //delete a single user given a username
     public void deleteUser(String username) {
 
         String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user/" + username;
@@ -300,7 +274,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), error.toString() + " ", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "User Doesn't Exist\n" + error.toString() + " ", Toast.LENGTH_LONG).show();
                         System.out.println("ERROR");
                         //System.out.println("ERROR" + error.toString());
                     }
@@ -311,4 +285,32 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
 
         volleyqueue.add(getRequest);
     }
+
+    //get info for a single user given a username
+    public void getSingleUser(String username) {
+
+        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user/" + username;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Toast.makeText(getActivity(), response + " ", Toast.LENGTH_LONG).show();
+                        //System.out.println(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getActivity(), "User Doesn't Exist\n" + error.toString() + " ", Toast.LENGTH_LONG).show();
+                        //System.out.println("ERROR" + error.toString());
+                    }
+                }
+        );
+        //set field back to blank
+        get_single_username.setText("");
+
+        volleyqueue.add(getRequest);
+
+    }
+
 }
