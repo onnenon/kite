@@ -39,3 +39,8 @@ The API container is using a volume to mount the Backend directory into the cont
 Tear everything down with:
 
 `docker-compose down`
+
+
+### Optimize Imports
+
+`isort -rc .`
