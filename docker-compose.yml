@@ -11,7 +11,7 @@ services:
       - 5432:5432
   api:
     restart: always
-    image: "koozie/kite-dev"
+    image: "koozie/kite"
     depends_on:
       - db
     environment:
