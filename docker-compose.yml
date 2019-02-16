@@ -2,15 +2,13 @@ version: '3'
 services:
   db:
     restart: always
-    image: "koozie/kite-db"
+    image: postgres:9.6-alpine
     environment:
       POSTGRES_USER: "admin"
       POSTGRES_PASSWORD: "pass"
       POSTGRES_DB: "forum_db"
     ports:
       - 5432:5432
-    volumes:
-      - pgdata:/var/lib/postgresql/data
   api:
     image: "koozie/kite"
     depends_on:
