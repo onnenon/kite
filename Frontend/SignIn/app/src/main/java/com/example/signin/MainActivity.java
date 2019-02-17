@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        try {
+                        //try {
 
                             // JSONObject TokenError = error.;
                             // String LoginProblem = TokenError.getString("detail");
@@ -115,23 +115,27 @@ public class MainActivity extends AppCompatActivity {
                             // String LoginProblem = TokenError.toString();
                             // LoginResult.setText(LoginProblem);
 
-                            String TokenError = new String(error.networkResponse.data, "utf-8");
-                            JSONObject data = new JSONObject(TokenError.trim());
+                            // String TokenError = new String(error.networkResponse.data, "utf-8"); // String TokenError = new String(error.networkResponse.toString());
+                            // JSONObject data = new JSONObject(TokenError.trim());
+                            // JSONObject detail; //= data.getJSONObject("detail");
 
-                            String LoginProblem = data.toString();
-                            LoginResult.setText(LoginProblem);
+                            // String LoginProblem = data.toString();
+                            // String LoginProblem = detail.toString();
+                            // LoginResult.setText(LoginProblem);
 
                             // JSONArray errors = data.getJSONArray("errors");
                             // JSONObject jsonMessage = errors.getJSONObject(0);
                             // String message = jsonMessage.getString("message");
 
-                        }
-                        catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                        catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                            LoginResult.setText("Username or password incorrect?");
+
+                        //}
+                        //catch (UnsupportedEncodingException e) {
+                           // e.printStackTrace();
+                        //}
+                        //catch (JSONException e) {
+                            //e.printStackTrace();
+                        //}
 
                         Toast.makeText(MainActivity.this, error + "", Toast.LENGTH_SHORT).show();
                     }
