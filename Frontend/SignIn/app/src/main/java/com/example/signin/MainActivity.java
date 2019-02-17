@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -17,9 +18,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,13 +69,13 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             LoginCredentials.put("Username", username);
-            LoginCredentials.put("Username", username);
+            LoginCredentials.put("Password", password);
         }
         catch (JSONException e) {
             e.printStackTrace();
         }
 
-        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.POST, URL, LoginCredentials,
+        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.POST, URL, null,
 
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -97,6 +100,38 @@ public class MainActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+
+                        try {
+
+                            // JSONObject TokenError = error.;
+                            // String LoginProblem = TokenError.getString("detail");
+                            // LoginResult.setText(LoginProblem);
+
+                            // NetworkResponse NetResponse = error.networkResponse;
+                            // String LoginProblem = new String();
+                            // LoginResult.setText(LoginProblem);
+
+                            // JSONObject TokenError = new JSONObject(error.toString());
+                            // String LoginProblem = TokenError.toString();
+                            // LoginResult.setText(LoginProblem);
+
+                            String TokenError = new String(error.networkResponse.data, "utf-8");
+                            JSONObject data = new JSONObject(TokenError.trim());
+
+                            String LoginProblem = data.toString();
+                            LoginResult.setText(LoginProblem);
+
+                            // JSONArray errors = data.getJSONArray("errors");
+                            // JSONObject jsonMessage = errors.getJSONObject(0);
+                            // String message = jsonMessage.getString("message");
+
+                        }
+                        catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
                         Toast.makeText(MainActivity.this, error + "", Toast.LENGTH_SHORT).show();
                     }
