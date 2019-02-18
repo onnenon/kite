@@ -35,4 +35,4 @@ build app:
       - .gradle/wrapper
       - .gradle/caches
   script:
-    - ./gradlew build
+    - ./Frontend/kite_master/gradlew build
