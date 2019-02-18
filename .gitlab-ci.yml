@@ -1,7 +1,3 @@
-stages:
-  - build
-  - test
-
 services:
   - postgres:9.6-alpine
 
@@ -12,15 +8,10 @@ variables:
 
 image: python:3.6
 
-build job:
-  stage: build
+build and test:
   script:
     - export FLASK_ENV=test
     - pip install -r Backend/requirements.txt
     - pip install -r Backend/requirements-test.txt
     - pip install -e Backend
-
-test api:
-  stage: test
-  script:
     - ./Backend/run-tests.sh
