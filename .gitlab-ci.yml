@@ -27,7 +27,7 @@ build app:
   image: java:8-jdk
   before_script:
     - echo `pwd`
-    - export GRADLE_USER_HOME=`pwd`/Frontend/kite_master/.gradle
+    - export GRADLE_USER_HOME=`pwd`/.gradle
     - rm -f  .gradle/caches/modules-2/modules-2.lock
     - rm -fr .gradle/caches/*/plugin-resolution/
   cache:
