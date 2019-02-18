@@ -1,0 +1,17 @@
+services:
+  - postgres:9.6-alpine
+
+variables:
+  POSTGRES_DB: forum_db
+  POSTGRES_USER: admin
+  POSTGRES_PASSWORD: pass
+
+image: python:3.6
+
+build and test:
+  script:
+    - export FLASK_ENV=test
+    - pip install -r Backend/requirements.txt
+    - pip install -r Backend/requirements-test.txt
+    - pip install -e Backend
+    - ./Backend/run-tests.sh
