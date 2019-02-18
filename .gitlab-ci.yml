@@ -1,10 +1,10 @@
 stages:
-  - backend
-  - frontend
+  - Backend
+  - Frontend
 
-
-test api:
-  stage: backend
+# Backend Jobs
+Test API:
+  stage: Backend
   image: python:3.6
 
   services:
@@ -22,8 +22,10 @@ test api:
     - pip install -e Backend
     - ./Backend/run-tests.sh
 
-build app:
-  stage: frontend
+
+# Frontend Jobs
+Build App:
+  stage: Frontend
   image: java:8-jdk
   before_script:
     - echo `pwd`
