@@ -17,6 +17,7 @@ Test API:
 
   script:
     - export FLASK_ENV=test
+    - export SPY_LOG_LOGGER="pretty-no-meta"
     - pip install -r Backend/requirements.txt
     - pip install -r Backend/requirements-test.txt
     - pip install -e Backend
