@@ -1,8 +1,7 @@
 import bcrypt
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from forum_api.resources import register_blueprints
-from forum_api.settings import FORUM_ADMIN, LOGGER
+from forum_api.settings import FORUM_ADMIN
 
 
 app = Flask(__name__)
