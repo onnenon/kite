@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.team100.kite_master.R;
+import java.util.Objects;
 
 
 public class HelpFragment extends Fragment {
@@ -21,6 +22,6 @@ public class HelpFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle("Help");
+        Objects.requireNonNull(getActivity()).setTitle("Help");
     }
 }
