@@ -1,19 +1,24 @@
-package com.example.kite_master;
+package com.team100.kite_master;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.FragmentTransaction;
+
+import com.team100.kite_master.devtests.UserTestsFragment;
+import com.team100.kite_master.forum.ForumFragment;
+import com.team100.kite_master.help.HelpFragment;
+import com.team100.kite_master.messages.MessagesFragment;
+import com.team100.kite_master.profile.ProfileFragment;
+import com.team100.kite_master.search.SearchFragment;
+import com.team100.kite_master.settings.SettingsFragment;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

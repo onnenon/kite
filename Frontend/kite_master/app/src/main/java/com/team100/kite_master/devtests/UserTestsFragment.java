@@ -1,4 +1,4 @@
-package com.example.kite_master;
+package com.team100.kite_master.devtests;
 
 
 //android imports
@@ -29,6 +29,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.team100.kite_master.R;
 
 //java imports
 import java.io.UnsupportedEncodingException;

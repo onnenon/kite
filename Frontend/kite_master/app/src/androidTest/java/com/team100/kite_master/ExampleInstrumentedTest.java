@@ -1,4 +1,4 @@
-package com.example.kite_master;
+package com.team100.kite_master;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
