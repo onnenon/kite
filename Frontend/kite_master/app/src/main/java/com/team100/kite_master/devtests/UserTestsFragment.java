@@ -4,9 +4,9 @@ package com.team100.kite_master.devtests;
 //android imports
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +20,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 //volley imports
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.team100.kite_master.R;
 
 //java imports
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
@@ -48,11 +45,6 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
     private EditText get_single_username;
     private EditText delete_user_text;
     //buttons
-    private Button get_user_button;
-    private Button create_user_button;
-    private Button update_user_button;
-    private Button delete_user_button;
-    private Button get_single_user_button;
     private CheckBox modCheckBox;
     private CheckBox adminCheckBox;
     //vars
@@ -60,7 +52,7 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_user_tests, container, false);
 
@@ -68,11 +60,11 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
         LOCAL_IP_ADDRESS = "10.0.1.2";
 
         //instantiate buttons
-        get_user_button = (Button) v.findViewById(R.id.get_user_button);
-        create_user_button = (Button) v.findViewById(R.id.create_user_button);
-        update_user_button = (Button) v.findViewById(R.id.update_user_button);
-        delete_user_button = (Button) v.findViewById(R.id.delete_user_button);
-        get_single_user_button = (Button) v.findViewById(R.id.get_single_user_button);
+        Button get_user_button = v.findViewById(R.id.get_user_button);
+        Button create_user_button = v.findViewById(R.id.create_user_button);
+        Button update_user_button = v.findViewById(R.id.update_user_button);
+        Button delete_user_button = v.findViewById(R.id.delete_user_button);
+        Button get_single_user_button = v.findViewById(R.id.get_single_user_button);
 
         //set onclick listeners to self
         get_user_button.setOnClickListener(this);
@@ -82,22 +74,22 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
         get_single_user_button.setOnClickListener(this);
 
         //instantiate check boxes
-        adminCheckBox = (CheckBox) v.findViewById(R.id.adminCheckBox);
-        modCheckBox = (CheckBox) v.findViewById(R.id.modCheckBox);
+        adminCheckBox = v.findViewById(R.id.adminCheckBox);
+        modCheckBox = v.findViewById(R.id.modCheckBox);
 
         //instantiate edit text
-        create_username = (EditText) v.findViewById(R.id.create_uname);
-        create_pass = (EditText) v.findViewById(R.id.create_pass);
-        create_bio = (EditText) v.findViewById(R.id.create_bio);
-        get_single_username = (EditText) v.findViewById(R.id.get_single_uname);
-        delete_user_text = (EditText) v.findViewById(R.id.delete_user_textedit);
+        create_username = v.findViewById(R.id.create_uname);
+        create_pass = v.findViewById(R.id.create_pass);
+        create_bio = v.findViewById(R.id.create_bio);
+        get_single_username = v.findViewById(R.id.get_single_uname);
+        delete_user_text = v.findViewById(R.id.delete_user_textedit);
 
         return v;
     }
 
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         //you can set the title for your toolbar here for different fragments different titles
