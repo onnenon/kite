@@ -92,6 +92,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_help:
                 fragment = new HelpFragment();
                 break;
+            case R.id.nav_user_tests:
+                fragment = new UserTestsFragment();
+                break;
         }
 
         //replacing the fragment
