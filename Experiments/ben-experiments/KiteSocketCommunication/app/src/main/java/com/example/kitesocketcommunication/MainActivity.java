@@ -78,7 +78,10 @@ public class MainActivity extends AppCompatActivity {
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stop();
+
+                client.dispatcher().executorService().shutdown();
+
+                socket.close(NORMAL_CLOSURE_STATUS, null);
             }
         });
 
@@ -102,12 +105,16 @@ public class MainActivity extends AppCompatActivity {
         return ws;
     }
 
+    /*
+
     private void stop() {
 
         client.dispatcher().executorService().shutdown();
 
         System.exit(0);
     }
+
+    */
 
     private void output(final String txt) {
 
