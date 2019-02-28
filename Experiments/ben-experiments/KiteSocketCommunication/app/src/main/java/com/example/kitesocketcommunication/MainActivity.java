@@ -22,9 +22,9 @@ public class MainActivity extends AppCompatActivity {
     private Button sendButton;
     private TextView outputText;
 
-    private boolean sendFlag;
-
     private OkHttpClient client;
+
+    private WebSocket socket;
 
     private static final int NORMAL_CLOSURE_STATUS = 1000;
 
@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
 
-            // System.exit(0);
             webSocket.send(username + " has left the chat");
             webSocket.close(NORMAL_CLOSURE_STATUS, null);
 
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start();
+                socket = start();
             }
         });
 
@@ -86,22 +85,28 @@ public class MainActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // webSocket.close(NORMAL_CLOSURE_STATUS, "Bye!");
+                if (socket != null) {
+
+                    socket.send(inputText.getText().toString());
+                }
             }
         });
     }
 
-    private void start() {
+    private WebSocket start() {
+
         Request request = new Request.Builder().url("ws://echo.websocket.org").build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         WebSocket ws = client.newWebSocket(request, listener);
 
-        // client.dispatcher().executorService().shutdown();
+        return ws;
     }
 
     private void stop() {
 
         client.dispatcher().executorService().shutdown();
+
+        System.exit(0);
     }
 
     private void output(final String txt) {
