@@ -1,17 +1,42 @@
-services:
+stages:
+  - Backend
+  - Frontend
+
+
+# Backend Jobs
+Test API:
+  stage: Backend
+  image: python:3.6
+
+  services:
   - postgres:9.6-alpine
 
-variables:
-  POSTGRES_DB: forum_db
-  POSTGRES_USER: admin
-  POSTGRES_PASSWORD: pass
+  variables:
+    POSTGRES_DB: forum_db
+    POSTGRES_USER: admin
+    POSTGRES_PASSWORD: pass
 
-image: python:3.6
-
-build and test:
   script:
     - export FLASK_ENV=test
+    - export SPY_LOG_LOGGER="pretty-no-meta"
     - pip install -r Backend/requirements.txt
     - pip install -r Backend/requirements-test.txt
     - pip install -e Backend
     - ./Backend/run-tests.sh
+
+
+# Frontend Jobs
+Build App:
+  stage: Frontend
+  image: java:8-jdk
+  before_script:
+    - echo `pwd`
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+    - rm -f  .gradle/caches/modules-2/modules-2.lock
+    - rm -fr .gradle/caches/*/plugin-resolution/
+  cache:
+    paths:
+      - .gradle/wrapper
+      - .gradle/caches
+  script:
+    - ./Frontend/kite_master/gradlew build
