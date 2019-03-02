@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -23,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView outputText;
 
     private OkHttpClient client;
-
-    private WebSocket socket;
+    private Request request;
+    WebSocket websocket;
 
     private static final int NORMAL_CLOSURE_STATUS = 1000;
 
@@ -66,7 +68,18 @@ public class MainActivity extends AppCompatActivity {
         inputText = (EditText) findViewById(R.id.messageText);
         sendButton = (Button) findViewById(R.id.sendButton);
         outputText = (TextView) findViewById(R.id.outputText);
-        client = new OkHttpClient();
+
+        client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
+        request = new Request.Builder().url("chat.kite.onn.sh").build();
+        websocket = client.newWebSocket(request, new WebSocketListener() {
+
+            @Override
+            public void onOpen(WebSocket webSocket, Response response) {
+                super.onOpen(webSocket, response);
+            }
+        });
+
+        /*
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,35 +88,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        */
+
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 client.dispatcher().executorService().shutdown();
 
-                socket.close(NORMAL_CLOSURE_STATUS, null);
+                websocket.close(NORMAL_CLOSURE_STATUS, null);
             }
         });
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (socket != null) {
 
-                    socket.send(inputText.getText().toString());
-                }
+                websocket.send(inputText.getText().toString());
             }
         });
     }
 
-    private WebSocket start() {
 
-        Request request = new Request.Builder().url("ws://echo.websocket.org").build();
-        EchoWebSocketListener listener = new EchoWebSocketListener();
-        WebSocket ws = client.newWebSocket(request, listener);
-
-        return ws;
-    }
 
     /*
 
