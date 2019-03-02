@@ -7,6 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -28,26 +31,28 @@ public class MainActivity extends AppCompatActivity {
     private Request request;
     WebSocket websocket;
 
+    String username = "Username";
+
     private static final int NORMAL_CLOSURE_STATUS = 1000;
 
     private class KiteWebSocketListener extends WebSocketListener {
 
-        String username = "Username";
-
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
-            webSocket.send(username + " has joined the chat");
+
+            sendJSONText(username + " has joined the chat");
         }
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
-            output(text);
+
+            receiveJSONText(text);
         }
 
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
 
-            webSocket.send(username + " has left the chat");
+            sendJSONText(username + " has left the chat");
             webSocket.close(NORMAL_CLOSURE_STATUS, null);
 
         }
@@ -79,13 +84,14 @@ public class MainActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                socket = start();
+
+                client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
+                request = new Request.Builder().url("http://chat.kite.onn.sh").build();
+                websocket = client.newWebSocket(request, new KiteWebSocketListener());
             }
         });
 
         */
-
-        /*
 
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,29 +103,54 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        */
-
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                websocket.send(inputText.getText().toString());
+                sendJSONText(inputText.getText().toString());
             }
         });
     }
 
+    private void sendJSONText(String TextString) {
 
+        JSONObject JsonText = new JSONObject();
 
-    /*
+        try {
 
-    private void stop() {
+            JsonText.put("username", username);
+            JsonText.put("text", TextString);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        client.dispatcher().executorService().shutdown();
-
-        System.exit(0);
+        websocket.send(JsonText.toString());
     }
 
-    */
+    private void receiveJSONText(String TextString) {
+
+        /*
+
+        Gson parser = new Gson();
+
+        JSONObject JsonText = TextString.;
+
+        try {
+
+            JsonText.getString("username");
+            JsonText.getString("text");
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        */
+
+        // output(JsonText.toString());
+
+        output(TextString);
+    }
 
     private void output(final String txt) {
 
