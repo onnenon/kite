@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int NORMAL_CLOSURE_STATUS = 1000;
 
-    private class EchoWebSocketListener extends WebSocketListener {
+    private class KiteWebSocketListener extends WebSocketListener {
 
         String username = "Username";
 
@@ -70,14 +70,9 @@ public class MainActivity extends AppCompatActivity {
         outputText = (TextView) findViewById(R.id.outputText);
 
         client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
-        request = new Request.Builder().url("chat.kite.onn.sh").build();
-        websocket = client.newWebSocket(request, new WebSocketListener() {
+        request = new Request.Builder().url("http://chat.kite.onn.sh").build();
 
-            @Override
-            public void onOpen(WebSocket webSocket, Response response) {
-                super.onOpen(webSocket, response);
-            }
-        });
+        websocket = client.newWebSocket(request, new KiteWebSocketListener());
 
         /*
 
@@ -90,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
 
         */
 
+        /*
+
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
                 websocket.close(NORMAL_CLOSURE_STATUS, null);
             }
         });
+
+        */
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
