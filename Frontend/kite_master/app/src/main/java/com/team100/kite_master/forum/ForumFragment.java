@@ -34,7 +34,7 @@ public class ForumFragment extends Fragment {
         listView = v.findViewById(R.id.list_view);
 
         //here call to get the list of posts and add it to topicList
-        topicList.add(new Topic("One", "The first entry"));
+        topicList.add(new Topic("tHe FirsT one", "The first entry"));
 
         CustomAdapter customAdapter = new CustomAdapter();
         listView.setAdapter(customAdapter);
