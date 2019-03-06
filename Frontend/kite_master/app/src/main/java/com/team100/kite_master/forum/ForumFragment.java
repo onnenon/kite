@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,11 +31,15 @@ import java.util.Collections;
 import java.util.Objects;
 
 
-public class ForumFragment extends Fragment {
+public class ForumFragment extends Fragment implements View.OnClickListener {
 
     public String LOCAL_IP_ADDRESS;
 
     ListView topicListView;
+    ProgressBar loadingCircle;
+    TextView errMessage;
+    Button retryTopics;
+
     ArrayList<Topic> topicList = new ArrayList<Topic>();
     private RequestQueue volleyqueue;
     CustomAdapter topicAdapter;
@@ -43,13 +49,25 @@ public class ForumFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_forum, container, false);
         //set local ip for testing
-        LOCAL_IP_ADDRESS = "10.0.1.100";
+        LOCAL_IP_ADDRESS = "10.0.10.100";
         //link list view
         topicListView = v.findViewById(R.id.list_view);
+        loadingCircle = v.findViewById(R.id.topics_loading);
+        errMessage = v.findViewById(R.id.error_message);
         //initialize volley queue
         volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         //request topics from the backend
         requestTopics();
+        //show loading circle until topics received
+        loadingCircle.setVisibility(View.VISIBLE);
+        //hide error text view
+        errMessage.setVisibility(View.GONE);
+        //initialize button
+        retryTopics = v.findViewById(R.id.retry_topics);
+        //set button on click listener
+        retryTopics.setOnClickListener(this);
+        //hide button
+        retryTopics.setVisibility(View.GONE);
         //initialize custom adapter and set it to list view
         topicAdapter = new CustomAdapter();
         topicListView.setAdapter(topicAdapter);
@@ -62,6 +80,18 @@ public class ForumFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //set title
         Objects.requireNonNull(getActivity()).setTitle("Forum");
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.retry_topics:
+                retryTopics.setVisibility(View.GONE);
+                errMessage.setVisibility(View.GONE);
+                requestTopics();
+                loadingCircle.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 
     //custom topic adapter class
@@ -95,10 +125,6 @@ public class ForumFragment extends Fragment {
         }
     }
 
-    public void toastMessage(String message) {
-        Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
-    }
-
     //NETWORKING
     //requests topic JSON object from backend
     public void requestTopics() {
@@ -119,7 +145,12 @@ public class ForumFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        System.out.println("ERROR" + error.toString());
+                        showToast(error.toString());
+                        loadingCircle.setVisibility(View.GONE);
+                        errMessage.setText("Connection Error\n Make sure your forum server is running.");
+                        errMessage.setVisibility(View.VISIBLE);
+                        retryTopics.setVisibility(View.VISIBLE);
+
                     }
                 }
         );
@@ -143,5 +174,12 @@ public class ForumFragment extends Fragment {
         Collections.sort(topicList);
         //notify adapter to update its list with the new topics
         topicAdapter.notifyDataSetChanged();
+        //hide loading circle
+        loadingCircle.setVisibility(View.GONE);
+    }
+
+    //display a toast
+    private void showToast(String message){
+        Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
     }
 }

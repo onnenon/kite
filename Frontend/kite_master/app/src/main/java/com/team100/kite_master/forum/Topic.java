@@ -32,6 +32,7 @@ public class Topic implements Comparable<Topic>{
     }
 
     //returns a string containing the topic id and description
+    @Override
     public String toString(){
         return "|" + topicID+" -> "+topicDescription+"|";
     }
