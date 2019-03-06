@@ -1,6 +1,6 @@
 package com.team100.kite_master.forum;
 
-public class Topic {
+public class Topic implements Comparable<Topic>{
 
     private String topicName;
     private String topicDescription;
@@ -21,9 +21,20 @@ public class Topic {
         return topicName;
     }
 
+    @Override
+    public int compareTo(Topic comparetopic) {
+        int cmp= this.getName().compareTo(comparetopic.getName());
+        /* For Ascending order*/
+        return cmp;
+    }
+
 
     public String getDescription() {
         return topicDescription;
+    }
+
+    public String toString(){
+        return topicID+","+topicDescription;
     }
 
 
