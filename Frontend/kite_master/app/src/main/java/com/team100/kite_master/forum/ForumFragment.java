@@ -27,6 +27,7 @@ public class ForumFragment extends Fragment {
     ListView listView;
     ArrayList<Topic> topicList = new ArrayList<Topic>();
     private RequestQueue volleyqueue;
+    private ForumHttp forumHttp;
 
 
     @Nullable
@@ -52,6 +53,7 @@ public class ForumFragment extends Fragment {
         Objects.requireNonNull(getActivity()).setTitle("Forum");
         //initialize volley queue
         volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+        forumHttp = new ForumHttp(volleyqueue);
     }
 
     //custom adapter class
@@ -81,19 +83,22 @@ public class ForumFragment extends Fragment {
             topicTitle.setText(topicList.get(i).getName());
             topicDescription.setText(topicList.get(i).getDescription());
 
+            getTopics();
+
             return view;
 
         }
     }
 
 
-    public void getTopics(){
+    public void getTopics() {
+
+        forumHttp.getAllTopics();
         System.out.println("topics gotten");
     }
 
 
-
-    public void toastMessage(String message){
+    public void toastMessage(String message) {
         Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
     }
 

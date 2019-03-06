@@ -57,7 +57,7 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
         View v = inflater.inflate(R.layout.fragment_user_tests, container, false);
 
         //set ip
-        LOCAL_IP_ADDRESS = "10.0.1.2";
+        LOCAL_IP_ADDRESS = "172.20.10.";
 
         //instantiate buttons
         Button get_user_button = v.findViewById(R.id.get_user_button);
@@ -141,7 +141,7 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //System.out.println("ERROR" + error.toString());
+                        System.out.println("ERROR" + error.toString());
 
                     }
                 }
