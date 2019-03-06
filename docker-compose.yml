@@ -1,5 +1,14 @@
-version: '3'
+version: "3"
 services:
+  lb:
+    image: traefik
+    command: --api --docker
+    ports:
+      - "5000:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./Docker/traefik.toml:/traefik.toml
   db:
     restart: always
     image: postgres:9.6-alpine
@@ -13,7 +22,7 @@ services:
       - pgdata:/var/lib/postgresql/data
   api:
     restart: always
-    image: "koozie/kite"
+    image: "koozie/kite-beta"
     depends_on:
       - db
     environment:
@@ -26,6 +35,15 @@ services:
       FORUM_ADMIN: "fadmin"
       FORUM_ADMIN_PASS: "pass"
     ports:
-      - 5000:5000
+      - 9000:9000
+    labels:
+      - "traefik.basic.frontend.rule=Host:localhost"
+  chat:
+    restart: always
+    image: "koozie/kite-chat"
+    ports:
+      - 5500:5500
+    labels:
+      - "traefik.basic.frontend.rule=Host:chat.localhost"
 volumes:
   pgdata:

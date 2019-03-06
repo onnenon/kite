@@ -13,6 +13,6 @@ RUN \
     python3 -m pip install -e . &&\
     apk --purge del .build-deps
 
-EXPOSE 5000
+EXPOSE 9000
 
-CMD ["gunicorn", "-w 2", "-b 0.0.0.0:5000", "forum_api:app"]
+CMD ["gunicorn", "-w 2", "-b 0.0.0.0:9000", "forum_api:app"]
