@@ -21,10 +21,9 @@ import java.util.Objects;
 
 public class ForumFragment extends Fragment {
 
-
     ListView listView;
-    List alist = new ArrayList();
-    ArrayAdapter adapter;
+    ArrayList<Topic> topicList = new ArrayList<Topic>();
+
 
     @Nullable
     @Override
@@ -32,32 +31,13 @@ public class ForumFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_forum, container, false);
 
-        listView = (ListView) v.findViewById(R.id.list_view);
+        listView = v.findViewById(R.id.list_view);
 
-        alist.add("one");
-        alist.add("two");
-        alist.add("three");
-        alist.add("four");
-        alist.add("five");
-        alist.add("six");
-        alist.add("seven");
-        alist.add("seven");
-        alist.add("seven");
-        alist.add("seven");
-        alist.add("seven");
-        alist.add("seven");
-        alist.add("seven");
-        alist.add("seven");
-        alist.add("seven");
-        alist.add("seven");
-
+        //here call to get the list of posts and add it to topicList
+        topicList.add(new Topic("One", "The first entry"));
 
         CustomAdapter customAdapter = new CustomAdapter();
-
-        adapter = new ArrayAdapter(Objects.requireNonNull(getActivity()).getApplicationContext(), android.R.layout.simple_list_item_1, alist);
         listView.setAdapter(customAdapter);
-
-
         return v;
     }
 
@@ -68,10 +48,11 @@ public class ForumFragment extends Fragment {
         Objects.requireNonNull(getActivity()).setTitle("Forum");
     }
 
+    //custom adapter class
     class CustomAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return alist.size(); //TODO
+            return topicList.size();
         }
 
         @Override
@@ -84,7 +65,6 @@ public class ForumFragment extends Fragment {
             return 0;
         }
 
-
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = getLayoutInflater().inflate(R.layout.topic_list_item, null);
@@ -92,13 +72,17 @@ public class ForumFragment extends Fragment {
             TextView topicTitle = (TextView) view.findViewById(R.id.text_title);
             TextView topicDescription = (TextView) view.findViewById(R.id.text_description);
 
-            topicTitle.setText(alist.get(i).toString());
-            topicDescription.setText(alist.get(i).toString());
+            topicTitle.setText(topicList.get(i).getName());
+            topicDescription.setText(topicList.get(i).getDescription());
 
             return view;
 
         }
+    }
 
+
+    public void getTopics(){
+        System.out.println("topics gotten");
     }
 
 
