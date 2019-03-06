@@ -57,7 +57,7 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
         View v = inflater.inflate(R.layout.fragment_user_tests, container, false);
 
         //set ip
-        LOCAL_IP_ADDRESS = "10.0.1.31";
+        LOCAL_IP_ADDRESS = "10.0.1.2";
 
         //instantiate buttons
         Button get_user_button = v.findViewById(R.id.get_user_button);
@@ -129,7 +129,7 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
     //get json list of all users in the db
     public void getAllUsers() {
 
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user";
+        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/users";
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -141,7 +141,6 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), error + " ", Toast.LENGTH_LONG).show();
                         //System.out.println("ERROR" + error.toString());
 
                     }
@@ -153,7 +152,7 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
 
     //create a single user
     public void createUser(String username, String password, String bio) {
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user";
+        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/users";
 
         if (username.equals("") || password.equals("") || bio.equals("")) {
             Toast.makeText(getActivity(), "Please fill out all fields!", Toast.LENGTH_LONG).show();
@@ -210,7 +209,7 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
     public void updateUser(String username, String password, String bio, boolean isMod, boolean isAdmin) {
 
 
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user/" + username;
+        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/users/" + username;
 
         JSONObject jsonBody = new JSONObject();
         try {
@@ -274,7 +273,7 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
             return;
         }
 
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user/" + username;
+        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/users/" + username;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.DELETE, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -306,7 +305,7 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
             return;
         }
 
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/user/" + username;
+        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/users/" + username;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override

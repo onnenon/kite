@@ -11,7 +11,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.team100.kite_master.R;
 
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ public class ForumFragment extends Fragment {
 
     ListView listView;
     ArrayList<Topic> topicList = new ArrayList<Topic>();
+    private RequestQueue volleyqueue;
 
 
     @Nullable
@@ -46,6 +50,8 @@ public class ForumFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getActivity()).setTitle("Forum");
+        //initialize volley queue
+        volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
     }
 
     //custom adapter class
@@ -83,6 +89,12 @@ public class ForumFragment extends Fragment {
 
     public void getTopics(){
         System.out.println("topics gotten");
+    }
+
+
+
+    public void toastMessage(String message){
+        Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
     }
 
 
