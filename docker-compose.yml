@@ -22,7 +22,7 @@ services:
       - pgdata:/var/lib/postgresql/data
   api:
     restart: always
-    image: "koozie/kite-beta"
+    image: "koozie/kite-dev"
     depends_on:
       - db
     environment:
