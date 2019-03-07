@@ -31,7 +31,7 @@ import java.util.Collections;
 import java.util.Objects;
 
 
-public class ForumFragment extends Fragment implements View.OnClickListener {
+public class ForumPostsFragment extends Fragment implements View.OnClickListener {
 
     public String LOCAL_IP_ADDRESS;
 
@@ -40,14 +40,14 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
     TextView errMessage;
     Button retryTopics;
 
-    ArrayList<Topic> topicList = new ArrayList<Topic>();
+    ArrayList<Topic> postList = new ArrayList<Topic>();
     private RequestQueue volleyqueue;
     CustomAdapter topicAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_forum, container, false);
+        View v = inflater.inflate(R.layout.fragment_forum_posts, container, false);
         //set local ip for testing
         LOCAL_IP_ADDRESS = "10.0.1.100";
         //link list view
@@ -114,10 +114,10 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
         @SuppressLint({"ViewHolder", "InflateParams"})
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = getLayoutInflater().inflate(R.layout.topic_list_item, null);
+            view = getLayoutInflater().inflate(R.layout.post_list_item, null);
             // initialize text views
             TextView topicTitle = (TextView) view.findViewById(R.id.text_title);
-            TextView topicDescription = (TextView) view.findViewById(R.id.text_description);
+            TextView topicDescription = (TextView) view.findViewById(R.id.text_snippet);
             // iterate through list to set topic entries
             topicTitle.setText(topicList.get(i).getName());
             topicDescription.setText(topicList.get(i).getDescription());
