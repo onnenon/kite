@@ -35,12 +35,13 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
 
     public String LOCAL_IP_ADDRESS;
 
-    ListView topicListView;
+    ListView postListView;
     ProgressBar loadingCircle;
     TextView errMessage;
     Button retryTopics;
+    String topic;
 
-    ArrayList<Topic> postList = new ArrayList<Topic>();
+    ArrayList<Post> postList = new ArrayList<Post>();
     private RequestQueue volleyqueue;
     CustomAdapter topicAdapter;
 
@@ -51,13 +52,13 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
         //set local ip for testing
         LOCAL_IP_ADDRESS = "10.0.1.100";
         //link list view
-        topicListView = v.findViewById(R.id.list_view);
+        postListView = v.findViewById(R.id.list_view);
         loadingCircle = v.findViewById(R.id.topics_loading);
         errMessage = v.findViewById(R.id.error_message);
         //initialize volley queue
         volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         //request topics from the backend
-        requestTopics();
+        requestPosts("Cars"); //TODO
         //show loading circle until topics received
         loadingCircle.setVisibility(View.VISIBLE);
         //hide error text view
@@ -70,7 +71,7 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
         retryTopics.setVisibility(View.GONE);
         //initialize custom adapter and set it to list view
         topicAdapter = new CustomAdapter();
-        topicListView.setAdapter(topicAdapter);
+        postListView.setAdapter(topicAdapter);
         return v;
     }
 
@@ -79,7 +80,7 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //set title
-        Objects.requireNonNull(getActivity()).setTitle("Forum");
+        Objects.requireNonNull(getActivity()).setTitle(topic);
     }
 
     @Override
@@ -88,7 +89,7 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
             case R.id.retry_topics:
                 retryTopics.setVisibility(View.GONE);
                 errMessage.setVisibility(View.GONE);
-                requestTopics();
+                requestPosts("Cars");
                 loadingCircle.setVisibility(View.VISIBLE);
                 break;
         }
@@ -98,7 +99,7 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
     class CustomAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return topicList.size();
+            return postList.size();
         }
 
         @Override
@@ -117,19 +118,21 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
             view = getLayoutInflater().inflate(R.layout.post_list_item, null);
             // initialize text views
             TextView topicTitle = (TextView) view.findViewById(R.id.text_title);
+            TextView topicAuthor = (TextView) view.findViewById(R.id.text_author);
             TextView topicDescription = (TextView) view.findViewById(R.id.text_snippet);
             // iterate through list to set topic entries
-            topicTitle.setText(topicList.get(i).getName());
-            topicDescription.setText(topicList.get(i).getDescription());
+            topicTitle.setText(postList.get(i).getPostTitle());
+            topicAuthor.setText(postList.get(i).getPostAuthor());
+            topicDescription.setText(postList.get(i).getPostBody());
             return view;
         }
     }
 
     //NETWORKING
     //requests topic JSON object from backend
-    public void requestTopics() {
-        System.out.println("REQUESTING TOPICS");
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/topics";
+    public void requestPosts(String topic) {
+        System.out.println("REQUESTING POSTS");
+        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/topics/"+topic;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -150,28 +153,31 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
                         errMessage.setText("Connection Error\n Make sure your forum server is running.");
                         errMessage.setVisibility(View.VISIBLE);
                         retryTopics.setVisibility(View.VISIBLE);
-
                     }
                 }
         );
         volleyqueue.add(getRequest);
     }
 
+
     //convert JSON object from backend to arraylist of topics
     public void parseTopics(JSONObject resp) throws JSONException {
         //create output list
-        ArrayList<Topic> tops = new ArrayList<Topic>();
-        //get JSON array of topics
-        JSONArray topics = resp.getJSONObject("data").getJSONArray("topics");
+        ArrayList<Post> receivedPosts = new ArrayList<Post>();
+        //get json array of posts
+        JSONObject jdata = resp.getJSONObject("data");
+        JSONObject jtopic = jdata.getJSONObject("topic");
+        JSONArray jposts = jtopic.getJSONArray("posts");
         //for each element in the array create a new topic object and add it to the array list
-        for (int i = 0; i < topics.length(); i++) {
-            Topic t = new Topic(topics.getJSONObject(i).getString("name"), topics.getJSONObject(i).getString("descript"));
-            tops.add(t);
+        for (int i = 0; i < jposts.length(); i++) {
+            JSONObject curPost = jposts.getJSONObject(i);
+            Post p = new Post(curPost.getString("id"), curPost.getString("title"), curPost.getString("body"), curPost.getString("author"), curPost.getBoolean("edited"), curPost.getString("topic_name"), curPost.getString("date"));
+            receivedPosts.add(p);
         }
         //update global topic list
-        topicList = new ArrayList<Topic>(tops);
+        postList = new ArrayList<Post>(receivedPosts);
         //sort topic list in alphabetical order
-        Collections.sort(topicList);
+        Collections.sort(postList);
         //notify adapter to update its list with the new topics
         topicAdapter.notifyDataSetChanged();
         //hide loading circle
