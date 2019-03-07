@@ -20,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
 
 import org.json.JSONArray;
@@ -51,14 +52,18 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
         View v = inflater.inflate(R.layout.fragment_forum_posts, container, false);
         //set local ip for testing
         LOCAL_IP_ADDRESS = "10.0.1.100";
+        //set topic string for testing
+        topic = "Cars";
         //link list view
         postListView = v.findViewById(R.id.list_view);
         loadingCircle = v.findViewById(R.id.topics_loading);
         errMessage = v.findViewById(R.id.error_message);
+        //set back arrow button
+        ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //initialize volley queue
         volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         //request topics from the backend
-        requestPosts("Cars"); //TODO
+        requestPosts(topic); //TODO
         //show loading circle until topics received
         loadingCircle.setVisibility(View.VISIBLE);
         //hide error text view
@@ -89,7 +94,7 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
             case R.id.retry_topics:
                 retryTopics.setVisibility(View.GONE);
                 errMessage.setVisibility(View.GONE);
-                requestPosts("Cars");
+                requestPosts(topic);
                 loadingCircle.setVisibility(View.VISIBLE);
                 break;
         }
