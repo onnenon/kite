@@ -37,13 +37,13 @@ services:
     ports:
       - 9000:9000
     labels:
-      - "traefik.basic.frontend.rule=Host:0.0.0.0, localhost"
+      - "traefik.basic.frontend.rule=PathPrefix: /api"
   chat:
     restart: always
     image: "koozie/kite-chat"
     ports:
       - 5500:5500
     labels:
-      - "traefik.basic.frontend.rule=Host:chat.0.0.0.0, chat.localhost"
+      - "traefik.basic.frontend.rule=HostRegexp: chat.{subdomain:[a-z0-9.]+}"
 volumes:
   pgdata:
