@@ -4,9 +4,13 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -66,6 +70,14 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
         retryTopics = v.findViewById(R.id.retry_topics);
         //set button on click listener
         retryTopics.setOnClickListener(this);
+        //returns value of whatever list item is clicked
+        topicListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println(topicList.get(position).getTopicID());
+                openTopic(topicList.get(position).getTopicID());
+            }
+        });
         //hide button
         retryTopics.setVisibility(View.GONE);
         //initialize custom adapter and set it to list view
@@ -103,12 +115,16 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
 
         @Override
         public Object getItem(int i) {
-            return null;
+            return topicList.get(i);
         }
 
         @Override
         public long getItemId(int i) {
             return 0;
+        }
+
+        public String getTopicID(int i) {
+            return topicList.get(i).getTopicID();
         }
 
         @SuppressLint({"ViewHolder", "InflateParams"})
@@ -124,6 +140,22 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
             return view;
         }
     }
+
+
+
+
+    //swtich to new fragment after list item is selected
+    public void openTopic(String topic) {
+        Fragment fragment = new ForumPostsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("selectedTopic", topic);
+        fragment.setArguments(bundle);
+
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, fragment).addToBackStack("tag");
+        ft.commit();
+    }
+
 
     //NETWORKING
     //requests topic JSON object from backend
@@ -179,7 +211,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
     }
 
     //display a toast
-    private void showToast(String message){
+    private void showToast(String message) {
         Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
     }
 }
