@@ -7,6 +7,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -130,26 +135,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void receiveJSONText(String TextString) {
 
-        /*
+        JsonParser parser = new JsonParser();
 
-        Gson parser = new Gson();
+        JsonObject JsonText = (JsonObject) parser.parse(TextString);
 
-        JSONObject JsonText = TextString.;
+        JsonElement jsonUsername = JsonText.get("username");
+        JsonElement jsonText = JsonText.get("text");
 
-        try {
+        String stringUsername = jsonUsername.getAsString();
+        String stringText = jsonText.getAsString();
 
-            JsonText.getString("username");
-            JsonText.getString("text");
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        */
-
-        // output(JsonText.toString());
-
-        output(TextString);
+        output(stringUsername + ": " + stringText);
     }
 
     private void output(final String txt) {
