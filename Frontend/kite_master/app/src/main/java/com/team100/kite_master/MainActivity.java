@@ -12,12 +12,10 @@ import android.view.MenuItem;
 import android.support.v4.app.FragmentTransaction;
 
 import com.team100.kite_master.devtests.UserTestsFragment;
-import com.team100.kite_master.forum.ForumFragment;
-import com.team100.kite_master.forum.ForumPostsFragment;
-import com.team100.kite_master.forum.ForumSinglePostFragment;
+import com.team100.kite_master.forum.ForumNewPostFragment;
+import com.team100.kite_master.forum.ForumTopicListFragment;
 import com.team100.kite_master.help.HelpFragment;
 import com.team100.kite_master.messages.MessagesFragment;
-import com.team100.kite_master.profile.ProfileFragment;
 import com.team100.kite_master.search.SearchFragment;
 import com.team100.kite_master.settings.SettingsFragment;
 
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity
         //initializing the fragment object which is selected
         switch (itemId) {
             case R.id.nav_forum:
-                fragment = new ForumFragment();
+                fragment = new ForumTopicListFragment();
                 break;
             case R.id.nav_search:
                 fragment = new SearchFragment();
@@ -96,7 +94,7 @@ public class MainActivity extends AppCompatActivity
                 fragment = new MessagesFragment();
                 break;
             case R.id.nav_profile:
-                fragment = new ProfileFragment();
+                fragment = new ForumNewPostFragment();
                 break;
             case R.id.nav_settings:
                 fragment = new SettingsFragment();

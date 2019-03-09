@@ -54,7 +54,7 @@ public class UserTestsFragment extends Fragment implements View.OnClickListener 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_user_tests, container, false);
+        View v = inflater.inflate(R.layout.user_tests_fragment, container, false);
 
         //set ip
         LOCAL_IP_ADDRESS = "10.0.1.100";
