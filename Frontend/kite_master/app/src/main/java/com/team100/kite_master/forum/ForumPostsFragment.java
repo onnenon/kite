@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -57,14 +61,13 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
         View v = inflater.inflate(R.layout.fragment_forum_posts, container, false);
         //receive bundle
         Bundle bundle = this.getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             topic = bundle.getString("selectedTopic");
         }
 
 
-
         //set local ip for testing
-        LOCAL_IP_ADDRESS = "10.0.1.100";
+        LOCAL_IP_ADDRESS = "10.0.1.2";
         //set topic string for testing
         //link list view
         postListView = v.findViewById(R.id.list_view);
@@ -75,6 +78,20 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
         volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         //request topics from the backend
         requestPosts(topic); //TODO
+
+
+        postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                openPost(postList.get(position).getPostID());
+                Animation animation1 = new AlphaAnimation(0.3f, 4.0f);
+                animation1.setDuration(4000);
+                view.startAnimation(animation1);
+
+                //openTopic(topicList.get(position).getTopicID());
+            }
+        });
+
         //show loading circle until topics received
         loadingCircle.setVisibility(View.VISIBLE);
         //hide error text view
@@ -116,10 +133,24 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Toast.makeText(getContext(),"Back button clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Back button clicked", Toast.LENGTH_SHORT).show();
                 break;
         }
         return true;
+    }
+
+
+
+    //switch to new fragment after list item is selected
+    public void openPost(String postID) {
+        Fragment fragment = new ForumSinglePostFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("selectedPost", postID);
+        fragment.setArguments(bundle);
+
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, fragment).addToBackStack("tag");
+        ft.commit();
     }
 
     //custom topic adapter class
@@ -137,6 +168,10 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
         @Override
         public long getItemId(int i) {
             return 0;
+        }
+
+        public String getPostID(int i) {
+            return postList.get(i).getPostID();
         }
 
         @SuppressLint({"ViewHolder", "InflateParams"})
@@ -159,7 +194,7 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
     //requests topic JSON object from backend
     public void requestPosts(String topic) {
         System.out.println("REQUESTING POSTS");
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/topics/"+topic;
+        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/topics/" + topic;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -209,10 +244,19 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
         topicAdapter.notifyDataSetChanged();
         //hide loading circle
         loadingCircle.setVisibility(View.GONE);
+
+        if (postList.size() == 0) {
+            errMessage.setText("There are no posts in this topic");
+            errMessage.setVisibility(View.VISIBLE);
+        } else {
+            errMessage.setVisibility(View.GONE);
+        }
+
+
     }
 
     //display a toast
-    private void showToast(String message){
+    private void showToast(String message) {
         Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
     }
 }

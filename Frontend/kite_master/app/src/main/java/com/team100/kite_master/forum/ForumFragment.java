@@ -53,7 +53,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_forum, container, false);
         //set local ip for testing
-        LOCAL_IP_ADDRESS = "10.0.1.100";
+        LOCAL_IP_ADDRESS = "10.0.1.2";
         //link list view
         topicListView = v.findViewById(R.id.list_view);
         loadingCircle = v.findViewById(R.id.topics_loading);

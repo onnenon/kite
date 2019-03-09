@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.team100.kite_master.devtests.UserTestsFragment;
 import com.team100.kite_master.forum.ForumFragment;
 import com.team100.kite_master.forum.ForumPostsFragment;
+import com.team100.kite_master.forum.ForumSinglePostFragment;
 import com.team100.kite_master.help.HelpFragment;
 import com.team100.kite_master.messages.MessagesFragment;
 import com.team100.kite_master.profile.ProfileFragment;
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity
                 fragment = new MessagesFragment();
                 break;
             case R.id.nav_profile:
-                fragment = new ForumPostsFragment();
+                fragment = new ProfileFragment();
                 break;
             case R.id.nav_settings:
                 fragment = new SettingsFragment();
