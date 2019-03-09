@@ -24,11 +24,11 @@
         android:layout_marginTop="32dp"
         android:text="Post"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/editText"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintStart_toStartOf="@+id/title_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/title_edit_text" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/title_edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -40,7 +40,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/body_edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -52,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/post_button"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,5 +64,20 @@
         android:textColor="@android:color/background_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@+id/body_edit_text" />
+
+    <EditText
+        android:id="@+id/text_author"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="Author - to be removed with login"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/post_button" />
+
 </android.support.constraint.ConstraintLayout>
