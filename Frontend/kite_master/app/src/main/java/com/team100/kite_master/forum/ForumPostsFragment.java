@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -66,7 +67,7 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
 
 
         //set local ip for testing
-        LOCAL_IP_ADDRESS = "10.0.1.100";
+        LOCAL_IP_ADDRESS = "10.0.1.2";
         //set topic string for testing
         //link list view
         postListView = v.findViewById(R.id.list_view);
@@ -82,7 +83,7 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
         postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println(postList.get(position).getPostID());
+                openPost(postList.get(position).getPostID());
                 Animation animation1 = new AlphaAnimation(0.3f, 4.0f);
                 animation1.setDuration(4000);
                 view.startAnimation(animation1);
@@ -136,6 +137,20 @@ public class ForumPostsFragment extends Fragment implements View.OnClickListener
                 break;
         }
         return true;
+    }
+
+
+
+    //switch to new fragment after list item is selected
+    public void openPost(String postID) {
+        Fragment fragment = new ForumSinglePostFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("selectedPost", postID);
+        fragment.setArguments(bundle);
+
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, fragment).addToBackStack("tag");
+        ft.commit();
     }
 
     //custom topic adapter class

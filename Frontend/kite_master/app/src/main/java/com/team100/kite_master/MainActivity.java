@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity
                 fragment = new MessagesFragment();
                 break;
             case R.id.nav_profile:
-                fragment = new ForumSinglePostFragment();
+                fragment = new ProfileFragment();
                 break;
             case R.id.nav_settings:
                 fragment = new SettingsFragment();
