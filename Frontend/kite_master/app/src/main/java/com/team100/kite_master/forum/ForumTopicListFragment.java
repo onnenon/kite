@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -25,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.team100.kite_master.R;
+import com.team100.kite_master.forum.forum_data_classes.Topic;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,7 +37,7 @@ import java.util.Collections;
 import java.util.Objects;
 
 
-public class ForumFragment extends Fragment implements View.OnClickListener {
+public class ForumTopicListFragment extends Fragment implements View.OnClickListener {
 
     public String LOCAL_IP_ADDRESS;
 
@@ -43,6 +45,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
     ProgressBar loadingCircle;
     TextView errMessage;
     Button retryTopics;
+    MenuItem newPostButton;
 
     ArrayList<Topic> topicList = new ArrayList<Topic>();
     private RequestQueue volleyqueue;
@@ -51,9 +54,9 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_forum, container, false);
+        View v = inflater.inflate(R.layout.forum_topic_list, container, false);
         //set local ip for testing
-        LOCAL_IP_ADDRESS = "10.0.1.100";
+        LOCAL_IP_ADDRESS = "10.0.1.2";
         //link list view
         topicListView = v.findViewById(R.id.list_view);
         loadingCircle = v.findViewById(R.id.topics_loading);
@@ -130,7 +133,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
         @SuppressLint({"ViewHolder", "InflateParams"})
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = getLayoutInflater().inflate(R.layout.topic_list_item, null);
+            view = getLayoutInflater().inflate(R.layout.forum_topic_list_item, null);
             // initialize text views
             TextView topicTitle = (TextView) view.findViewById(R.id.text_title);
             TextView topicDescription = (TextView) view.findViewById(R.id.text_description);
@@ -146,7 +149,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener {
 
     //swtich to new fragment after list item is selected
     public void openTopic(String topic) {
-        Fragment fragment = new ForumPostsFragment();
+        Fragment fragment = new ForumPostListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedTopic", topic);
         fragment.setArguments(bundle);
