@@ -7,6 +7,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,13 +30,14 @@ public class MainActivity extends AppCompatActivity {
     private Button stopButton;
     private EditText inputText;
     private Button sendButton;
+    private EditText usernameText;
     private TextView outputText;
 
     private OkHttpClient client;
     private Request request;
     WebSocket websocket;
 
-    String username = "Username";
+    String startUsername = "CoolDude34";
 
     private static final int NORMAL_CLOSURE_STATUS = 1000;
 
@@ -40,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
 
-            sendJSONText(username + " has joined the chat");
+            sendJSONText(usernameText.getText().toString() + " has joined the chat");
         }
 
         @Override
@@ -52,9 +58,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
 
-            sendJSONText(username + " has left the chat");
+            sendJSONText(usernameText.getText().toString() + " has left the chat");
             webSocket.close(NORMAL_CLOSURE_STATUS, null);
-
         }
 
         @Override
@@ -72,12 +77,15 @@ public class MainActivity extends AppCompatActivity {
         stopButton = (Button) findViewById(R.id.stopButton);
         inputText = (EditText) findViewById(R.id.messageText);
         sendButton = (Button) findViewById(R.id.sendButton);
+        usernameText = (EditText) findViewById(R.id.usernameText);
         outputText = (TextView) findViewById(R.id.outputText);
 
         client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
         request = new Request.Builder().url("http://chat.kite.onn.sh").build();
 
         websocket = client.newWebSocket(request, new KiteWebSocketListener());
+
+        usernameText.setText(startUsername);
 
         /*
 
@@ -114,42 +122,27 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendJSONText(String TextString) {
 
-        JSONObject JsonText = new JSONObject();
+        JsonObject JsonText = new JsonObject();
 
-        try {
-
-            JsonText.put("username", username);
-            JsonText.put("text", TextString);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
+        JsonText.addProperty("username", usernameText.getText().toString());
+        JsonText.addProperty("text", TextString);
 
         websocket.send(JsonText.toString());
     }
 
     private void receiveJSONText(String TextString) {
 
-        /*
+        JsonParser parser = new JsonParser();
 
-        Gson parser = new Gson();
+        JsonObject JsonText = (JsonObject) parser.parse(TextString);
 
-        JSONObject JsonText = TextString.;
+        JsonElement jsonUsername = JsonText.get("username");
+        JsonElement jsonText = JsonText.get("text");
 
-        try {
+        String stringUsername = jsonUsername.getAsString();
+        String stringText = jsonText.getAsString();
 
-            JsonText.getString("username");
-            JsonText.getString("text");
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        */
-
-        // output(JsonText.toString());
-
-        output(TextString);
+        output(stringUsername + ": " + stringText);
     }
 
     private void output(final String txt) {
