@@ -1,13 +1,14 @@
 import bcrypt
 from flask import Flask
 from forum_api.resources import register_blueprints
-from forum_api.settings import FORUM_ADMIN, LOGGER
+from forum_api.settings import FORUM_ADMIN
 
 
 app = Flask(__name__)
 app.config.from_object("forum_api.settings")
 
 register_blueprints(app)
+
 from forum_api.models import db, User
 
 db.init_app(app)

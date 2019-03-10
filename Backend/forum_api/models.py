@@ -8,6 +8,7 @@ db = SQLAlchemy()
 
 
 class User(db.Model):
+
     __tablename__ = "users"
 
     username = db.Column(db.String(30), nullable=False, primary_key=True)
@@ -16,6 +17,7 @@ class User(db.Model):
     is_mod = db.Column(db.Boolean(), nullable=False, default=False)
     post_count = db.Column(db.Integer(), nullable=False, default=0)
     bio = db.Column(db.String(50), default="")
+    displayName = db.Column(db.String(30), default="")
 
     posts = db.relationship("Post", backref="auth", cascade="all")
 
@@ -27,7 +29,7 @@ class User(db.Model):
     def delete(self):
         """Deletes the user from the DB."""
         db.session.delete(self)
-        db.session.commit
+        db.session.commit()
 
     @staticmethod
     def get_all():
@@ -51,6 +53,7 @@ class User(db.Model):
             "is_mod": self.is_mod,
             "post_count": self.post_count,
             "bio": self.bio,
+            "displayName": self.displayName,
         }
 
 
@@ -70,7 +73,7 @@ class Topic(db.Model):
     def delete(self):
         """Deletes the topic from the DB."""
         db.session.delete(self)
-        db.session.commit
+        db.session.commit()
 
     @staticmethod
     def get_all():
@@ -78,7 +81,7 @@ class Topic(db.Model):
         return Topic.query.all()
 
     @staticmethod
-    def get_user(top_name):
+    def get_topic(top_name):
         """Returns a user Object for a specific user, if it exists.
 
         Args:
@@ -86,9 +89,12 @@ class Topic(db.Model):
         """
         return Topic.query.filter_by(name=top_name).first()
 
-    def to_json(self):
+    def to_json(self, posts=False):
         """Returns a JSON representation of the topic."""
-        return {"name": self.name, "descript": self.descript}
+        data = {"name": self.name, "descript": self.descript}
+        if posts:
+            data["posts"] = [post.to_json() for post in self.posts]
+        return data
 
 
 class Post(db.Model):
@@ -99,6 +105,7 @@ class Post(db.Model):
     body = db.Column(db.String(255), nullable=False)
     author = db.Column(db.String(30), db.ForeignKey("users.username"), nullable=False)
     topic_name = db.Column(db.String(30), db.ForeignKey("topics.name"), nullable=False)
+    edited = db.Column(db.Boolean(), default=False)
     date_ = db.Column(
         db.DateTime(timezone=True), default=datetime.utcnow, nullable=False
     )
@@ -113,7 +120,7 @@ class Post(db.Model):
     def delete(self):
         """Deletes the post from the database."""
         db.session.delete(self)
-        db.session.commit
+        db.session.commit()
 
     @staticmethod
     def get_all():
@@ -121,7 +128,7 @@ class Post(db.Model):
         return Post.query.all()
 
     @staticmethod
-    def get_user(post_id):
+    def get_post(post_id):
         """Returns a post object for a specific post.
 
         Args:
@@ -136,8 +143,9 @@ class Post(db.Model):
             "title": self.title,
             "body": self.body,
             "author": self.author,
+            "edited": self.edited,
             "topic_name": self.topic_name,
-            "date": self.date_,
+            "date": self.date_.strftime("%s %H:%M %B %d %Y"),
         }
 
 
@@ -148,31 +156,38 @@ class Reply(db.Model):
     body = db.Column(db.String(255), nullable=False)
     author = db.Column(db.String(30), db.ForeignKey("users.username"), nullable=False)
     post_id = db.Column(UUID, db.ForeignKey("posts.id"), nullable=False)
+    edited = db.Column(db.Boolean(), default=False)
     date_ = db.Column(
         db.DateTime(timezone=True), default=datetime.utcnow, nullable=False
     )
 
     def save(self):
+        """Saves the reply to the database."""
         db.session.add(self)
         db.session.commit()
 
     def delete(self):
+        """Deletes a reply from the database."""
         db.session.delete(self)
-        db.session.commit
+        db.session.commit()
 
     @staticmethod
     def get_all():
+        """Gets all replies from the database."""
         return Reply.query.all()
 
     @staticmethod
-    def get_user(rep_id):
+    def get_reply(rep_id):
+        """Queries the database for a specific reply_id."""
         return Reply.query.filter_by(id=rep_id).first()
 
     def to_json(self):
+        """Returns a json representation of a reply."""
         return {
             "id": self.id,
             "body": self.body,
             "author": self.author,
             "post_id": self.post_id,
-            "date": self.date_,
+            "edited": self.edited,
+            "date": self.date_.strftime("%s %H:%M %B %d %Y"),
         }
