@@ -22,7 +22,7 @@ services:
       - pgdata:/var/lib/postgresql/data
   api:
     restart: always
-    image: "koozie/kite-beta"
+    image: "koozie/kite:beta"
     depends_on:
       - db
     environment:
@@ -40,7 +40,7 @@ services:
       - "traefik.basic.frontend.rule=PathPrefix: /api"
   chat:
     restart: always
-    image: "koozie/kite-chat"
+    image: "koozie/kite-chat:beta"
     ports:
       - 5500:5500
     labels:
