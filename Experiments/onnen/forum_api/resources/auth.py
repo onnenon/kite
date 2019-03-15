@@ -1,6 +1,5 @@
 from flask import Blueprint
 from flask_restful import Api, Resource, request
-
 from forum_api.settings import LOGGER
 
 USERS = {"test": "password"}
