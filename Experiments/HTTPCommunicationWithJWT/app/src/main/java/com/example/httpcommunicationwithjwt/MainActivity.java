@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private String URL = "http://kite.onn.sh/api/auth/login";
     private RequestQueue Requests;
 
+    private String JWT;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
                             JSONObject token = response.getJSONObject("data");
 
-                            String JWT = token.getString("access_token");
+                            JWT = token.getString("access_token");
 
                             LoginJWT.setText(JWT);
                         }
