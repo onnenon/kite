@@ -15,4 +15,4 @@ RUN \
 
 EXPOSE 9000
 
-CMD ["gunicorn", "-w 2", "-b 0.0.0.0:9000", "forum_api:app"]
+CMD ["gunicorn", "-w 2", "-b 0.0.0.0:9000", "kite:app"]

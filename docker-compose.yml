@@ -26,14 +26,14 @@ services:
     depends_on:
       - db
     environment:
-      FLASK_APP: "forum_api"
+      FLASK_APP: "kite"
       API_DB_HOST: "db"
       API_DB_PORT: "5432"
       API_DB_USERNAME: "admin"
       API_DB_PASSWORD: "pass"
       API_DB_NAME: "forum_db"
       FORUM_ADMIN: "fadmin"
-      FORUM_ADMIN_PASS: "pass"
+      FORUM_ADMIN_PASS: "password"
     ports:
       - 9000:9000
     labels:
