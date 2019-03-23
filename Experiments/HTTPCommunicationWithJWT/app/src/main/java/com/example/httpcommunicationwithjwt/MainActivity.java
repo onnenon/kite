@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,6 +34,13 @@ public class MainActivity extends AppCompatActivity {
 
     private String JWT;
 
+
+
+    private TextView Status;
+    private EditText EnterUsername;
+
+    private Button GetUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +48,15 @@ public class MainActivity extends AppCompatActivity {
 
         SignInButton = (Button) findViewById(R.id.SignIn);
         LoginJWT = (TextView) findViewById(R.id.LoginStatus);
+
+
+
+        Status = (TextView) findViewById(R.id.Status);
+        EnterUsername = (EditText) findViewById(R.id.EnterUsername);
+
+        GetUser = (Button) findViewById(R.id.GetUser);
+
+
 
         Requests = Volley.newRequestQueue(this);
 
@@ -51,6 +69,15 @@ public class MainActivity extends AppCompatActivity {
                 String password = "pass";
 
                 login(username, password);
+            }
+        });
+
+        GetUser.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                jsonParse();
             }
         });
     }
@@ -116,5 +143,44 @@ public class MainActivity extends AppCompatActivity {
         };
 
         Requests.add(loginRequest);
+    }
+
+    private void jsonParse() {
+
+        // jsonParse material from video
+        String URL = "http://kite.onn.sh/api/v2/users";
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, URL, null,
+
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray userData = response.getJSONArray("data");
+
+                            // String userName = user.getString("username");
+                            // boolean isAdmin = user.getBoolean("is_admin");
+                            // boolean isMod = user.getBoolean("is_mod");
+                            // int postCount = user.getInt("post_count");
+                            // String bio = user.getString("bio");
+
+                            // Status.setText(userName + ", " + bio + ", " + Integer.toString(postCount) + ", " + Boolean.toString(isAdmin) + ", " + Boolean.toString(isMod));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Status.setText(e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+
+        Requests.add(request);
     }
 }
