@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONArray userData = response.getJSONArray("data");
+                            JSONArray userData = response.getJSONArray("users");
 
                             // String userName = user.getString("username");
                             // boolean isAdmin = user.getBoolean("is_admin");
