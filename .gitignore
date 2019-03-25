@@ -1,5 +1,5 @@
-<<<<<<< HEAD
-.vscode
+**.vscode
+**.idea
 
 # Created by https://www.gitignore.io/api/androidstudio
 # Edit at https://www.gitignore.io/?templates=androidstudio
@@ -135,9 +135,5 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.gitignore.io/api/androidstudio
-=======
-**/.vscode
 .DS_Store
-**/.idea
-.vscode
->>>>>>> b46b488aa5a8f812accc2c6f3e0a0eb100dbbbb2
+
