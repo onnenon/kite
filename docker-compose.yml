@@ -41,6 +41,8 @@ services:
   chat:
     restart: always
     image: "koozie/kite-chat:beta"
+    environment:
+      MESSAGE_CONFIRMATION: "True"
     ports:
       - 5500:5500
     labels:
