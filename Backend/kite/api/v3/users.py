@@ -66,10 +66,7 @@ class UserLookup(Resource):
 
 
 class UserList(Resource):
-
-    method_decorators = [token_auth_required]
-
-    def post(self, jwt_payload=None):
+    def post(self):
         """Create a new user.
 
         Required in Payload:
@@ -96,6 +93,7 @@ class UserList(Resource):
             return Success(data).to_json(), 201
         return Fail(f"user {args.username} exists").to_json(), 400
 
+    @token_auth_required
     def get(self, jwt_payload=None):
         """Get list of all users."""
         LOGGER.debug({"JWT payload": jwt_payload})
