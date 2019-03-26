@@ -157,15 +157,21 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONArray userData = response.getJSONArray("users");
 
-                            // String userName = user.getString("username");
-                            // boolean isAdmin = user.getBoolean("is_admin");
-                            // boolean isMod = user.getBoolean("is_mod");
-                            // int postCount = user.getInt("post_count");
-                            // String bio = user.getString("bio");
+                            JSONObject data = response.getJSONObject("data");
 
-                            // Status.setText(userName + ", " + bio + ", " + Integer.toString(postCount) + ", " + Boolean.toString(isAdmin) + ", " + Boolean.toString(isMod));
+                            JSONArray userData = data.getJSONArray("users");
+
+                            JSONObject user = userData.getJSONObject(0);
+
+                            String userName = user.getString("username");
+                            boolean isAdmin = user.getBoolean("is_admin");
+                            boolean isMod = user.getBoolean("is_mod");
+                            int postCount = user.getInt("post_count");
+                            String bio = user.getString("bio");
+                            String displayName = user.getString("displayName");
+
+                            Status.setText(userName + ", " + bio + ", " + Integer.toString(postCount) + ", " + Boolean.toString(isAdmin) + ", " + Boolean.toString(isMod) + ", " + displayName);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -184,3 +190,20 @@ public class MainActivity extends AppCompatActivity {
         Requests.add(request);
     }
 }
+
+/*
+
+            // Credit to the people at this source: https://stackoverflow.com/questions/25941658/volley-how-to-send-jsonobject-using-bearer-accesstoken-authentication
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                String credentials = username + ":" + password;
+                String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+
+                HashMap<String, String> headers = new HashMap<String, String>();
+
+                headers.put("Authorization", "Basic " + base64EncodedCredentials);
+
+                return headers;
+            }
+ */
