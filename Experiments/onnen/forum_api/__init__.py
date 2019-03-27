@@ -1,7 +1,7 @@
 from flask import Flask
 
 # from flask_sqlalchemy import SQLAlchemy
-from forum_api.resources.auth import auth_bp
+from kite.resources.auth import auth_bp
 
 app = Flask(__name__)
 
