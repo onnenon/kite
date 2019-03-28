@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private Button SignInButton;
     private TextView LoginJWT;
 
-    private String URL = "http://kite.onn.sh/api/auth/login";
+    private String LoginURL = "http://kite.onn.sh/api/auth/login";
     private RequestQueue Requests;
 
     private String JWT;
@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         SignInButton = (Button) findViewById(R.id.SignIn);
         LoginJWT = (TextView) findViewById(R.id.LoginStatus);
+
+        JWT = "";
 
 
 
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                jsonParse();
+                GetHTTPRequest();
             }
         });
     }
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.POST, URL, null,
+        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.POST, LoginURL, null,
 
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -145,12 +147,11 @@ public class MainActivity extends AppCompatActivity {
         Requests.add(loginRequest);
     }
 
-    private void jsonParse() {
+    private void GetHTTPRequest() {
 
-        // jsonParse material from video
-        String URL = "http://kite.onn.sh/api/v2/users";
+        String RequestURL = "http://kite.onn.sh/api/v3/users";
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, URL, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, RequestURL, null,
 
                 new Response.Listener<JSONObject>() {
 
@@ -185,7 +186,20 @@ public class MainActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
                     }
-                });
+                }) {
+
+            // Credit to the people at this source: https://stackoverflow.com/questions/25941658/volley-how-to-send-jsonobject-using-bearer-accesstoken-authentication
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                HashMap<String, String> headers = new HashMap<String, String>();
+
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer " + JWT);
+
+                return headers;
+            }
+        };
 
         Requests.add(request);
     }
@@ -193,17 +207,5 @@ public class MainActivity extends AppCompatActivity {
 
 /*
 
-            // Credit to the people at this source: https://stackoverflow.com/questions/25941658/volley-how-to-send-jsonobject-using-bearer-accesstoken-authentication
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
 
-                String credentials = username + ":" + password;
-                String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-
-                HashMap<String, String> headers = new HashMap<String, String>();
-
-                headers.put("Authorization", "Basic " + base64EncodedCredentials);
-
-                return headers;
-            }
  */
