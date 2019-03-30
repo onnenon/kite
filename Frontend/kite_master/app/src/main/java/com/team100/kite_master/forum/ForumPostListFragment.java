@@ -79,13 +79,45 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         loadingCircle = v.findViewById(R.id.topics_loading);
         errMessage = v.findViewById(R.id.error_message);
         newPostFab = v.findViewById(R.id.new_post_fab);
+        retryTopics = v.findViewById(R.id.retry_topics);
+
+        //set on click listeners
         newPostFab.setOnClickListener(this);
+        retryTopics.setOnClickListener(this);
 
         //initialize volley queue
         volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         //request topics from the backend
-        requestPosts(topic); //TODO
+        requestPosts(topic);
 
+
+
+        //show loading circle until topics received
+        loadingCircle.setVisibility(View.VISIBLE);
+        //hide error text view
+        errMessage.setVisibility(View.GONE);
+        //hide fab
+        newPostFab.show();
+        //hide button
+        retryTopics.setVisibility(View.GONE);
+
+        //initialize custom adapter and set it to list view
+        topicAdapter = new CustomAdapter();
+        postListView.setAdapter(topicAdapter);
+
+        //show action bar buttons
+        setHasOptionsMenu(true);
+
+        return v;
+    }
+
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Objects.requireNonNull(getActivity()).setTitle(topic);
+
+        //set on click listener for menu items
         postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -100,7 +132,6 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
 
         //hides FAB when scrolling
         postListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            private int mLastFirstVisibleItem;
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if(scrollState == 1 && newPostFab.isShown()){
@@ -115,33 +146,10 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
             }
         });
 
-        //show loading circle until topics received
-        loadingCircle.setVisibility(View.VISIBLE);
-        //hide error text view
-        errMessage.setVisibility(View.GONE);
-        //hide fab
-        newPostFab.show();
-        //initialize button
-        retryTopics = v.findViewById(R.id.retry_topics);
-        //set button on click listener
-        retryTopics.setOnClickListener(this);
-        //hide button
-        retryTopics.setVisibility(View.GONE);
-        //initialize custom adapter and set it to list view
-        topicAdapter = new CustomAdapter();
-        postListView.setAdapter(topicAdapter);
-        setHasOptionsMenu(true);
-        return v;
     }
 
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        Objects.requireNonNull(getActivity()).setTitle(topic);
-    }
-
-
+    //creates action bar menu
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.action_buttons, menu);
@@ -164,7 +172,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         }
     }
 
-    //TODO
+    //handles clicks of the refresh button in the action bar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -183,7 +191,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         Bundle bundle = new Bundle();
         bundle.putString("newPostTopic", topic);
         fragment.setArguments(bundle);
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
         ft.replace(R.id.content_frame, fragment).addToBackStack("tag");
         ft.commit();
@@ -229,7 +237,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
             TextView topicTitle = view.findViewById(R.id.text_title);
             TextView topicAuthor = view.findViewById(R.id.text_author);
             TextView topicTime = view.findViewById(R.id.text_time);
-            ImageView postImage = view.findViewById(R.id.image_postimage);
+            //ImageView postImage = view.findViewById(R.id.image_postimage);
             // iterate through list to set topic entries
             topicTitle.setText(postList.get(i).getPostTitle());
             topicAuthor.setText(postList.get(i).getPostAuthor());
@@ -238,9 +246,6 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
             return view;
         }
     }
-
-
-
 
 
 
@@ -265,7 +270,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        showToast(error.toString());
+                        Toast.makeText(getActivity(), error.toString() + " ", Toast.LENGTH_LONG).show();
                         loadingCircle.setVisibility(View.GONE);
                         errMessage.setText("Connection Error\n Make sure your forum server is running.");
                         errMessage.setVisibility(View.VISIBLE);
@@ -314,10 +319,5 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         } else {
             errMessage.setVisibility(View.GONE);
         }
-    }
-
-    //display a toast
-    private void showToast(String message) {
-        Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
     }
 }

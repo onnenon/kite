@@ -43,13 +43,16 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
 
     public String LOCAL_IP_ADDRESS;
 
-
+    //declare global vars
     private RequestQueue volleyqueue;
+    private String newPostTopicString;
+
+    //declare layout items
     private EditText titleText;
     private EditText bodyText;
     private EditText authorText;
     private Button postButton;
-    private String newPostTopicString;
+
 
     @Nullable
     @Override
@@ -61,10 +64,10 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
             newPostTopicString = bundle.getString("newPostTopic");
         }
 
-
         //set local ip for testing
         LOCAL_IP_ADDRESS = "10.0.1.2";
-        //link edit text views
+
+        //link layout items
         titleText = (EditText) v.findViewById(R.id.title_edit_text);
         bodyText = (EditText) v.findViewById(R.id.body_edit_text);
         authorText = (EditText) v.findViewById(R.id.text_author);
@@ -95,9 +98,8 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
         }
     }
 
-
     public void confirmAndClose(){
-        showToast("Post Sent Successfully");
+        Toast.makeText(getActivity(), "Post sent successfully!" + " ", Toast.LENGTH_LONG).show();
         Fragment fragment = new ForumPostListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedTopic", newPostTopicString);
@@ -107,7 +109,6 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
         ft.replace(R.id.content_frame, fragment);
         ft.commit();
     }
-
 
 
     //NETWORKING
@@ -131,7 +132,6 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         final String requestBody = jsonBody.toString();
         StringRequest postRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
@@ -143,7 +143,7 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        showToast(error.toString());
+                        Toast.makeText(getActivity(), error.toString() + " ", Toast.LENGTH_LONG).show();
                         System.out.println("ERROR" + error.toString());
                     }
                 }
@@ -159,13 +159,6 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
             }
         };
         volleyqueue.add(postRequest);
-
     }
 
-
-
-    //display a toast
-    private void showToast(String message) {
-        Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
-    }
 }

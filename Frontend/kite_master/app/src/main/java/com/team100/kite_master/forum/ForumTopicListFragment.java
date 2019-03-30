@@ -39,14 +39,15 @@ import java.util.Objects;
 
 public class ForumTopicListFragment extends Fragment implements View.OnClickListener {
 
-    public String LOCAL_IP_ADDRESS;
+    public String LOCAL_IP_ADDRESS; //TODO - move to bundle
 
+    //declare layout items
     ListView topicListView;
     ProgressBar loadingCircle;
     TextView errMessage;
     Button retryTopics;
-    MenuItem newPostButton;
 
+    //declare data structures
     ArrayList<Topic> topicList = new ArrayList<Topic>();
     private RequestQueue volleyqueue;
     CustomAdapter topicAdapter;
@@ -55,22 +56,28 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.forum_topic_list, container, false);
+
         //set local ip for testing
         LOCAL_IP_ADDRESS = "10.0.1.2";
-        //link list view
+        
+        //initialize layout items
         topicListView = v.findViewById(R.id.list_view);
         loadingCircle = v.findViewById(R.id.topics_loading);
         errMessage = v.findViewById(R.id.error_message);
+        retryTopics = v.findViewById(R.id.retry_topics);
+
         //initialize volley queue
         volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+
         //request topics from the backend
         requestTopics();
+
         //show loading circle until topics received
         loadingCircle.setVisibility(View.VISIBLE);
+
         //hide error text view
         errMessage.setVisibility(View.GONE);
-        //initialize button
-        retryTopics = v.findViewById(R.id.retry_topics);
+
         //set button on click listener
         retryTopics.setOnClickListener(this);
         //returns value of whatever list item is clicked
@@ -81,18 +88,21 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
                 openTopic(topicList.get(position).getTopicID());
             }
         });
+
         //hide button
         retryTopics.setVisibility(View.GONE);
+
         //initialize custom adapter and set it to list view
         topicAdapter = new CustomAdapter();
         topicListView.setAdapter(topicAdapter);
 
+        //show the refresh button in the action bar
         setHasOptionsMenu(true);
 
         return v;
     }
 
-
+    //creates options menu in action bar
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.action_buttons, menu);
@@ -106,6 +116,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         Objects.requireNonNull(getActivity()).setTitle("Forum");
     }
 
+    //fragment on click handler
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -118,7 +129,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         }
     }
 
-
+    //handles click of buttons in the action bar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -129,8 +140,6 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         }
         return true;
     }
-
-
 
     //custom topic adapter class
     class CustomAdapter extends BaseAdapter {
@@ -168,16 +177,13 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     }
 
 
-
-
-    //swtich to new fragment after list item is selected
+    //switch to new fragment after list item is selected
     public void openTopic(String topic) {
         Fragment fragment = new ForumPostListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedTopic", topic);
         fragment.setArguments(bundle);
-
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment).addToBackStack("tag");
         ft.commit();
     }
@@ -203,12 +209,11 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        showToast(error.toString());
+                        Toast.makeText(getActivity(), error.toString() + " ", Toast.LENGTH_LONG).show();
                         loadingCircle.setVisibility(View.GONE);
                         errMessage.setText("Connection Error\n Make sure your forum server is running.");
                         errMessage.setVisibility(View.VISIBLE);
                         retryTopics.setVisibility(View.VISIBLE);
-
                     }
                 }
         );
@@ -234,10 +239,5 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         topicAdapter.notifyDataSetChanged();
         //hide loading circle
         loadingCircle.setVisibility(View.GONE);
-    }
-
-    //display a toast
-    private void showToast(String message) {
-        Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
     }
 }

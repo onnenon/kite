@@ -31,19 +31,23 @@ import java.util.Objects;
 
 public class ForumPostFragment extends Fragment implements View.OnClickListener {
 
+        //Local ip for testing
         String LOCAL_IP_ADDRESS;
+
+        //global variables
+        String postID;
+        RequestQueue volleyqueue;
+
+        //declare layout items
         ProgressBar loadingCircle;
         TextView errMessage;
         Button retry;
-        String postID;
-        RequestQueue volleyqueue;
         ImageView postImageView;
         TextView postTitleView;
         TextView postTimeView;
         TextView postAuthorView;
         TextView postBodyView;
         ScrollView postScrollView;
-
 
 
         @Nullable
@@ -55,14 +59,14 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
             if (bundle != null) {
                 postID = bundle.getString("selectedPost");
             }
+
             //set local ip for testing
             LOCAL_IP_ADDRESS = "10.0.1.2";
 
 
-            //initialize error elements
+            //initialize layout elements
             loadingCircle = v.findViewById(R.id.topics_loading);
             errMessage = v.findViewById(R.id.error_message);
-            //initialize image and text views
             postImageView = v.findViewById(R.id.single_post_image);
             postTitleView = v.findViewById(R.id.single_post_title);
             postTimeView = v.findViewById(R.id.single_post_time);
@@ -70,7 +74,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
             postBodyView = v.findViewById(R.id.single_post_body);
             postScrollView = v.findViewById(R.id.post_scroll_view);
             //hide everything until post is gotten
-            displayElements(false);
+            postScrollView.setVisibility(View.GONE);
             //initialize volley queue
             volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
             //request post from the backend
@@ -91,10 +95,10 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         @Override
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            //set title
             Objects.requireNonNull(getActivity()).setTitle("Post");
         }
 
+        //handle retry button click
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -128,7 +132,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            showToast(error.toString());
+                            Toast.makeText(getActivity(), error.toString() + " ", Toast.LENGTH_LONG).show();
                             loadingCircle.setVisibility(View.GONE);
                             errMessage.setText("Connection Error\n Make sure your forum server is running.");
                             errMessage.setVisibility(View.VISIBLE);
@@ -148,7 +152,13 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
             JSONObject jdata = resp.getJSONObject("data");
             JSONObject jpost = jdata.getJSONObject("post");
             //create new post object from data
-            Post p = new Post(jpost.getString("id"), jpost.getString("title"), jpost.getString("body"), jpost.getString("author"), jpost.getBoolean("edited"), jpost.getString("topic_name"), jpost.getString("date"));
+            Post p = new Post(jpost.getString("id"),
+                    jpost.getString("title"),
+                    jpost.getString("body"),
+                    jpost.getString("author"),
+                    jpost.getBoolean("edited"),
+                    jpost.getString("topic_name"),
+                    jpost.getString("date"));
             //hide loading circle
             loadingCircle.setVisibility(View.GONE);
 
@@ -156,21 +166,6 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
             postAuthorView.setText(p.getPostAuthor());
             postTimeView.setText(p.getPostDate());
             postBodyView.setText(p.getPostBody());
-            displayElements(true);
+            postScrollView.setVisibility(View.VISIBLE);
         }
-
-        //display a toast
-        private void showToast(String message) {
-            Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
-        }
-
-        private void displayElements(Boolean areDisplayed){
-            if(areDisplayed){
-                postScrollView.setVisibility(View.VISIBLE);
-            } else {
-                postScrollView.setVisibility(View.GONE);
-            }
-        }
-
-
     }
