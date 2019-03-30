@@ -64,7 +64,6 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
 
         //set local ip for testing
         LOCAL_IP_ADDRESS = "10.0.1.2";
-        //set topic string for testing
         //link edit text views
         titleText = (EditText) v.findViewById(R.id.title_edit_text);
         bodyText = (EditText) v.findViewById(R.id.body_edit_text);

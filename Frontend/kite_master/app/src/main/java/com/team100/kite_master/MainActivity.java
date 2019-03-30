@@ -16,6 +16,7 @@ import com.team100.kite_master.forum.ForumNewPostFragment;
 import com.team100.kite_master.forum.ForumTopicListFragment;
 import com.team100.kite_master.help.HelpFragment;
 import com.team100.kite_master.messages.MessagesFragment;
+import com.team100.kite_master.profile.ProfileFragment;
 import com.team100.kite_master.search.SearchFragment;
 import com.team100.kite_master.settings.SettingsFragment;
 
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity
                 fragment = new MessagesFragment();
                 break;
             case R.id.nav_profile:
-                fragment = new ForumNewPostFragment();
+                fragment = new ProfileFragment();
                 break;
             case R.id.nav_settings:
                 fragment = new SettingsFragment();
