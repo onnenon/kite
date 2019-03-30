@@ -123,8 +123,8 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                requestTopics();
                 loadingCircle.setVisibility(View.VISIBLE);
+                requestTopics();
                 break;
         }
         return true;

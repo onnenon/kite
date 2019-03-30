@@ -169,10 +169,8 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                retryTopics.setVisibility(View.GONE);
-                errMessage.setVisibility(View.GONE);
-                requestPosts(topic);
                 loadingCircle.setVisibility(View.VISIBLE);
+                requestPosts(topic);
                 break;
         }
         return true;
