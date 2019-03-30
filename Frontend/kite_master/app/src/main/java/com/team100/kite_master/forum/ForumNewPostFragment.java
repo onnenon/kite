@@ -43,13 +43,13 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
 
     public String LOCAL_IP_ADDRESS;
 
-    String topic;
 
     private RequestQueue volleyqueue;
     private EditText titleText;
     private EditText bodyText;
     private EditText authorText;
     private Button postButton;
+    private String newPostTopicString;
 
     @Nullable
     @Override
@@ -58,7 +58,7 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
         //receive bundle
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            topic = bundle.getString("selectedTopic"); //TODO
+            newPostTopicString = bundle.getString("newPostTopic");
         }
 
 
@@ -83,7 +83,7 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //set title
-        Objects.requireNonNull(getActivity()).setTitle(topic);
+        Objects.requireNonNull(getActivity()).setTitle("New Post - " + newPostTopicString);
     }
 
     @Override
@@ -99,9 +99,13 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
 
     public void confirmAndClose(){
         showToast("Post Sent Successfully");
-        Fragment fragment = new ForumTopicListFragment();
+        Fragment fragment = new ForumPostListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("selectedTopic", newPostTopicString);
+        fragment.setArguments(bundle);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.content_frame, fragment).addToBackStack("tag");
+        ft.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+        ft.replace(R.id.content_frame, fragment);
         ft.commit();
     }
 
@@ -122,8 +126,8 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
 
         try {
             jsonBody.put("title", title);
-            jsonBody.put("author", author);
-            jsonBody.put("topic", "Cars");
+            jsonBody.put("author", author); //TODO
+            jsonBody.put("topic", newPostTopicString);
             jsonBody.put("body", body);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -134,8 +138,7 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        showToast(response);
-                        //System.out.println(response);
+                        //showToast(response);
                     }
                 },
                 new Response.ErrorListener() {

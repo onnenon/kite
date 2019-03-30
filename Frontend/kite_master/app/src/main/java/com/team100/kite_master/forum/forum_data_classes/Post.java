@@ -47,6 +47,12 @@ public class Post implements Comparable<Post> {
     }
 
     //returns description of topic
+    public String getPostTime() {
+        String[] timearr = postDate.split(" ");
+        return timearr[0];
+    }
+
+    //returns description of topic
     public Boolean getPostEdited() {
         return postEdited;
     }
