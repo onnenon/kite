@@ -1,5 +1,6 @@
 from flask_restful import reqparse
-from forum_api.utils import validate_length
+
+from kite.utils import validate_length
 
 post_parser = reqparse.RequestParser()
 put_parser = reqparse.RequestParser()
@@ -19,13 +20,6 @@ post_parser.add_argument(
     required=True,
     help="Type: String. The post's body, required. Length: 10-250 characters",
     type=validate_length(255, 10, "body"),
-)
-post_parser.add_argument(
-    "author",
-    dest="author",
-    location="json",
-    required=True,
-    help="Type: String. The post's Author, required.",
 )
 post_parser.add_argument(
     "topic",
