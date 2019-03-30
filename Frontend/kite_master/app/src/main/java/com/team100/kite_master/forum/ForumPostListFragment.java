@@ -1,6 +1,7 @@
 package com.team100.kite_master.forum;
 
 import android.annotation.SuppressLint;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -177,11 +179,12 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
             // initialize text views
             TextView topicTitle = (TextView) view.findViewById(R.id.text_title);
             TextView topicAuthor = (TextView) view.findViewById(R.id.text_author);
-            TextView topicDescription = (TextView) view.findViewById(R.id.text_snippet);
+            TextView topicDescription = (TextView) view.findViewById(R.id.text_time);
+            ImageView postImage = (ImageView) view.findViewById(R.id.image_postimage);
             // iterate through list to set topic entries
             topicTitle.setText(postList.get(i).getPostTitle());
             topicAuthor.setText(postList.get(i).getPostAuthor());
-            topicDescription.setText(postList.get(i).getPostBody());
+            //topicDescription.setText(postList.get(i).getPostBody());
             return view;
         }
     }
