@@ -8,6 +8,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,6 +130,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         //initialize custom adapter and set it to list view
         topicAdapter = new CustomAdapter();
         postListView.setAdapter(topicAdapter);
+        setHasOptionsMenu(true);
         return v;
     }
 
@@ -136,6 +139,13 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getActivity()).setTitle(topic);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.action_buttons, menu);
+        super.onCreateOptionsMenu(menu,inflater);
     }
 
     //handles fragment on click listeners
@@ -158,8 +168,11 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                Toast.makeText(getContext(), "Back button clicked", Toast.LENGTH_SHORT).show();
+            case R.id.menu_refresh:
+                retryTopics.setVisibility(View.GONE);
+                errMessage.setVisibility(View.GONE);
+                requestPosts(topic);
+                loadingCircle.setVisibility(View.VISIBLE);
                 break;
         }
         return true;

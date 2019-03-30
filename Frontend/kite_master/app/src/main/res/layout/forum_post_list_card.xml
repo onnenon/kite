@@ -48,7 +48,7 @@
             android:textAlignment="gravity"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/colorSecondaryTextDefaultMaterialLight"
-            android:textSize="14sp"
+            android:textSize="16sp"
             app:autoSizeMaxTextSize="16dp"
             app:autoSizeMinTextSize="10dp"
             app:autoSizeStepGranularity="2dp"

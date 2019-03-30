@@ -2,6 +2,7 @@ package com.team100.kite_master.forum.forum_data_classes;
 
 public class DateUtil {
 
+    //Copyright 2012 Google Inc.
 
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -19,7 +20,6 @@ public class DateUtil {
             return "";
         }
 
-        // TODO: localize
         final long diff = now - time;
         if (diff < MINUTE_MILLIS) {
             return "just now";
@@ -35,7 +35,6 @@ public class DateUtil {
             } else {
                 return diff / HOUR_MILLIS + " hours ago";
             }
-
         } else if (diff < 48 * HOUR_MILLIS) {
             return "yesterday";
         } else {

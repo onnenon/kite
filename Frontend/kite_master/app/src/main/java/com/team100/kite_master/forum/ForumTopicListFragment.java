@@ -86,9 +86,18 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         //initialize custom adapter and set it to list view
         topicAdapter = new CustomAdapter();
         topicListView.setAdapter(topicAdapter);
+
+        setHasOptionsMenu(true);
+
         return v;
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.action_buttons, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -108,6 +117,20 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
                 break;
         }
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_refresh:
+                requestTopics();
+                loadingCircle.setVisibility(View.VISIBLE);
+                break;
+        }
+        return true;
+    }
+
+
 
     //custom topic adapter class
     class CustomAdapter extends BaseAdapter {
