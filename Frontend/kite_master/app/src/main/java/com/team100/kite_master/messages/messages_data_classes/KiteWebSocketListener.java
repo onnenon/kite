@@ -1,5 +1,7 @@
 package com.team100.kite_master.messages.messages_data_classes;
 
+import android.widget.TextView;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -8,29 +10,26 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.*;
 
-public class KiteWebSocketListener {
+public class KiteWebSocketListener extends WebSocketListener {
 
     private static final int NORMAL_CLOSURE_STATUS = 1000;
 
-    // Connection variables
-    private OkHttpClient client;
-    private Request request;
-    private WebSocket websocket;
+
 
     private String username;
+    private String statusText;
 
+    public KiteWebSocketListener(String username, String statusText) {
 
-
-    public KiteWebSocketListener() {
-
-        client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
-        request = new Request.Builder().url("http://chat.kite.onn.sh").build();
-
-        websocket = client.newWebSocket(request, new KiteWebSocketListener());
+        this.username = username;
+        this.statusText = statusText;
     }
 
+
+    
+    // Networking functionality
     @Override
-    public void onOpen(WebSocket webSocket, Response response) {
+    public void onOpen(WebSocket webSocket, okhttp3.Response response) {
 
         sendJSONText(username + " has joined the chat");
     }
@@ -49,11 +48,37 @@ public class KiteWebSocketListener {
     }
 
     @Override
-    public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+    public void onFailure(WebSocket webSocket, Throwable t, okhttp3.Response response) {
         output("Error : " + t.getMessage());
     }
 
-    private void sendJSONText(String TextString) {
+
+
+    // Getter and setter methods
+    public String getUsername() {
+
+        return username;
+    }
+
+    public void setUsername(String username) {
+
+        this.username = username;
+    }
+
+    public String getStatusText() {
+
+        return statusText;
+    }
+
+    public void setStatusText(String statusText) {
+
+        this.statusText = statusText;
+    }
+
+
+
+    // Helper methods for this class and outer classes
+    public void sendJSONText(String TextString) {
 
         JsonObject JsonText = new JsonObject();
 
@@ -63,7 +88,7 @@ public class KiteWebSocketListener {
         websocket.send(JsonText.toString());
     }
 
-    private void receiveJSONText(String TextString) {
+    public void receiveJSONText(String TextString) {
 
         JsonParser parser = new JsonParser();
 
@@ -78,14 +103,55 @@ public class KiteWebSocketListener {
         output(stringUsername + ": " + stringText);
     }
 
-    private void output(final String txt) {
+    public void output(final String txt) {
 
+        new Thread() {
+
+            @Override
+            public void run() {
+
+                setStatusText(txt);
+            }
+        }.run();
+
+        /*
+
+        new Thread() {
+
+            @Override
+            public void run() {
+
+                TextView text = new TextView(getContext());
+
+                text.setText(txt);
+
+                messageView.addView(text);
+
+                statusText.setText(txt);
+            }
+        }.run();
+
+        */
+
+        /*
+
+        //android.app.Activity.runOnUiThread(new Runnable() {
         runOnUiThread(new Runnable() {
 
             @Override
             public void run() {
-                outputText.setText(outputText.getText().toString() + "\n" + txt);
+
+                TextView text = new TextView(getContext());
+
+                text.setText(txt);
+
+                messageView.addView(text);
+
+
+                // outputText.setText(outputText.getText().toString() + "\n" + txt);
             }
         });
+
+        */
     }
 }

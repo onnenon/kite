@@ -1,5 +1,7 @@
 package com.team100.kite_master.messages;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -17,30 +20,46 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.team100.kite_master.R;
+import com.team100.kite_master.messages.messages_data_classes.KiteWebSocketListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.WebSocket;
 
 
 public class MessagesFragment extends Fragment {
 
+    private static final int NORMAL_CLOSURE_STATUS = 1000;
+
     public String LOCAL_IP_ADDRESS;
 
-    private RequestQueue volleyqueue;
+    // Connection variables
+    private OkHttpClient client;
+    private okhttp3.Request request;
+    private WebSocket websocket;
 
     private LinearLayout messageView;
+    private TextView statusText;
     private EditText messageText;
     private Button postButton;
+
+    private String username;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.forum_new_post, container, false);
+        View v = inflater.inflate(R.layout.messages_fragment, container, false);
 
         /*
 
@@ -52,21 +71,31 @@ public class MessagesFragment extends Fragment {
 
         */
 
+        //set username
+        username = "ANewUser";
 
         //set local ip for testing
         LOCAL_IP_ADDRESS = "10.0.1.2";
 
         //initialize user interface objects
         messageView = (LinearLayout) v.findViewById(R.id.message_layout);
+        statusText = (TextView) v.findViewById(R.id.message_status_text_view);
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
-        postButton = v.findViewById(R.id.message_button);
+        postButton = (Button) v.findViewById(R.id.message_button);
 
         //set on click listener
-        // postButton.setOnClickListener(this);
+        //postButton.setOnClickListener(this);
+        postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendJSONText(messageText.getText().toString());
+            }
+        });
 
-        //initialize volley queue
-        volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-        //request topics from the backend
+        //initialize websocket connection
+        client = new OkHttpClient.Builder().readTimeout(3,TimeUnit.SECONDS).build();
+        request = new okhttp3.Request.Builder().url("http://chat.kite.onn.sh").build();
+        websocket = client.newWebSocket(request, new KiteWebSocketListener(username));
 
         return v;
     }
@@ -78,71 +107,93 @@ public class MessagesFragment extends Fragment {
         Objects.requireNonNull(getActivity()).setTitle("Messages");
     }
 
+    /*
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.post_button:
-                sendPost(titleText.getText().toString(), bodyText.getText().toString(), authorText.getText().toString()); //TODO
-                confirmAndClose();
+            case R.id.message_button:
+                sendJSONText(messageText.getText().toString());
                 break;
         }
     }
 
-    //NETWORKING
+    */
 
-    //create a single user
-    public void sendPost(String title, String body, String author) {
-        String URL = "http://kite.onn.sh/api/v2/posts";
+    public void sendJSONText(String TextString) {
 
-        if (title.equals("") || body.equals("") || author.equals("")) {
-            Toast.makeText(getActivity(), "Please fill out all fields!", Toast.LENGTH_LONG).show();
-            return;
-        }
+        JsonObject JsonText = new JsonObject();
 
-        JSONObject jsonBody = new JSONObject();
+        JsonText.addProperty("username", username);
+        JsonText.addProperty("text", TextString);
 
-        try {
-            jsonBody.put("title", title);
-            jsonBody.put("author", author);
-            jsonBody.put("topic", "Cars");
-            jsonBody.put("body", body);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        final String requestBody = jsonBody.toString();
-        StringRequest postRequest = new StringRequest(Request.Method.POST, URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        showToast(response);
-                        //System.out.println(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        showToast(error.toString());
-                        System.out.println("ERROR" + error.toString());
-                    }
-                }
-        ) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() {
-                return requestBody.getBytes(StandardCharsets.UTF_8);
-            }
-        };
-        volleyqueue.add(postRequest);
-
+        websocket.send(JsonText.toString());
     }
 
-    //display a toast
-    private void showToast(String message) {
-        Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
+    public void receiveJSONText(String TextString) {
+
+        JsonParser parser = new JsonParser();
+
+        JsonObject JsonText = (JsonObject) parser.parse(TextString);
+
+        JsonElement jsonUsername = JsonText.get("username");
+        JsonElement jsonText = JsonText.get("text");
+
+        String stringUsername = jsonUsername.getAsString();
+        String stringText = jsonText.getAsString();
+
+        output(stringUsername + ": " + stringText);
+    }
+
+    public void output(final String txt) {
+
+        new Thread() {
+
+            @Override
+            public void run() {
+
+                statusText.setText(txt);
+            }
+        }.run();
+
+        /*
+
+        new Thread() {
+
+            @Override
+            public void run() {
+
+                TextView text = new TextView(getContext());
+
+                text.setText(txt);
+
+                messageView.addView(text);
+
+                statusText.setText(txt);
+            }
+        }.run();
+
+        */
+
+        /*
+
+        //android.app.Activity.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                TextView text = new TextView(getContext());
+
+                text.setText(txt);
+
+                messageView.addView(text);
+
+
+                // outputText.setText(outputText.getText().toString() + "\n" + txt);
+            }
+        });
+
+        */
     }
 }
