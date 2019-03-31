@@ -15,18 +15,23 @@ import com.team100.kite_master.devtests.UserTestsFragment;
 import com.team100.kite_master.forum.ForumNewPostFragment;
 import com.team100.kite_master.forum.ForumTopicListFragment;
 import com.team100.kite_master.help.HelpFragment;
+import com.team100.kite_master.login.LoginFragment;
+import com.team100.kite_master.login.SaveSharedPreference;
 import com.team100.kite_master.messages.MessagesFragment;
 import com.team100.kite_master.profile.ProfileFragment;
 import com.team100.kite_master.search.SearchFragment;
 import com.team100.kite_master.settings.SettingsFragment;
+import com.team100.kite_master.userdata.User;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     int cur_screen;
+    public User currentUser;
     DrawerLayout drawer;
     public Toolbar toolbar;
+    private boolean isLoggedIn;
 
 
     @Override
@@ -50,7 +55,15 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //show forum as first page
-        displaySelectedScreen(R.id.nav_forum);
+
+
+
+        if(SaveSharedPreference.getUserName(MainActivity.this).length() == 0){
+            displayLoginScreen();
+        } else {
+            logIn();
+        }
+
     }
 
 
@@ -61,10 +74,10 @@ public class MainActivity extends AppCompatActivity
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if(cur_screen != R.id.nav_forum) {
+        } else if (cur_screen != R.id.nav_forum) {
             displaySelectedScreen(R.id.nav_forum);
-        } else if(count > 0) {
-        getSupportFragmentManager().popBackStack();
+        } else if (count > 0) {
+            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -78,6 +91,23 @@ public class MainActivity extends AppCompatActivity
         displaySelectedScreen(item.getItemId());
         return true;
     }
+
+
+    private void displayLoginScreen() {
+        Fragment fragment = new LoginFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
+
+    }
+
+    private void logIn(){
+
+        displaySelectedScreen(R.id.nav_forum);
+    }
+
+
+
 
     private void displaySelectedScreen(int itemId) {
         cur_screen = itemId;
@@ -118,10 +148,6 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
-
-
-
-
 
 
 }
