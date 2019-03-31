@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -34,7 +34,9 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import okhttp3.Response;
 import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
 
 
 public class MessagesFragment extends Fragment {
@@ -94,11 +96,13 @@ public class MessagesFragment extends Fragment {
 
         //initialize websocket connection
         client = new OkHttpClient.Builder().readTimeout(3,TimeUnit.SECONDS).build();
-        request = new okhttp3.Request.Builder().url("http://chat.kite.onn.sh").build();
-        websocket = client.newWebSocket(request, new KiteWebSocketListener(username));
+        request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
+        websocket = client.newWebSocket(request, new KiteWebSocketListener());
 
         return v;
     }
+
+    // ws://echo.websocket.org
 
 
     @Override
@@ -107,19 +111,36 @@ public class MessagesFragment extends Fragment {
         Objects.requireNonNull(getActivity()).setTitle("Messages");
     }
 
-    /*
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.message_button:
-                sendJSONText(messageText.getText().toString());
-                break;
+    // FIXME: Refactor!!!
+    private class KiteWebSocketListener extends WebSocketListener {
+
+        @Override
+        public void onOpen(WebSocket webSocket, okhttp3.Response response) {
+
+            sendJSONText(username + " has joined the chat");
+        }
+
+        @Override
+        public void onMessage(WebSocket webSocket, String text) {
+
+            receiveJSONText(text);
+        }
+
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason) {
+
+            sendJSONText(username + " has left the chat");
+            webSocket.close(NORMAL_CLOSURE_STATUS, null);
+        }
+
+        @Override
+        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+            output("Error : " + t.getMessage());
         }
     }
 
-    */
-
+    // Helper methods for this class and outer classes
     public void sendJSONText(String TextString) {
 
         JsonObject JsonText = new JsonObject();
@@ -145,20 +166,12 @@ public class MessagesFragment extends Fragment {
         output(stringUsername + ": " + stringText);
     }
 
-    public void output(final String txt) {
 
-        new Thread() {
 
-            @Override
-            public void run() {
+    private void output(final String txt) {
 
-                statusText.setText(txt);
-            }
-        }.run();
 
-        /*
-
-        new Thread() {
+        getActivity().runOnUiThread(new Runnable() {
 
             @Override
             public void run() {
@@ -170,30 +183,29 @@ public class MessagesFragment extends Fragment {
                 messageView.addView(text);
 
                 statusText.setText(txt);
-            }
-        }.run();
-
-        */
-
-        /*
-
-        //android.app.Activity.runOnUiThread(new Runnable() {
-        runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-
-                TextView text = new TextView(getContext());
-
-                text.setText(txt);
-
-                messageView.addView(text);
-
-
-                // outputText.setText(outputText.getText().toString() + "\n" + txt);
             }
         });
+    }
+
+
+        /*
+
+        new Thread() {
+
+            @Override
+            public void run() {
+
+                // TextView text = new TextView(getContext());
+
+                // text.setText(txt);
+
+                // messageView.addView(text); // FIXME!!!
+
+                statusText.setText(statusText.getText().toString() + "\n" + txt);
+            }
+        }.run();
 
         */
-    }
+
+
 }

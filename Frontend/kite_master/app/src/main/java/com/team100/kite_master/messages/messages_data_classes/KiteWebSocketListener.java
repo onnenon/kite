@@ -12,9 +12,12 @@ import okhttp3.*;
 
 public class KiteWebSocketListener extends WebSocketListener {
 
+    // Connection Variables
     private static final int NORMAL_CLOSURE_STATUS = 1000;
 
-
+    private OkHttpClient client;
+    private okhttp3.Request request;
+    private WebSocket websocket;
 
     private String username;
     private String statusText;
@@ -23,10 +26,16 @@ public class KiteWebSocketListener extends WebSocketListener {
 
         this.username = username;
         this.statusText = statusText;
+
+        this.client = new OkHttpClient.Builder().readTimeout(3,TimeUnit.SECONDS).build();
+        this.request = new okhttp3.Request.Builder().url("http://chat.kite.onn.sh").build();
+        websocket = client.newWebSocket(request, new KiteWebSocketListener(username, "Status"));
     }
 
+    // Create new connection
 
-    
+
+
     // Networking functionality
     @Override
     public void onOpen(WebSocket webSocket, okhttp3.Response response) {
