@@ -164,7 +164,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     //requests topic JSON object from backend
     public void requestTopics() {
         System.out.println("REQUESTING TOPICS");
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/topics";
+        String URL = "http://kite.onn.sh/api/v2/topics";
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override

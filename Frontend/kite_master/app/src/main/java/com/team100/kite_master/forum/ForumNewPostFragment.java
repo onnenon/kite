@@ -111,7 +111,7 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
 
     //create a single user
     public void sendPost(String title, String body, String author) {
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/posts";
+        String URL = "http://kite.onn.sh/api/v2/posts";
 
         if (title.equals("") || body.equals("") || author.equals("")) {
             Toast.makeText(getActivity(), "Please fill out all fields!", Toast.LENGTH_LONG).show();
