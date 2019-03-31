@@ -48,7 +48,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.login_screen, container, false);
 
-        volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+
         loginUsername = v.findViewById(R.id.login_username);
         loginPassword = v.findViewById(R.id.login_password);
         loginButton = (Button) v.findViewById(R.id.login_button);
@@ -65,6 +65,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     }
 
+     @Override
+     public void onActivityCreated (Bundle savedInstanceState){
+         volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+        super.onActivityCreated(savedInstanceState);
+
+    }
+
+
+
 
     //handle retry button click
     @Override
@@ -76,7 +85,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                 login(loginUsername.getText().toString(), loginPassword.getText().toString(),"http://" + LOCAL_IP_ADDRESS + ":5000/api/auth/login");
 
-                //SaveSharedPreference.setUserName(getActivity(), "josh");
+                SaveSharedPreference.setUserName(getActivity(), "josh");
                 break;
         }
     }
@@ -107,7 +116,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             JSONObject token = response.getJSONObject("data");
                             webToken = token.getString("access_token");
                             System.out.println("TOKEN: " + webToken);
-                            ((MainActivity)getActivity()).currentUser.setUsername(username);
+                            getSingleUser(username);
                         }
                         catch (JSONException e) {
                             e.printStackTrace();
@@ -139,6 +148,53 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         };
 
         volleyqueue.add(loginRequest);
+    }
+
+
+
+    public void getSingleUser(String username) {
+
+        if(volleyqueue == null){
+            System.out.println("NULL QUEUE");
+            volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+        }
+
+        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/users/" + username;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            parseUserInfo(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error.toString());
+                    }
+                }
+        );
+        volleyqueue.add(getRequest);
+
+    }
+
+
+    //convert JSON object from backend to arraylist of topics
+    public void parseUserInfo(JSONObject resp) throws JSONException {
+        //get json array of user info
+        JSONObject jinfo = resp.getJSONObject("data");
+        //set all the data fields for current user
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setUsername(jinfo.getString("username"));
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setAdmin(Boolean.parseBoolean(jinfo.getString("is_admin")));
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setMod(Boolean.parseBoolean(jinfo.getString("is_mod")));
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setPostCount(Integer.parseInt(jinfo.getString("post_count")));
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setBio(jinfo.getString("bio"));
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setDisplayname(jinfo.getString("displayName"));
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.printUserDetails();
     }
 
 

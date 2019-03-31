@@ -1,5 +1,6 @@
 package com.team100.kite_master;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.design.widget.NavigationView;
@@ -10,9 +11,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.team100.kite_master.devtests.UserTestsFragment;
-import com.team100.kite_master.forum.ForumNewPostFragment;
 import com.team100.kite_master.forum.ForumTopicListFragment;
 import com.team100.kite_master.help.HelpFragment;
 import com.team100.kite_master.login.LoginFragment;
@@ -23,17 +30,25 @@ import com.team100.kite_master.search.SearchFragment;
 import com.team100.kite_master.settings.SettingsFragment;
 import com.team100.kite_master.userdata.User;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    int cur_screen;
+
+    //global variables
+    public int cur_screen;
     public User currentUser;
+
+    //gblobal layout elements
     DrawerLayout drawer;
     public Toolbar toolbar;
-    private boolean isLoggedIn;
 
 
+    //on create method
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,17 +69,21 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //show forum as first page
+        //instantiate user with blank fields
+        currentUser = new User("","","",0,false, false);
 
-
-
+        //login - if they were previously logged in auto login, else require log in
         if(SaveSharedPreference.getUserName(MainActivity.this).length() == 0){
-            displayLoginScreen();
+            //displayLoginScreen();
+            logIn();
         } else {
+
             logIn();
         }
-
     }
+
+
+
 
 
     //back button goes to forum unless it is on forum, then it closes app
@@ -76,6 +95,8 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else if (cur_screen != R.id.nav_forum) {
             displaySelectedScreen(R.id.nav_forum);
+        } else if (cur_screen == R.id.login_screen){
+            System.out.println("GO HOME");
         } else if (count > 0) {
             getSupportFragmentManager().popBackStack();
         } else {
@@ -94,6 +115,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private void displayLoginScreen() {
+
         Fragment fragment = new LoginFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment);
@@ -103,9 +125,14 @@ public class MainActivity extends AppCompatActivity
 
     private void logIn(){
 
-        displaySelectedScreen(R.id.nav_forum);
-    }
+        LoginFragment f = new LoginFragment();
 
+        f.getSingleUser("josh");
+
+        currentUser.printUserDetails();
+        displaySelectedScreen(R.id.nav_forum);
+        System.out.println("HERE");
+    }
 
 
 

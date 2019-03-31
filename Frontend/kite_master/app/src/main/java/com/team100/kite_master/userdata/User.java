@@ -82,4 +82,16 @@ public class User {
     }
 
 
+    public void printUserDetails(){
+        System.out.println(
+                "[Username: " + username + "\n" +
+                        "DisplayName: " + displayname + "\n" +
+                        "Bio: " + bio + "\n" +
+                        "Postcount: " + postCount + "\n" +
+                        "isMod: " + isModerator + "\n" +
+                        "isAdmin: " + isAdministrator + "]");
+
+    }
+
+
 }
