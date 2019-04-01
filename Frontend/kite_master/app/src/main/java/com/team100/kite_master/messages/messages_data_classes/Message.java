@@ -39,7 +39,7 @@ public class Message {
         return this.message;
     }
 
-    public void setMessage() {
+    public void setMessage(String message) {
 
         this.message = message;
     }
