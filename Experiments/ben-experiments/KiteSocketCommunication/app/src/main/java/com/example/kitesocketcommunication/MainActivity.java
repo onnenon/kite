@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
         outputText = (TextView) findViewById(R.id.outputText);
 
         client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
-        // request = new Request.Builder().url("http://chat.kite.onn.sh").build();
-        request = new Request.Builder().url("ws://echo.websocket.org").build();
+        request = new Request.Builder().url("http://chat.kite.onn.sh").build();
+        // request = new Request.Builder().url("ws://echo.websocket.org").build();
 
         websocket = client.newWebSocket(request, new KiteWebSocketListener());
 

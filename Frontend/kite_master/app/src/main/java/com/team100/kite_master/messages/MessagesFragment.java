@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -34,6 +33,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
@@ -96,6 +96,7 @@ public class MessagesFragment extends Fragment {
 
         //initialize websocket connection
         client = new OkHttpClient.Builder().readTimeout(3,TimeUnit.SECONDS).build();
+        // request = new Request.Builder().url("http://chat.kite.onn.sh").build();
         request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
         websocket = client.newWebSocket(request, new KiteWebSocketListener());
 
@@ -104,12 +105,12 @@ public class MessagesFragment extends Fragment {
 
     // ws://echo.websocket.org
 
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getActivity()).setTitle("Messages");
     }
+
 
 
     // FIXME: Refactor!!!
@@ -166,10 +167,7 @@ public class MessagesFragment extends Fragment {
         output(stringUsername + ": " + stringText);
     }
 
-
-
     private void output(final String txt) {
-
 
         getActivity().runOnUiThread(new Runnable() {
 
@@ -185,27 +183,7 @@ public class MessagesFragment extends Fragment {
                 statusText.setText(txt);
             }
         });
+
     }
-
-
-        /*
-
-        new Thread() {
-
-            @Override
-            public void run() {
-
-                // TextView text = new TextView(getContext());
-
-                // text.setText(txt);
-
-                // messageView.addView(text); // FIXME!!!
-
-                statusText.setText(statusText.getText().toString() + "\n" + txt);
-            }
-        }.run();
-
-        */
-
 
 }

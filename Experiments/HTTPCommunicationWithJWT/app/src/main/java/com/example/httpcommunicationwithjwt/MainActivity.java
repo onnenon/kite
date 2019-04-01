@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void login(final String username, final String password) {
+    public void login(final String username, final String password) {
 
         JSONObject LoginCredentials = new JSONObject();
 
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         Requests.add(loginRequest);
     }
 
-    private void GetHTTPRequest() {
+    public void GetHTTPRequest() {
 
         String RequestURL = "http://kite.onn.sh/api/v3/users";
 
