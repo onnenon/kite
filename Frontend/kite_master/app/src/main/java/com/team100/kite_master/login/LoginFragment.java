@@ -42,6 +42,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     Button loginButton;
     EditText loginUsername;
     EditText loginPassword;
+    private boolean successfulIP;
 
     private RequestQueue volleyqueue;
     private String webToken;
@@ -64,6 +65,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getActivity()).setTitle("Login");
         Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).hide();
+        successfulIP = false;
+        render();
     }
 
     @Override
@@ -78,12 +81,43 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_button:
-                loginPassword.onEditorAction(EditorInfo.IME_ACTION_DONE);
-                loginUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
-                System.out.println("LOGIN PUSHED");
-                Toast.makeText(getActivity(), "LOGGED IN" + " ", Toast.LENGTH_LONG).show();
-                login(loginUsername.getText().toString(), loginPassword.getText().toString(), "http://" + LOCAL_IP_ADDRESS + ":5000/api/auth/login");
+                if(successfulIP) {
+                    loginPassword.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                    loginUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                    login(loginUsername.getText().toString(), loginPassword.getText().toString(), "http://" + LOCAL_IP_ADDRESS + ":5000/api/auth/login");
+                } else {
+                    checkIP(loginUsername.getText().toString());
+                    loginUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                }
                 break;
+        }
+    }
+
+
+
+    private void render(){
+        if(successfulIP){
+            loginUsername.getText().clear();
+            loginUsername.setHint("Username");
+            loginUsername.setVisibility(View.VISIBLE);
+            loginPassword.setVisibility(View.VISIBLE);
+            loginButton.setText("Login");
+        } else {
+            loginUsername.setHint("IP Address (ex. 10.0.1.1)");
+            loginUsername.setVisibility(View.VISIBLE);
+            loginPassword.setVisibility(View.GONE);
+            loginButton.setText("Set IP");
+        }
+    }
+
+
+    private void checkIP(String ip){
+        if(ip.length() > 0){
+            successfulIP = true;
+            Toast.makeText(getActivity(), "Connected!" + " ", Toast.LENGTH_LONG).show();
+            render();
+        } else {
+            render();
         }
     }
 
@@ -110,6 +144,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             JSONObject token = response.getJSONObject("data");
                             webToken = token.getString("access_token");
                             System.out.println("TOKEN: " + webToken);
+                            Toast.makeText(getActivity(), "Logging In!" + " ", Toast.LENGTH_LONG).show();
                             logIn(username);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -122,10 +157,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     public void onErrorResponse(VolleyError error) {
                         String err = error.toString();
                         if (err.equals("com.android.volley.AuthFailureError")) {
-                            System.out.println("INCORRECT PASSWORD");
+                            Toast.makeText(getActivity(), "Incorrect Password" + " ", Toast.LENGTH_LONG).show();
                         } else {
-                            System.out.println("NETWORK ERROR");
+                            Toast.makeText(getActivity(), "Network Error" + " ", Toast.LENGTH_LONG).show();
                         }
+                        loginPassword.getText().clear();
                     }
                 }) {
             @Override

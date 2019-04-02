@@ -128,7 +128,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         super.onViewCreated(view, savedInstanceState);
         //set title
         Objects.requireNonNull(getActivity()).setTitle("Forum");
-        getSingleUser(userdata[0]);
+        getSingleUser(((MainActivity) Objects.requireNonNull(getActivity())).currentUser.getUsername());
     }
 
     //fragment on click handler
