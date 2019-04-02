@@ -91,10 +91,13 @@ public class MainActivity extends AppCompatActivity
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (cur_screen == R.id.login_screen) {
+            Intent startMain = new Intent(Intent.ACTION_MAIN);
+            startMain.addCategory(Intent.CATEGORY_HOME);
+            startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(startMain);
         } else if (cur_screen != R.id.nav_forum) {
             displaySelectedScreen(R.id.nav_forum);
-        } else if (cur_screen == R.id.login_screen) {
-            System.out.println("GO HOME");
         } else if (count > 0) {
             getSupportFragmentManager().popBackStack();
         } else {
@@ -113,6 +116,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private void displayLoginScreen() {
+        cur_screen = R.id.login_screen;
         Fragment fragment = new LoginFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment);
@@ -134,6 +138,10 @@ public class MainActivity extends AppCompatActivity
         navUsername.setText(username);
     }
 
+    public void setCurScreen(int screenID){
+        cur_screen = screenID;
+    }
+
 
     private void displaySelectedScreen(int itemId) {
         cur_screen = itemId;
@@ -150,7 +158,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_messages:
                 fragment = new MessagesFragment();
                 break;
-            case R.id.nav_profile:
+            case R.id.nav_favorites:
                 fragment = new ProfileFragment();
                 break;
             case R.id.nav_settings:

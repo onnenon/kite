@@ -64,6 +64,9 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         //set local ip for testing
         LOCAL_IP_ADDRESS = "10.0.1.2";
 
+
+        ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen(R.id.nav_forum);
+
         //get bundle data
         Bundle bundle = this.getArguments();
         if (bundle != null) {
