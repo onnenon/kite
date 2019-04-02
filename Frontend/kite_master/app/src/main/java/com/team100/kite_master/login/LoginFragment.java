@@ -3,11 +3,13 @@ package com.team100.kite_master.login;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,6 +24,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
+import com.team100.kite_master.forum.ForumPostListFragment;
+import com.team100.kite_master.forum.ForumTopicListFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,8 +51,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.login_screen, container, false);
-
-
         loginUsername = v.findViewById(R.id.login_username);
         loginPassword = v.findViewById(R.id.login_password);
         loginButton = (Button) v.findViewById(R.id.login_button);
@@ -62,17 +64,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getActivity()).setTitle("Login");
         Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).hide();
-
     }
 
-     @Override
-     public void onActivityCreated (Bundle savedInstanceState){
-         volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         super.onActivityCreated(savedInstanceState);
-
     }
-
-
 
 
     //handle retry button click
@@ -80,20 +78,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_button:
+                loginPassword.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                loginUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
                 System.out.println("LOGIN PUSHED");
                 Toast.makeText(getActivity(), "LOGGED IN" + " ", Toast.LENGTH_LONG).show();
-
-                login(loginUsername.getText().toString(), loginPassword.getText().toString(),"http://" + LOCAL_IP_ADDRESS + ":5000/api/auth/login");
-
-                SaveSharedPreference.setUserName(getActivity(), "josh");
+                login(loginUsername.getText().toString(), loginPassword.getText().toString(), "http://" + LOCAL_IP_ADDRESS + ":5000/api/auth/login");
                 break;
         }
     }
 
 
-
     String LOCAL_IP_ADDRESS = "10.0.1.2";
-
 
 
     private void login(final String username, final String password, final String URL) {
@@ -102,8 +97,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         try {
             LoginCredentials.put("Username", username);
             LoginCredentials.put("Password", password);
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
@@ -116,9 +110,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             JSONObject token = response.getJSONObject("data");
                             webToken = token.getString("access_token");
                             System.out.println("TOKEN: " + webToken);
-                            getSingleUser(username);
-                        }
-                        catch (JSONException e) {
+                            logIn(username);
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
@@ -128,15 +121,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         String err = error.toString();
-                        if(err.equals("com.android.volley.AuthFailureError")){
+                        if (err.equals("com.android.volley.AuthFailureError")) {
                             System.out.println("INCORRECT PASSWORD");
                         } else {
                             System.out.println("NETWORK ERROR");
                         }
                     }
-                })
-
-        {
+                }) {
             @Override
             public Map<String, String> getHeaders() {
                 String credentials = username + ":" + password;
@@ -151,51 +142,18 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
 
-
-    public void getSingleUser(String username) {
-
-        if(volleyqueue == null){
-            System.out.println("NULL QUEUE");
-            volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-        }
-
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/users/" + username;
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            parseUserInfo(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println(error.toString());
-                    }
-                }
-        );
-        volleyqueue.add(getRequest);
-
+    private void logIn(String username){
+        SaveSharedPreference.setUserName(getActivity(), username);
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setUsername(username);
+        Fragment fragment = new ForumTopicListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("curUser", username);
+        fragment.setArguments(bundle);
+        FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
     }
 
-
-    //convert JSON object from backend to arraylist of topics
-    public void parseUserInfo(JSONObject resp) throws JSONException {
-        //get json array of user info
-        JSONObject jinfo = resp.getJSONObject("data");
-        //set all the data fields for current user
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setUsername(jinfo.getString("username"));
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setAdmin(Boolean.parseBoolean(jinfo.getString("is_admin")));
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setMod(Boolean.parseBoolean(jinfo.getString("is_mod")));
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setPostCount(Integer.parseInt(jinfo.getString("post_count")));
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setBio(jinfo.getString("bio"));
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setDisplayname(jinfo.getString("displayName"));
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.printUserDetails();
-    }
 
 
 }

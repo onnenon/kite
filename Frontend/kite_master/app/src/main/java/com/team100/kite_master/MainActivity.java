@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
     public int cur_screen;
     public User currentUser;
 
-    //gblobal layout elements
+    //global layout elements
     DrawerLayout drawer;
     public Toolbar toolbar;
 
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         //set drawer
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -70,20 +71,15 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //instantiate user with blank fields
-        currentUser = new User("","","",0,false, false);
+        currentUser = new User("", "", "", 0, false, false);
 
         //login - if they were previously logged in auto login, else require log in
-        if(SaveSharedPreference.getUserName(MainActivity.this).length() == 0){
-            //displayLoginScreen();
-            logIn();
+        if (SaveSharedPreference.getUserName(MainActivity.this).length() == 0) {
+            displayLoginScreen();
         } else {
-
             logIn();
         }
     }
-
-
-
 
 
     //back button goes to forum unless it is on forum, then it closes app
@@ -95,7 +91,7 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else if (cur_screen != R.id.nav_forum) {
             displaySelectedScreen(R.id.nav_forum);
-        } else if (cur_screen == R.id.login_screen){
+        } else if (cur_screen == R.id.login_screen) {
             System.out.println("GO HOME");
         } else if (count > 0) {
             getSupportFragmentManager().popBackStack();
@@ -115,7 +111,6 @@ public class MainActivity extends AppCompatActivity
 
 
     private void displayLoginScreen() {
-
         Fragment fragment = new LoginFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment);
@@ -123,17 +118,11 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void logIn(){
-
-        LoginFragment f = new LoginFragment();
-
-        f.getSingleUser("josh");
-
-        currentUser.printUserDetails();
+    private void logIn() {
+        currentUser.setUsername(SaveSharedPreference.getUserName(MainActivity.this));
         displaySelectedScreen(R.id.nav_forum);
-        System.out.println("HERE");
+        //set values in nav drawer profile TODO
     }
-
 
 
     private void displaySelectedScreen(int itemId) {
@@ -167,6 +156,9 @@ public class MainActivity extends AppCompatActivity
 
         //replacing the fragment
         if (fragment != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("curUser", currentUser.getUsername());
+            fragment.setArguments(bundle);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
