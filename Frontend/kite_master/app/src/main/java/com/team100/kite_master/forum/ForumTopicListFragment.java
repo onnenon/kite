@@ -42,8 +42,8 @@ import java.util.Objects;
 
 public class ForumTopicListFragment extends Fragment implements View.OnClickListener {
 
-    public String LOCAL_IP_ADDRESS; //TODO - move to bundle
-    private String currentUsername;
+    private String LOCAL_IP_ADDRESS;
+    private String[] userdata;
 
     //declare layout items
     ListView topicListView;
@@ -70,8 +70,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         //get bundle data
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            currentUsername = bundle.getString("curUser");
-            System.out.println("CURRENT USER IS: " + currentUsername);
+            userdata = bundle.getStringArray("userData");
         }
         
         //initialize layout items
@@ -129,7 +128,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         super.onViewCreated(view, savedInstanceState);
         //set title
         Objects.requireNonNull(getActivity()).setTitle("Forum");
-        getSingleUser(currentUsername);
+        getSingleUser(userdata[0]);
     }
 
     //fragment on click handler
@@ -200,6 +199,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         Fragment fragment = new ForumPostListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedTopic", topic);
+        bundle.putStringArray("userData", userdata);
         fragment.setArguments(bundle);
         FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment).addToBackStack("tag");
@@ -307,7 +307,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setBio(jinfo.getString("bio"));
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setDisplayname(jinfo.getString("displayName"));
         //set nav drawer data
-        ((MainActivity) Objects.requireNonNull(getActivity())).setNavDrawerData(jinfo.getString("displayName"),jinfo.getString("username"));
+        ((MainActivity) Objects.requireNonNull(getActivity())).setNavDrawerData(jinfo.getString("username"),jinfo.getString("displayName"));
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.printUserDetails();
     }
 

@@ -46,7 +46,8 @@ import java.util.Objects;
 
 public class ForumPostListFragment extends Fragment implements View.OnClickListener {
 
-    public String LOCAL_IP_ADDRESS;
+    private String LOCAL_IP_ADDRESS;
+    private String[] userdata;
 
     //view item instantiation
     ListView postListView;
@@ -54,6 +55,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
     TextView errMessage;
     Button retryTopics;
     String topic;
+
     FloatingActionButton newPostFab;
 
     //other instantiations
@@ -68,6 +70,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         //receive bundle
         Bundle bundle = this.getArguments();
         if (bundle != null) {
+            userdata = bundle.getStringArray("userData");
             topic = bundle.getString("selectedTopic");
         }
 
@@ -88,7 +91,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         //initialize volley queue
         volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         //request topics from the backend
-        requestPosts(topic);
+
 
 
 
@@ -146,6 +149,8 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
             }
         });
 
+        requestPosts(topic);
+
     }
 
 
@@ -190,6 +195,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         Fragment fragment = new ForumNewPostFragment();
         Bundle bundle = new Bundle();
         bundle.putString("newPostTopic", topic);
+        bundle.putStringArray("userData", userdata);
         fragment.setArguments(bundle);
         FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
@@ -202,6 +208,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         Fragment fragment = new ForumPostFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedPost", postID);
+        bundle.putStringArray("userData", userdata);
         fragment.setArguments(bundle);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment).addToBackStack("tag");

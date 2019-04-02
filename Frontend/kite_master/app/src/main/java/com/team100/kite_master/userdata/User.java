@@ -94,4 +94,16 @@ public class User {
     }
 
 
+    public String[] toArray(){
+        String[] c = new String[6];
+        c[0] = username;
+        c[1] = displayname;
+        c[2] = bio;
+        c[3] = Integer.toString(postCount);
+        c[4] = Boolean.toString(isModerator);
+        c[5] = Boolean.toString(isAdministrator);
+        return c;
+    }
+
+
 }

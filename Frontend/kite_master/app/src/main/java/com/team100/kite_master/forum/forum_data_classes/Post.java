@@ -65,7 +65,8 @@ public class Post implements Comparable<Post> {
     //overrides compare to to allow alphabetical sorting of the topic list
     @Override
     public int compareTo(Post comparepost) {
-        return this.getPostTitle().compareTo(comparepost.getPostTitle());
+        return Integer.compare(Integer.parseInt(comparepost.getPostTime()), Integer.parseInt(this.getPostTime()));
+        //return this.getPostTitle().toLowerCase().compareTo(comparepost.getPostTitle().toLowerCase());
     }
 
     //returns a string containing the topic id and description

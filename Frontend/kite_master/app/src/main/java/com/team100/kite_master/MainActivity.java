@@ -129,13 +129,16 @@ public class MainActivity extends AppCompatActivity
         displaySelectedScreen(R.id.nav_forum);
     }
 
+
+
     public void setNavDrawerData(String username, String displayname){
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         TextView navDisplayname = headerView.findViewById(R.id.nav_display_name);
         navDisplayname.setText(displayname);
         TextView navUsername = headerView.findViewById(R.id.nav_user_name);
-        navUsername.setText(username);
+        String atUsername = "@" + username;
+        navUsername.setText(atUsername);
     }
 
     public void setCurScreen(int screenID){
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity
         //replacing the fragment
         if (fragment != null) {
             Bundle bundle = new Bundle();
-            bundle.putString("curUser", currentUser.getUsername());
+            bundle.putStringArray("userData", currentUser.toArray());
             fragment.setArguments(bundle);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);

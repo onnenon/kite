@@ -32,7 +32,8 @@ import java.util.Objects;
 public class ForumPostFragment extends Fragment implements View.OnClickListener {
 
         //Local ip for testing
-        String LOCAL_IP_ADDRESS;
+        private String LOCAL_IP_ADDRESS;
+        private String[] userdata;
 
         //global variables
         String postID;
@@ -57,6 +58,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
             //receive bundle
             Bundle bundle = this.getArguments();
             if (bundle != null) {
+                userdata = bundle.getStringArray("userData");
                 postID = bundle.getString("selectedPost");
             }
 
