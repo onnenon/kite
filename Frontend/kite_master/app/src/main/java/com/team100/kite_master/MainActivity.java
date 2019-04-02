@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -121,7 +123,15 @@ public class MainActivity extends AppCompatActivity
     private void logIn() {
         currentUser.setUsername(SaveSharedPreference.getUserName(MainActivity.this));
         displaySelectedScreen(R.id.nav_forum);
-        //set values in nav drawer profile TODO
+    }
+
+    public void setNavDrawerData(String username, String displayname){
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView navDisplayname = headerView.findViewById(R.id.nav_display_name);
+        navDisplayname.setText(displayname);
+        TextView navUsername = headerView.findViewById(R.id.nav_user_name);
+        navUsername.setText(username);
     }
 
 

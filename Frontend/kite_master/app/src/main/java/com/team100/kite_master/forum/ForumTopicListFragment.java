@@ -3,6 +3,7 @@ package com.team100.kite_master.forum;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -302,6 +303,8 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setPostCount(Integer.parseInt(jinfo.getString("post_count")));
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setBio(jinfo.getString("bio"));
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setDisplayname(jinfo.getString("displayName"));
+        //set nav drawer data
+        ((MainActivity) Objects.requireNonNull(getActivity())).setNavDrawerData(jinfo.getString("displayName"),jinfo.getString("username"));
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.printUserDetails();
     }
 
