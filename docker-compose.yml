@@ -38,12 +38,14 @@ services:
       - 9000:9000
     labels:
       - "traefik.basic.frontend.rule=PathPrefix: /api"
+      - "traefik.basic.frontend.rule=PathPrefix: /status"
+
   chat:
     restart: always
     image: "koozie/kite-chat:beta"
     environment:
       # Message confirmation should be "true" or null
-      MESSAGE_CONFIRMATION: null
+      MESSAGE_CONFIRMATION: "true"
     ports:
       - 5500:5500
     labels:
