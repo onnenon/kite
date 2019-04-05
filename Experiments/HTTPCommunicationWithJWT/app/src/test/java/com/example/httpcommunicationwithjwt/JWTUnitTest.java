@@ -64,21 +64,13 @@ public class JWTUnitTest {
 
         assertTrue(Imp.getUserInfo("fadmin"));
         assertTrue(Imp.setAll("fadmin", "password", "I exist", true, true));
-        assertTrue(Imp.getUserInfo("fadmin"));
-        assertTrue(Imp.getUserInfo("fadmin"));
-        assertTrue(Imp.getUserInfo("fadmin"));
-        assertTrue(Imp.getUserInfo("fadmin"));
-        assertTrue(Imp.getUserInfo("fadmin"));
+        assertTrue(Imp.setBio("fadmin", "I exist"));
+        assertTrue(Imp.setPassword("fadmin","password"));
+        assertTrue(Imp.setAdministratorStatus("fadmin", true));
+        assertTrue(Imp.setModeratorStatus("fadmin", true));
+        assertTrue(Imp.deleteUser("fadmin"));
 
-
-        // Plan:
-        // 1. Get JWT
-        // 2. Make sure that all methods that rely on JWT return true
-
-
-
-
+        // Mock objects should be used to test lower level functions.
+        // The output of a mock function should be used in another function.
     }
-
-
 }
