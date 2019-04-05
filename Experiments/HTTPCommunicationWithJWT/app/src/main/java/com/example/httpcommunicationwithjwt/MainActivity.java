@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String username = "fadmin";
-                String password = "pass";
+                String password = "passw";
 
                 login(username, password);
             }
