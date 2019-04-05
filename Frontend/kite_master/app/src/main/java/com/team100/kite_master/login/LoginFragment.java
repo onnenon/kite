@@ -82,7 +82,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_button:
-                if(successfulIP) {
+                if (successfulIP) {
                     loginPassword.onEditorAction(EditorInfo.IME_ACTION_DONE);
                     loginUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
                     login(loginUsername.getText().toString(), loginPassword.getText().toString(), "http://" + LOCAL_IP_ADDRESS + ":5000/api/auth/login");
@@ -95,9 +95,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
 
-
-    private void render(){
-        if(successfulIP){
+    private void render() {
+        if (successfulIP) {
             loginUsername.getText().clear();
             loginUsername.setHint("Username");
             loginUsername.setVisibility(View.VISIBLE);
@@ -112,21 +111,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void checkIP(String ip){
-        if(ip.length() > 0){
-            getIpStatus();
-            render();
-        } else {
-            render();
+    private void checkIP(String ip) {
+        if (ip.length() > 0) {
+            getIpStatus(ip);
         }
     }
 
 
-
     //get json list of all users in the db
-    public void getIpStatus() {
+    public void getIpStatus(String inputIP) {
 
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/status";
+        String URL = "http://" + inputIP + ":5000/api/status";
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -138,9 +133,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             e.printStackTrace();
                         }
 
-                        if(status.equals("Online")){
+                        if (status.equals("Online")) {
                             Toast.makeText(getActivity(), "Connected!" + " ", Toast.LENGTH_LONG).show();
                             successfulIP = true;
+                            render();
                         }
                     }
                 },
@@ -154,9 +150,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         );
         volleyqueue.add(getRequest);
     }
-
-
-
 
 
     private void login(final String username, final String password, final String URL) {
@@ -212,7 +205,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void moveToFoumFrag(String username){
+    private void moveToFoumFrag(String username) {
         SaveSharedPreference.setUserName(getActivity(), username);
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setUsername(username);
         Fragment fragment = new ForumTopicListFragment();
@@ -223,7 +216,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         ft.replace(R.id.content_frame, fragment);
         ft.commit();
     }
-
 
 
 }
