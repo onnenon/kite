@@ -37,8 +37,10 @@ services:
     ports:
       - 9000:9000
     labels:
-      - "traefik.basic.frontend.rule=PathPrefix: /api"
-      - "traefik.basic.frontend.rule=PathPrefix: /status"
+     - "traefik.basic.frontend.rule=PathPrefix: /api"      
+     - "traefik.basic.frontend.rule=PathPrefix: /status"
+      
+      
 
   chat:
     restart: always
