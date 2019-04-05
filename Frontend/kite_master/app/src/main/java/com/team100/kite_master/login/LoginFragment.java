@@ -43,6 +43,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     EditText loginUsername;
     EditText loginPassword;
     private boolean successfulIP;
+    String LOCAL_IP_ADDRESS = "10.0.1.2";
 
     private RequestQueue volleyqueue;
     private String webToken;
@@ -113,8 +114,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private void checkIP(String ip){
         if(ip.length() > 0){
-            successfulIP = true;
-            Toast.makeText(getActivity(), "Connected!" + " ", Toast.LENGTH_LONG).show();
+            getIpStatus();
             render();
         } else {
             render();
@@ -122,7 +122,41 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    String LOCAL_IP_ADDRESS = "10.0.1.2";
+
+    //get json list of all users in the db
+    public void getIpStatus() {
+
+        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/status";
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        String status = "";
+                        try {
+                            status = response.getString("Status");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        if(status.equals("Online")){
+                            Toast.makeText(getActivity(), "Connected!" + " ", Toast.LENGTH_LONG).show();
+                            successfulIP = true;
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getActivity(), "Network Error, Try Again?", Toast.LENGTH_LONG).show();
+
+                    }
+                }
+        );
+        volleyqueue.add(getRequest);
+    }
+
+
+
 
 
     private void login(final String username, final String password, final String URL) {
@@ -145,7 +179,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             webToken = token.getString("access_token");
                             System.out.println("TOKEN: " + webToken);
                             Toast.makeText(getActivity(), "Logging In!" + " ", Toast.LENGTH_LONG).show();
-                            logIn(username);
+                            moveToFoumFrag(username);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -178,7 +212,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void logIn(String username){
+    private void moveToFoumFrag(String username){
         SaveSharedPreference.setUserName(getActivity(), username);
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setUsername(username);
         Fragment fragment = new ForumTopicListFragment();
