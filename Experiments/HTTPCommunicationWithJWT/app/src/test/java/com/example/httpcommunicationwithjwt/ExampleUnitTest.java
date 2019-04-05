@@ -109,42 +109,5 @@ public class ExampleUnitTest {
         };
     }
 
-    @Test
-    public void foo() {
-
-        String username = "fadmin";
-        String password = "pass";
-
-        main.login(username, password);
-
-        verify(main, times(1)).login(username, password);
-    }
-
-    /*
-
-    @Test
-    public void foo2() {
-
-        main.GetUserInfo();
-
-        verify(main, times(1)).GetHTTPRequest();
-    }
-
-    */
-
-    @Test
-    public void foo3() {
-
-        when(request.add(getRequest)).thenReturn();
-    }
-
-
-
-    @Test
-    public void foo4() {
-
-        when(listener.onResponse(getRequest.get)).thenReturn();
-    }
-
 
 }
