@@ -94,9 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
                 String userName = EnterUsername.getText().toString();
 
-                String InfoString = Implementation.getUserInfo(userName);
+                // String InfoString = Implementation.getUserInfo();
 
-                UserInfo.setText(InfoString);
+                // UserInfo.setText(InfoString);
             }
         });
 

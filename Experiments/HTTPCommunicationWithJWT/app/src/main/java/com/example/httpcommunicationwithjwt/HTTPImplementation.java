@@ -104,13 +104,13 @@ public class HTTPImplementation implements HTTPInterface {
             }
         };
 
-        Requests.add(loginRequest);
+        Request success = Requests.add(loginRequest);
 
-        return JWT;
+        return success.getBodyContentType();
     }
 
     @Override
-    public String getUserInfo(String userName) {
+    public boolean getUserInfo(String userName) {
 
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, RequestURL + "/" + userName, null,
 
@@ -159,13 +159,13 @@ public class HTTPImplementation implements HTTPInterface {
             }
         };
 
-        Requests.add(getRequest);
+        Request success = Requests.add(getRequest);
 
-        return UserInfo;
+        return false;
     }
 
     @Override
-    public void setModeratorStatus(String userName, boolean isModer) {
+    public boolean setModeratorStatus(String userName, boolean isModer) {
 
         JSONObject newUser = new JSONObject();
 
@@ -208,12 +208,13 @@ public class HTTPImplementation implements HTTPInterface {
             }
         };
 
-        Requests.add(putRequest);
+        Request success = Requests.add(putRequest);
 
+        return success.hasHadResponseDelivered();
     }
 
     @Override
-    public void setAdministratorStatus(String userName, boolean isAdmin) {
+    public boolean setAdministratorStatus(String userName, boolean isAdmin) {
 
         JSONObject newUser = new JSONObject();
 
@@ -256,11 +257,13 @@ public class HTTPImplementation implements HTTPInterface {
             }
         };
 
-        Requests.add(putRequest);
+        Request success = Requests.add(putRequest);
+
+        return false;
     }
 
     @Override
-    public void setPassword(String userName, String newPassword) {
+    public boolean setPassword(String userName, String newPassword) {
 
         JSONObject newUser = new JSONObject();
 
@@ -303,11 +306,13 @@ public class HTTPImplementation implements HTTPInterface {
             }
         };
 
-        Requests.add(putRequest);
+        Request success = Requests.add(putRequest);
+
+        return false;
     }
 
     @Override
-    public void setBio(String userName, String newBio) {
+    public boolean setBio(String userName, String newBio) {
 
         JSONObject newUser = new JSONObject();
 
@@ -350,11 +355,13 @@ public class HTTPImplementation implements HTTPInterface {
             }
         };
 
-        Requests.add(putRequest);
+        Request success = Requests.add(putRequest);
+
+        return false;
     }
 
     @Override
-    public void setAll(String userName, String newPassword, String newBio, boolean isModer, boolean isAdmin) {
+    public boolean setAll(String userName, String newPassword, String newBio, boolean isModer, boolean isAdmin) {
 
         JSONObject newUser = new JSONObject();
 
@@ -400,11 +407,13 @@ public class HTTPImplementation implements HTTPInterface {
             }
         };
 
-        Requests.add(putRequest);
+        Request success = Requests.add(putRequest);
+
+        return false;
     }
 
     @Override
-    public void deleteUser(String userName) {
+    public boolean deleteUser(String userName) {
 
         JsonObjectRequest deleteRequest = new JsonObjectRequest(Request.Method.DELETE, RequestURL + "/" + userName, null,
 
@@ -437,7 +446,9 @@ public class HTTPImplementation implements HTTPInterface {
             }
         };
 
-        Requests.add(deleteRequest);
+        Request success = Requests.add(deleteRequest);
+
+        return false;
     }
 
     public String getJWT() {
@@ -458,5 +469,10 @@ public class HTTPImplementation implements HTTPInterface {
     public void setUserInfo(String UserInfo) {
 
         this.UserInfo = UserInfo;
+    }
+
+    public JSONObject foo() {
+
+        return null;
     }
 }
