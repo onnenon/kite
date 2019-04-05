@@ -10,6 +10,6 @@
     <color name="colorPrimaryTextDefaultMaterialLight">#D6000000</color>
     <color name="colorSecondaryTextDefaultMaterialLight">#8A000000</color>
 
-    <color name="colorPrimaryTextDefaultMaterialDark">#FFFFFFFF</color>
+    <color name="colorPrimaryTextDefaultMaterialDark">#FFFFFF</color>
     <color name="colorSecondaryTextDefaultMaterialDark">#B3FFFFFF</color>
 </resources>

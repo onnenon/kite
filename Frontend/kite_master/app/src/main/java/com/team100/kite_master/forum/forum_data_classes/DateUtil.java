@@ -1,5 +1,8 @@
 package com.team100.kite_master.forum.forum_data_classes;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class DateUtil {
 
     //Copyright 2012 Google Inc.
@@ -40,6 +43,27 @@ public class DateUtil {
         } else {
             return diff / DAY_MILLIS + " days ago";
         }
+    }
+
+    public String getCleanDate(long milliSeconds, String dateFormat)
+    {
+        if (milliSeconds < 1000000000000L) {
+            milliSeconds *= 1000;
+        }
+        SimpleDateFormat formatter;
+        formatter = new SimpleDateFormat(dateFormat);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(milliSeconds);
+        StringBuilder sb = new StringBuilder(formatter.format(cal.getTime()));
+        if(sb.charAt(sb.length() - 7) == '0') {
+            sb.deleteCharAt(sb.length() - 7);
+        }
+        if(sb.charAt(0) == '0'){
+            sb.deleteCharAt(0);
+        }
+        String out = sb.toString();
+        out = out.replace("AM", "am").replace("PM","pm");
+        return out;
     }
 
 }

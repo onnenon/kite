@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -21,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.team100.kite_master.R;
+import com.team100.kite_master.forum.forum_data_classes.DateUtil;
 import com.team100.kite_master.forum.forum_data_classes.Post;
 
 import org.json.JSONException;
@@ -98,6 +100,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             Objects.requireNonNull(getActivity()).setTitle("Post");
+            Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).hide();
         }
 
         //handle retry button click
@@ -148,8 +151,8 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
 
         //convert JSON object from backend to arraylist of topics
         public void parsePost(JSONObject resp) throws JSONException {
-            //get json object and convert to post
-            ArrayList<Post> receivedPosts = new ArrayList<Post>();
+            //create dateutil
+            DateUtil d = new DateUtil();
             //get json array of posts
             JSONObject jdata = resp.getJSONObject("data");
             JSONObject jpost = jdata.getJSONObject("post");
@@ -165,8 +168,10 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
             loadingCircle.setVisibility(View.GONE);
 
             postTitleView.setText(p.getPostTitle());
-            postAuthorView.setText(p.getPostAuthor());
-            postTimeView.setText(p.getPostDate());
+            String atAuthor = "@" + p.getPostAuthor();
+            postAuthorView.setText(atAuthor);
+            String date = d.getCleanDate(Long.parseLong(p.getPostTime()), "dd/MM/yy hh:mma");
+            postTimeView.setText(date);
             postBodyView.setText(p.getPostBody());
             postScrollView.setVisibility(View.VISIBLE);
         }
