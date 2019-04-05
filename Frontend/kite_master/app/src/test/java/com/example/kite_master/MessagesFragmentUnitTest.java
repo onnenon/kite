@@ -63,5 +63,17 @@ public class MessagesFragmentUnitTest {
 
 
 
+    @Test
+    public void testRecentMessagesRetrieval() {
+
+
+    }
+
+    // Mock the return value of the address
+    // Mock the return value of HTTP request?
+
+
+
+
 
 }

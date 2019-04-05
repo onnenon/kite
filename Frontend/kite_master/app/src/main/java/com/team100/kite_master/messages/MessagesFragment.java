@@ -51,7 +51,7 @@ public class MessagesFragment extends Fragment {
     private WebSocket websocket;
 
     private LinearLayout messageView;
-    private TextView statusText;
+    // private TextView statusText;
     private EditText messageText;
     private Button postButton;
 
@@ -81,7 +81,7 @@ public class MessagesFragment extends Fragment {
 
         //initialize user interface objects
         messageView = (LinearLayout) v.findViewById(R.id.message_layout);
-        statusText = (TextView) v.findViewById(R.id.message_status_text_view);
+        // statusText = (TextView) v.findViewById(R.id.message_status_text_view);
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
         postButton = (Button) v.findViewById(R.id.message_button);
 
@@ -95,7 +95,7 @@ public class MessagesFragment extends Fragment {
         });
 
         //initialize websocket connection
-        client = new OkHttpClient.Builder().readTimeout(3,TimeUnit.SECONDS).build();
+        client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
         // request = new Request.Builder().url("http://chat.kite.onn.sh").build();
         request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
         websocket = client.newWebSocket(request, new KiteWebSocketListener());
@@ -110,7 +110,6 @@ public class MessagesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getActivity()).setTitle("Messages");
     }
-
 
 
     // FIXME: Refactor!!!
@@ -180,10 +179,12 @@ public class MessagesFragment extends Fragment {
 
                 messageView.addView(text);
 
-                statusText.setText(txt);
+                // statusText.setText(txt);
             }
         });
 
     }
+
+    // private void getTenRecentMessages() {}
 
 }

@@ -215,6 +215,6 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
 
     //display a toast
     private void showToast(String message) {
-        Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
+        // Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
     }
 }

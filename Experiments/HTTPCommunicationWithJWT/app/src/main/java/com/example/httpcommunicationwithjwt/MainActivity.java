@@ -1,11 +1,12 @@
 package com.example.httpcommunicationwithjwt;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +18,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,40 +27,52 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private Button SignInButton;
+
     private TextView LoginJWT;
+    private TextView UserInfo;
 
-    private String LoginURL = "http://kite.onn.sh/api/auth/login";
-    private RequestQueue Requests;
-
-    private String JWT;
-
-
-
-    private TextView Status;
     private EditText EnterUsername;
+    private EditText EnterPassword;
+    private EditText EnterBio;
 
-    private Button GetUser;
+    private Switch AdminBool;
+    private Switch ModerBool;
+
+    private Button SetPassword;
+    private Button SetBio;
+    private Button SetModer;
+    private Button SetAdmin;
+    private Button SetAll;
+    private Button DeleteUser;
+    private Button GetUserInfo;
+
+    private HTTPInterface Implementation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Implementation = new HTTPImplementation(getApplication(), this, "http://kite.onn.sh/api/v3/users");
+
         SignInButton = (Button) findViewById(R.id.SignIn);
+
         LoginJWT = (TextView) findViewById(R.id.LoginStatus);
+        UserInfo = (TextView) findViewById(R.id.UserInfo);
 
-        JWT = "";
-
-
-
-        Status = (TextView) findViewById(R.id.Status);
         EnterUsername = (EditText) findViewById(R.id.EnterUsername);
+        EnterPassword = (EditText) findViewById(R.id.EnterPassword);
+        EnterBio = (EditText) findViewById(R.id.EnterBio);
+        AdminBool = (Switch) findViewById(R.id.AdminBool);
+        ModerBool = (Switch) findViewById(R.id.ModerBool);
 
-        GetUser = (Button) findViewById(R.id.GetUser);
-
-
-
-        Requests = Volley.newRequestQueue(this);
+        SetPassword = (Button) findViewById(R.id.SetPassword);
+        SetBio = (Button) findViewById(R.id.SetBio);
+        SetModer = (Button) findViewById(R.id.SetModer);
+        SetAdmin = (Button) findViewById(R.id.SetAdmin);
+        SetAll = (Button) findViewById(R.id.SetAll);
+        DeleteUser = (Button) findViewById(R.id.DeleteUser);
+        GetUserInfo = (Button) findViewById(R.id.GetUserInfo);
 
         SignInButton.setOnClickListener(new View.OnClickListener() {
 
@@ -68,144 +80,98 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String username = "fadmin";
-                String password = "passw";
 
-                login(username, password);
+                String password = "password";
+
+                Implementation.login(username, password);
             }
         });
 
-        GetUser.setOnClickListener(new View.OnClickListener() {
+        GetUserInfo.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                GetHTTPRequest();
+                String userName = EnterUsername.getText().toString();
+
+                String InfoString = Implementation.getUserInfo(userName);
+
+                UserInfo.setText(InfoString);
+            }
+        });
+
+        SetPassword.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String userName = EnterUsername.getText().toString();
+                String password = EnterPassword.getText().toString();
+
+                Implementation.setPassword(userName, password);
+            }
+        });
+
+        SetBio.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String userName = EnterUsername.getText().toString();
+                String bio = EnterBio.getText().toString();
+
+                Implementation.setBio(userName, bio);
+            }
+        });
+
+        SetModer.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String userName = EnterUsername.getText().toString();
+                boolean isModer = ModerBool.isChecked();
+
+                Implementation.setModeratorStatus(userName, isModer);
+            }
+        });
+
+        SetAdmin.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String userName = EnterUsername.getText().toString();
+                boolean isAdmin = AdminBool.isChecked();
+
+                Implementation.setAdministratorStatus(userName, isAdmin);
+            }
+        });
+
+        SetAll.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String userName = EnterUsername.getText().toString();
+                String password = EnterPassword.getText().toString();
+                String bio = EnterBio.getText().toString();
+                boolean isModer = ModerBool.isChecked();
+                boolean isAdmin = AdminBool.isChecked();
+
+                Implementation.setAll(userName, password, bio, isModer, isAdmin);
+            }
+        });
+
+        DeleteUser.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String userName = EnterUsername.getText().toString();
+
+                Implementation.deleteUser(userName);
             }
         });
     }
-
-    public void login(final String username, final String password) {
-
-        JSONObject LoginCredentials = new JSONObject();
-
-        try {
-            LoginCredentials.put("Username", username);
-            LoginCredentials.put("Password", password);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.POST, LoginURL, null,
-
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-
-                            JSONObject token = response.getJSONObject("data");
-
-                            JWT = token.getString("access_token");
-
-                            LoginJWT.setText(JWT);
-                        }
-                        catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        Toast.makeText(getApplication(), response + "", Toast.LENGTH_SHORT).show();
-                    }
-                },
-
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        LoginJWT.setText("Username or password incorrect?");
-
-                        Toast.makeText(MainActivity.this, error + "", Toast.LENGTH_SHORT).show();
-                    }
-                })
-
-        {
-            // Credit to the people at this source: https://stackoverflow.com/questions/44000212/how-to-send-authorization-header-in-android-using-volley-library
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                String credentials = username + ":" + password;
-                String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-
-                HashMap<String, String> headers = new HashMap<String, String>();
-
-                headers.put("Authorization", "Basic " + base64EncodedCredentials);
-
-                return headers;
-            }
-        };
-
-        Requests.add(loginRequest);
-    }
-
-    public void GetHTTPRequest() {
-
-        String RequestURL = "http://kite.onn.sh/api/v3/users";
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, RequestURL, null,
-
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-
-                            JSONObject data = response.getJSONObject("data");
-
-                            JSONArray userData = data.getJSONArray("users");
-
-                            JSONObject user = userData.getJSONObject(0);
-
-                            String userName = user.getString("username");
-                            boolean isAdmin = user.getBoolean("is_admin");
-                            boolean isMod = user.getBoolean("is_mod");
-                            int postCount = user.getInt("post_count");
-                            String bio = user.getString("bio");
-                            String displayName = user.getString("displayName");
-
-                            Status.setText(userName + ", " + bio + ", " + Integer.toString(postCount) + ", " + Boolean.toString(isAdmin) + ", " + Boolean.toString(isMod) + ", " + displayName);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Status.setText(e.getMessage());
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                }) {
-
-            // Credit to the people at this source: https://stackoverflow.com/questions/25941658/volley-how-to-send-jsonobject-using-bearer-accesstoken-authentication
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                HashMap<String, String> headers = new HashMap<String, String>();
-
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
-
-                return headers;
-            }
-        };
-
-        Requests.add(request);
-    }
 }
-
-/*
-
-
- */

@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1fc64db6-97f3-4460-901a-16805cd8ee62" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../WebSocketCommunication/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../WebSocketCommunication/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../WebSocketCommunication/app/src/main/java/com/example/websocketcommunication/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../WebSocketCommunication/app/src/main/java/com/example/websocketcommunication/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../WebSocketCommunication/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../WebSocketCommunication/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../HTTPCommunicationWithJWT/app/src/main/java/com/example/httpcommunicationwithjwt/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTTPCommunicationWithJWT/app/src/main/java/com/example/httpcommunicationwithjwt/MainActivity.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,11 +21,11 @@
     <session id="-1194659673">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="3" />
-          <entry key="project.open.time.0" value="1" />
+          <entry key="project.closed" value="4" />
+          <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.4" value="1" />
-          <entry key="project.opened" value="3" />
+          <entry key="project.opened" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -49,8 +47,8 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="91" />
+    <option name="y" value="334" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -61,14 +59,14 @@
     </navigator>
     <panes>
       <pane id="ProjectPane" />
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="device.picker.selection" value="Nexus_5X_API_28" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../WebSocketCommunication" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../ben-demo-experiments/HTTPUserCommunication" />
     <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
   </component>
   <component name="RunDashboard">
