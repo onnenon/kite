@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.team100.kite_master.R;
 import com.team100.kite_master.messages.messages_data_classes.KiteWebSocketListener;
+import com.team100.kite_master.messages.messages_data_classes.WebSocketImplementation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,23 +42,17 @@ import okhttp3.WebSocketListener;
 
 public class MessagesFragment extends Fragment {
 
-    private static final int NORMAL_CLOSURE_STATUS = 1000;
-
-    private KiteWebSocketListener KiteWSlistener;
-
     public String LOCAL_IP_ADDRESS;
 
-    // Connection variables
-    private OkHttpClient client;
-    private okhttp3.Request request;
-    private WebSocket websocket;
-
     private LinearLayout messageView;
-    // private TextView statusText;
     private EditText messageText;
     private Button postButton;
 
-    private String username;
+    private WebSocketImplementation implementationWS;
+
+    private OkHttpClient client;
+    private Request request;
+    private WebSocket webSocket;
 
     @Nullable
     @Override
@@ -75,11 +70,6 @@ public class MessagesFragment extends Fragment {
 
         */
 
-
-
-        //set username
-        username = "ANewUser";
-
         //set local ip for testing
         LOCAL_IP_ADDRESS = "10.0.1.2";
 
@@ -89,20 +79,27 @@ public class MessagesFragment extends Fragment {
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
         postButton = (Button) v.findViewById(R.id.message_button);
 
+
+
+        client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
+        // this.request = new okhttp3.Request.Builder().url("http://chat.kite.onn.sh").build();
+        request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
+        webSocket = client.newWebSocket(request, new KiteWebSocketListener());
+
+
+
+        implementationWS = new WebSocketImplementation("ANewUser", getActivity(), getContext(), messageView, client, request, webSocket);
+
+
+
         //set on click listener
         //postButton.setOnClickListener(this);
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                KiteWSlistener.sendJSONText(messageText.getText().toString());
+                implementationWS.sendJSONText(messageText.getText().toString());
             }
         });
-
-        //initialize websocket connection
-        client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
-        request = new okhttp3.Request.Builder().url("http://chat.kite.onn.sh").build();
-        // request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
-        websocket = KiteWSlistener.getClient().newWebSocket(KiteWSlistener.getRequest(), KiteWSlistener);
 
         return v;
     }
@@ -113,6 +110,36 @@ public class MessagesFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getActivity()).setTitle("Messages");
+    }
+
+    private class KiteWebSocketListener extends WebSocketListener {
+
+        private static final int NORMAL_CLOSURE_STATUS = 1000;
+
+        // Networking functionality
+        @Override
+        public void onOpen(WebSocket webSocket, Response response) {
+
+            implementationWS.sendJSONText(implementationWS.getUsername() + " has joined the chat");
+        }
+
+        @Override
+        public void onMessage(WebSocket webSocket, String text) {
+
+            implementationWS.receiveJSONText(text);
+        }
+
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason) {
+
+            implementationWS.sendJSONText(implementationWS.getUsername() + " has left the chat");
+            webSocket.close(NORMAL_CLOSURE_STATUS, null);
+        }
+
+        @Override
+        public void onFailure(WebSocket webSocket, Throwable t, okhttp3.Response response) {
+            implementationWS.output("Error : " + t.getMessage());
+        }
     }
 
     // private void getTenRecentMessages() {}
