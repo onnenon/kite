@@ -11,6 +11,7 @@ import com.google.gson.JsonParser;
 import com.team100.kite_master.R;
 import com.team100.kite_master.messages.MessagesFragment;
 
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -43,7 +44,6 @@ public class WebSocketImplementation {
 
         this.client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
         this.request = new okhttp3.Request.Builder().url("http://chat.kite.onn.sh").build();
-        // this.request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
         this.webSocket = client.newWebSocket(request, new KiteWebSocketListener());
     }
 
@@ -83,9 +83,7 @@ public class WebSocketImplementation {
             public void run() {
 
                 TextView text = new TextView(WScontext);
-
-                text.setText(txt);
-
+                text.setText(Calendar.getInstance().getTime().getTime() + "\n" + txt + "\n");
                 messageView.addView(text);
             }
         });

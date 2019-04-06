@@ -88,8 +88,6 @@ public class MessagesFragment extends Fragment {
         return v;
     }
 
-    // ws://echo.websocket.org
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

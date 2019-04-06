@@ -10,14 +10,14 @@ public class Message {
 
     private int ID;
     private String username;
-    private String message;
+    private String text;
     private Date messageTime;
 
-    public Message(String username, String message, int ID) {
+    public Message(String username, String text, int ID) {
 
         this.ID = ID;
         this.username = username;
-        this.message = message;
+        this.text = text;
         this.messageTime = Calendar.getInstance().getTime();
     }
 
@@ -34,14 +34,14 @@ public class Message {
         this.username = username;
     }
 
-    public String getMessage() {
+    public String getText() {
 
-        return this.message;
+        return this.text;
     }
 
-    public void setMessage(String message) {
+    public void setText(String text) {
 
-        this.message = message;
+        this.text = text;
     }
 
     public int getID() {
