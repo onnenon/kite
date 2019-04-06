@@ -70,7 +70,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
             userdata = bundle.getStringArray("userData");
             LOCAL_IP_ADDRESS = bundle.getString("serverIP");
         }
-        
+
         //initialize layout items
         topicListView = v.findViewById(R.id.list_view);
         loadingCircle = v.findViewById(R.id.topics_loading);
