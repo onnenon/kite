@@ -6,6 +6,6 @@ public class JWTUnitTest {
 
     @Test
     public void foo() {
-        
+
     }
 }
