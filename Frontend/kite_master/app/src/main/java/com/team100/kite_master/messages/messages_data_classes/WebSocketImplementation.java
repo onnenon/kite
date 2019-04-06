@@ -15,7 +15,9 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
 
 public class WebSocketImplementation {
 
@@ -30,8 +32,7 @@ public class WebSocketImplementation {
 
     private LinearLayout messageView;
 
-    public WebSocketImplementation(String username, Activity WSactivity, Context WScontext,
-                                   LinearLayout messageView, OkHttpClient client, Request request, WebSocket webSocket) {
+    public WebSocketImplementation(String username, Activity WSactivity, Context WScontext, LinearLayout messageView) {
 
         this.WSactivity = WSactivity;
         this.WScontext = WScontext;
@@ -40,9 +41,10 @@ public class WebSocketImplementation {
 
         this.messageView = messageView;
 
-        this.client = client;
-        this.request = request;
-        this.webSocket = webSocket;
+        this.client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
+        this.request = new okhttp3.Request.Builder().url("http://chat.kite.onn.sh").build();
+        // this.request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
+        this.webSocket = client.newWebSocket(request, new KiteWebSocketListener());
     }
 
     // Helper methods for this class and outer classes
@@ -54,6 +56,8 @@ public class WebSocketImplementation {
         JsonText.addProperty("text", TextString);
 
         webSocket.send(JsonText.toString());
+
+        output(username + ": " + TextString);
     }
 
     public void receiveJSONText(String TextString) {
@@ -106,6 +110,36 @@ public class WebSocketImplementation {
     public okhttp3.Request getRequest() {
 
         return this.request;
+    }
+
+    private class KiteWebSocketListener extends WebSocketListener {
+
+        private static final int NORMAL_CLOSURE_STATUS = 1000;
+
+        // Networking functionality
+        @Override
+        public void onOpen(WebSocket webSocket, Response response) {
+
+            sendJSONText(getUsername() + " has joined the chat");
+        }
+
+        @Override
+        public void onMessage(WebSocket webSocket, String text) {
+
+            receiveJSONText(text);
+        }
+
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason) {
+
+            sendJSONText(getUsername() + " has left the chat");
+            webSocket.close(NORMAL_CLOSURE_STATUS, null);
+        }
+
+        @Override
+        public void onFailure(WebSocket webSocket, Throwable t, okhttp3.Response response) {
+            output("Error : " + t.getMessage());
+        }
     }
 
     /*
