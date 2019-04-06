@@ -62,10 +62,10 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
             if (bundle != null) {
                 userdata = bundle.getStringArray("userData");
                 postID = bundle.getString("selectedPost");
+                LOCAL_IP_ADDRESS = bundle.getString("serverIP");
             }
 
-            //set local ip for testing
-            LOCAL_IP_ADDRESS = "10.0.1.2";
+
 
 
             //initialize layout elements

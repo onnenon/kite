@@ -73,10 +73,9 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         if (bundle != null) {
             userdata = bundle.getStringArray("userData");
             topic = bundle.getString("selectedTopic");
+            LOCAL_IP_ADDRESS = bundle.getString("serverIP");
         }
 
-        //set local ip for testing
-        LOCAL_IP_ADDRESS = "10.0.1.2";
 
         //link view items
         postListView = v.findViewById(R.id.list_view);
@@ -197,6 +196,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         Fragment fragment = new ForumNewPostFragment();
         Bundle bundle = new Bundle();
         bundle.putString("newPostTopic", topic);
+        bundle.putString("serverIP", LOCAL_IP_ADDRESS);
         bundle.putStringArray("userData", userdata);
         fragment.setArguments(bundle);
         FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
@@ -210,6 +210,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         Fragment fragment = new ForumPostFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedPost", postID);
+        bundle.putString("serverIP", LOCAL_IP_ADDRESS);
         bundle.putStringArray("userData", userdata);
         fragment.setArguments(bundle);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();

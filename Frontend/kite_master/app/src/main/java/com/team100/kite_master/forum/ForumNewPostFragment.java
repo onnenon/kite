@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -63,10 +64,12 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
         if (bundle != null) {
             userdata = bundle.getStringArray("userData");
             newPostTopicString = bundle.getString("newPostTopic");
+            LOCAL_IP_ADDRESS = bundle.getString("serverIP");
+            System.out.println("USER DATA:");
+            System.out.println(Arrays.toString(userdata));
+
         }
 
-        //set local ip for testing
-        LOCAL_IP_ADDRESS = "10.0.1.2";
 
         //link layout items
         titleText = (EditText) v.findViewById(R.id.title_edit_text);
@@ -104,6 +107,7 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
         Fragment fragment = new ForumPostListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedTopic", newPostTopicString);
+        bundle.putString("serverIP", LOCAL_IP_ADDRESS);
         bundle.putStringArray("userData", userdata);
         getActivity().getSupportFragmentManager().popBackStack();
         //fragment.setArguments(bundle);
