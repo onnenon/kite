@@ -8,8 +8,10 @@ import android.widget.TextView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.team100.kite_master.R;
-import com.team100.kite_master.messages.MessagesFragment;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -140,12 +142,17 @@ public class WebSocketImplementation {
         }
     }
 
-    /*
+    public JSONArray getMessagesString(int numMessages) {
 
-    public WebSocket getWebsocket() {
-
-        return this.webSocket;
+        return null;
     }
 
-    */
+    public String getMessage(JSONArray messages, int index) throws JSONException {
+
+        JSONObject obj = (JSONObject) messages.get(index);
+
+        String text = obj.getString("username") + ": " + obj.getString("text");
+
+        return text;
+    }
 }

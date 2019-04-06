@@ -72,7 +72,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         if (bundle != null) {
             userdata = bundle.getStringArray("userData");
         }
-        
+
         //initialize layout items
         topicListView = v.findViewById(R.id.list_view);
         loadingCircle = v.findViewById(R.id.topics_loading);
@@ -211,7 +211,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     //requests topic JSON object from backend
     public void requestTopics() {
         System.out.println("REQUESTING TOPICS");
-        String URL = "http://kite.onn.sh/api/v2/topics";
+        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/topics";
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -259,11 +259,6 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         loadingCircle.setVisibility(View.GONE);
     }
 
-<<<<<<< HEAD
-    //display a toast
-    private void showToast(String message) {
-        // Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
-=======
 
 
 
@@ -297,7 +292,6 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         );
         volleyqueue.add(getRequest);
 
->>>>>>> 4a520f2cf66ce3b2fb8d7c145cc0440343581441
     }
 
 

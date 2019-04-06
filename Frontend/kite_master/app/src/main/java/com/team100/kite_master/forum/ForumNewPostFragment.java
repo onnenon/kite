@@ -1,43 +1,28 @@
 package com.team100.kite_master.forum;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.team100.kite_master.R;
-import com.team100.kite_master.forum.forum_data_classes.Post;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Objects;
 
 public class ForumNewPostFragment extends Fragment implements View.OnClickListener {
@@ -118,7 +103,7 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
 
     //send new post
     public void sendPost(String title, String body, String author) {
-        String URL = "http://kite.onn.sh/api/v2/posts";
+        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/posts";
 
         if (title.equals("") || body.equals("") || author.equals("")) {
             Toast.makeText(getActivity(), "Please fill out all fields!", Toast.LENGTH_LONG).show();

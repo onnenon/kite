@@ -1,49 +1,26 @@
 package com.team100.kite_master.messages;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.team100.kite_master.R;
 import com.team100.kite_master.messages.messages_data_classes.WebSocketImplementation;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
 
 
 public class MessagesFragment extends Fragment {
 
     public String LOCAL_IP_ADDRESS;
 
-    private LinearLayout messageView;
+    public LinearLayout messageView;
     private EditText messageText;
     private Button postButton;
 

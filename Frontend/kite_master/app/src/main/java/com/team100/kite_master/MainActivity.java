@@ -2,26 +2,18 @@ package com.team100.kite_master;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.team100.kite_master.devtests.UserTestsFragment;
 import com.team100.kite_master.forum.ForumTopicListFragment;
 import com.team100.kite_master.help.HelpFragment;
@@ -32,10 +24,6 @@ import com.team100.kite_master.profile.ProfileFragment;
 import com.team100.kite_master.search.SearchFragment;
 import com.team100.kite_master.settings.SettingsFragment;
 import com.team100.kite_master.userdata.User;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 public class MainActivity extends AppCompatActivity
