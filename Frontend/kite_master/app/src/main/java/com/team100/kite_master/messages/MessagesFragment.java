@@ -13,12 +13,14 @@ import android.widget.LinearLayout;
 import com.team100.kite_master.R;
 import com.team100.kite_master.messages.messages_data_classes.WebSocketImplementation;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 
 public class MessagesFragment extends Fragment {
 
     public String LOCAL_IP_ADDRESS;
+    private String[] userdata;
 
     public LinearLayout messageView;
     private EditText messageText;
@@ -32,15 +34,15 @@ public class MessagesFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.messages_fragment, container, false);
 
-        /*
-
         //receive bundle
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            topic = bundle.getString("selectedTopic"); //TODO
-        }
+            userdata = bundle.getStringArray("userData");
+            LOCAL_IP_ADDRESS = bundle.getString("serverIP");
+            System.out.println("USER DATA:");
+            System.out.println(Arrays.toString(userdata));
 
-        */
+        }
 
         //set local ip for testing
         LOCAL_IP_ADDRESS = "10.0.1.2";
@@ -51,7 +53,7 @@ public class MessagesFragment extends Fragment {
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
         postButton = (Button) v.findViewById(R.id.message_button);
 
-        implementationWS = new WebSocketImplementation("ANewUser", getActivity(), getContext(), messageView);
+        implementationWS = new WebSocketImplementation("ANewUser", getActivity(), getContext(), messageView, LOCAL_IP_ADDRESS);
 
         //set on click listener
         //postButton.setOnClickListener(this);
@@ -61,6 +63,8 @@ public class MessagesFragment extends Fragment {
                 implementationWS.sendJSONText(messageText.getText().toString());
             }
         });
+
+        bundle.getString("serverIP");
 
         return v;
     }

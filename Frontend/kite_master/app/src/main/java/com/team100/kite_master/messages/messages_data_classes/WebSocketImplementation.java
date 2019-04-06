@@ -35,7 +35,7 @@ public class WebSocketImplementation {
 
     private LinearLayout messageView;
 
-    public WebSocketImplementation(String username, Activity WSactivity, Context WScontext, LinearLayout messageView) {
+    public WebSocketImplementation(String username, Activity WSactivity, Context WScontext, LinearLayout messageView, String IP_ADDRESS) {
 
         this.WSactivity = WSactivity;
         this.WScontext = WScontext;
@@ -45,7 +45,8 @@ public class WebSocketImplementation {
         this.messageView = messageView;
 
         this.client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
-        this.request = new okhttp3.Request.Builder().url("http://chat.kite.onn.sh").build();
+        // this.request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
+        this.request = new okhttp3.Request.Builder().url("http://chat." + "kite.onn.sh" + ":5000").build();
         this.webSocket = client.newWebSocket(request, new KiteWebSocketListener());
     }
 
@@ -85,7 +86,7 @@ public class WebSocketImplementation {
             public void run() {
 
                 TextView text = new TextView(WScontext);
-                text.setText(Calendar.getInstance().getTime().getTime() + "\n" + txt + "\n");
+                text.setText(Calendar.getInstance().getTime() + "\n" + txt + "\n");
                 messageView.addView(text);
             }
         });
