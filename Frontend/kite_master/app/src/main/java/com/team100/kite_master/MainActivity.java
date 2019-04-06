@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity
     //global variables
     public int cur_screen;
     public User currentUser;
+    private String LOCAL_IP_ADDRESS;
 
     //global layout elements
     DrawerLayout drawer;
@@ -113,8 +114,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void setLocalIP(String ip){
+        LOCAL_IP_ADDRESS = ip;
+    }
+
     private void logIn() {
         currentUser.setUsername(SaveSharedPreference.getUserName(MainActivity.this));
+        LOCAL_IP_ADDRESS = SaveSharedPreference.getHostIp(MainActivity.this);
         displaySelectedScreen(R.id.nav_forum);
     }
 
@@ -167,6 +173,7 @@ public class MainActivity extends AppCompatActivity
         //replacing the fragment
         if (fragment != null) {
             Bundle bundle = new Bundle();
+            bundle.putString("serverIP", LOCAL_IP_ADDRESS);
             bundle.putStringArray("userData", currentUser.toArray());
             fragment.setArguments(bundle);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

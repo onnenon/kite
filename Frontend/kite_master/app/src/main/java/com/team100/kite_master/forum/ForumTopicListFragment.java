@@ -61,9 +61,6 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.forum_topic_list, container, false);
 
-        //set local ip for testing
-        LOCAL_IP_ADDRESS = "10.0.1.2";
-
 
         ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen(R.id.nav_forum);
 
@@ -71,6 +68,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             userdata = bundle.getStringArray("userData");
+            LOCAL_IP_ADDRESS = bundle.getString("serverIP");
         }
 
         //initialize layout items
@@ -199,6 +197,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         Fragment fragment = new ForumPostListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedTopic", topic);
+        bundle.putString("serverIP", LOCAL_IP_ADDRESS);
         bundle.putStringArray("userData", userdata);
         fragment.setArguments(bundle);
         FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
