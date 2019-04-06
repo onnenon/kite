@@ -43,7 +43,7 @@ services:
     image: "koozie/kite-chat:beta"
     environment:
       # Message confirmation should be "true" or null
-      MESSAGE_CONFIRMATION: null
+      MESSAGE_CONFIRMATION: "true"
     ports:
       - 5500:5500
     labels:

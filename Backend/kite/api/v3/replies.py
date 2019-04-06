@@ -36,15 +36,18 @@ class ReplyUpdate(Resource):
         """
         if not validate_uuid(reply_id):
             return Fail("invalid reply ID").to_json(), 400
-
         reply = Reply.get_reply(reply_id)
+        if reply is None:
+            return Fail(f"reply with ID {reply_id} not found").to_json(), 404
+        if jwt_payload.username != reply.author:
+            return Fail("Replies can only be updated by their creators").to_json(), 403
+
         if reply is not None:
             args = put_parser.parse_args(strict=True)
             reply.body = args.body
             reply.edited = True
             reply.save()
             return Success(f"reply with ID {reply_id} updated").to_json(), 200
-        return Fail(f"reply with ID {reply_id} not found").to_json(), 404
 
     def delete(self, reply_id, jwt_payload=None):
         """Delete a specific reply from the database.
@@ -55,10 +58,18 @@ class ReplyUpdate(Resource):
         if not validate_uuid(reply_id):
             return Fail("invalid reply ID").to_json(), 400
         reply = Reply.get_reply(reply_id)
-        if reply is not None:
-            reply.delete()
-            return Success(None).to_json(), 204
-        return Fail(f"Reply ID {reply_id} does not exist").to_json(), 404
+        if reply is None:
+            return Fail(f"Reply ID {reply_id} does not exist").to_json(), 404
+        if not (
+            jwt_payload.is_admin
+            or jwt_payload.is_mod
+            or jwt_payload.username == reply.author
+        ):
+            return Fail("You do not have permission to delete replies").to_json(), 403
+        else:
+            if reply is not None:
+                reply.delete()
+                return Success(None).to_json(), 204
 
 
 class Replies(Resource):
