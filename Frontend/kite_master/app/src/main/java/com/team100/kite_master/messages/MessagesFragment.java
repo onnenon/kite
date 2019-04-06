@@ -43,6 +43,8 @@ public class MessagesFragment extends Fragment {
 
     private static final int NORMAL_CLOSURE_STATUS = 1000;
 
+    private KiteWebSocketListener KiteWSlistener;
+
     public String LOCAL_IP_ADDRESS;
 
     // Connection variables
@@ -73,6 +75,8 @@ public class MessagesFragment extends Fragment {
 
         */
 
+
+
         //set username
         username = "ANewUser";
 
@@ -90,15 +94,15 @@ public class MessagesFragment extends Fragment {
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendJSONText(messageText.getText().toString());
+                KiteWSlistener.sendJSONText(messageText.getText().toString());
             }
         });
 
         //initialize websocket connection
         client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
-        // request = new Request.Builder().url("http://chat.kite.onn.sh").build();
-        request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
-        websocket = client.newWebSocket(request, new KiteWebSocketListener());
+        request = new okhttp3.Request.Builder().url("http://chat.kite.onn.sh").build();
+        // request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
+        websocket = KiteWSlistener.getClient().newWebSocket(KiteWSlistener.getRequest(), KiteWSlistener);
 
         return v;
     }
@@ -109,80 +113,6 @@ public class MessagesFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getActivity()).setTitle("Messages");
-    }
-
-
-    // FIXME: Refactor!!!
-    private class KiteWebSocketListener extends WebSocketListener {
-
-        @Override
-        public void onOpen(WebSocket webSocket, okhttp3.Response response) {
-
-            sendJSONText(username + " has joined the chat");
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, String text) {
-
-            receiveJSONText(text);
-        }
-
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-
-            sendJSONText(username + " has left the chat");
-            webSocket.close(NORMAL_CLOSURE_STATUS, null);
-        }
-
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            output("Error : " + t.getMessage());
-        }
-    }
-
-    // Helper methods for this class and outer classes
-    public void sendJSONText(String TextString) {
-
-        JsonObject JsonText = new JsonObject();
-
-        JsonText.addProperty("username", username);
-        JsonText.addProperty("text", TextString);
-
-        websocket.send(JsonText.toString());
-    }
-
-    public void receiveJSONText(String TextString) {
-
-        JsonParser parser = new JsonParser();
-
-        JsonObject JsonText = (JsonObject) parser.parse(TextString);
-
-        JsonElement jsonUsername = JsonText.get("username");
-        JsonElement jsonText = JsonText.get("text");
-
-        String stringUsername = jsonUsername.getAsString();
-        String stringText = jsonText.getAsString();
-
-        output(stringUsername + ": " + stringText);
-    }
-
-    private void output(final String txt) {
-
-        getActivity().runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-
-                TextView text = new TextView(getContext());
-
-                text.setText(txt);
-
-                messageView.addView(text);
-
-                // statusText.setText(txt);
-            }
-        });
-
     }
 
     // private void getTenRecentMessages() {}

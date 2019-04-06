@@ -1,5 +1,7 @@
 package com.team100.kite_master.messages.messages_data_classes;
 
+import android.app.Activity;
+import android.content.Context;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
@@ -15,6 +17,9 @@ public class KiteWebSocketListener extends WebSocketListener {
     // Connection Variables
     private static final int NORMAL_CLOSURE_STATUS = 1000;
 
+    private Activity WSactivity;
+    private Context WScontext;
+
     private OkHttpClient client;
     private okhttp3.Request request;
     private WebSocket websocket;
@@ -22,14 +27,17 @@ public class KiteWebSocketListener extends WebSocketListener {
     private String username;
     private String statusText;
 
-    public KiteWebSocketListener(String username, String statusText) {
+    public KiteWebSocketListener(Activity WSactivity, Context WScontext, String username, String statusText) {
+
+        this.WSactivity = WSactivity;
+        this.WScontext = WScontext;
 
         this.username = username;
         this.statusText = statusText;
 
         this.client = new OkHttpClient.Builder().readTimeout(3,TimeUnit.SECONDS).build();
         this.request = new okhttp3.Request.Builder().url("http://chat.kite.onn.sh").build();
-        websocket = client.newWebSocket(request, new KiteWebSocketListener(username, "Status"));
+        // websocket = this.client.newWebSocket(this.request, new KiteWebSocketListener(username, "Status"));
     }
 
     // Create new connection
@@ -94,7 +102,7 @@ public class KiteWebSocketListener extends WebSocketListener {
         JsonText.addProperty("username", username);
         JsonText.addProperty("text", TextString);
 
-        websocket.send(JsonText.toString());
+        // websocket.send(JsonText.toString());
     }
 
     public void receiveJSONText(String TextString) {
@@ -109,58 +117,35 @@ public class KiteWebSocketListener extends WebSocketListener {
         String stringUsername = jsonUsername.getAsString();
         String stringText = jsonText.getAsString();
 
-        output(stringUsername + ": " + stringText);
+        // output(stringUsername + ": " + stringText);
     }
 
     public void output(final String txt) {
 
-        new Thread() {
+        WSactivity.runOnUiThread(new Runnable() {
 
             @Override
             public void run() {
 
-                setStatusText(txt);
-            }
-        }.run();
-
-        /*
-
-        new Thread() {
-
-            @Override
-            public void run() {
-
-                TextView text = new TextView(getContext());
+                TextView text = new TextView(WScontext);
 
                 text.setText(txt);
 
-                messageView.addView(text);
+                // messageView.addView(text);
 
-                statusText.setText(txt);
-            }
-        }.run();
-
-        */
-
-        /*
-
-        //android.app.Activity.runOnUiThread(new Runnable() {
-        runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-
-                TextView text = new TextView(getContext());
-
-                text.setText(txt);
-
-                messageView.addView(text);
-
-
-                // outputText.setText(outputText.getText().toString() + "\n" + txt);
+                // statusText.setText(txt);
             }
         });
-
-        */
     }
+
+    public OkHttpClient getClient() {
+
+        return this.client;
+    }
+
+    public okhttp3.Request getRequest() {
+
+        return this.request;
+    }
+
 }

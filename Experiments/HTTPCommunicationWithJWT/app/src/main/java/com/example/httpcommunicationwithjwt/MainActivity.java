@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String username = "fadmin";
+
                 String password = "password";
 
                 Implementation.login(username, password);
@@ -93,9 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
                 String userName = EnterUsername.getText().toString();
 
-                String InfoString = Implementation.getUserInfo(userName);
+                // String InfoString = Implementation.getUserInfo();
 
-                UserInfo.setText(InfoString);
+                // UserInfo.setText(InfoString);
             }
         });
 
