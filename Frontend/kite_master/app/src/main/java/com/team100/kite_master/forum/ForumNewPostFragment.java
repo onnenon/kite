@@ -65,10 +65,17 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
             userdata = bundle.getStringArray("userData");
             newPostTopicString = bundle.getString("newPostTopic");
             LOCAL_IP_ADDRESS = bundle.getString("serverIP");
-            System.out.println("USER DATA:");
-            System.out.println(Arrays.toString(userdata));
-
         }
+
+
+
+        //DEBUGGING
+        System.out.println(" ");
+        System.out.println("NEW POST FRAGMENT:");
+        System.out.println("POSTING TO TOPIC: " + newPostTopicString);
+        System.out.println("USER: " + Arrays.toString(userdata));
+        System.out.println("IP ADDRESS: " + LOCAL_IP_ADDRESS);
+        System.out.println(" ");
 
 
         //link layout items

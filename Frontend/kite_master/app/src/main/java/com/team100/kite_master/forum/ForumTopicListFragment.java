@@ -36,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -70,7 +71,16 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
             userdata = bundle.getStringArray("userData");
             LOCAL_IP_ADDRESS = bundle.getString("serverIP");
         }
-        
+
+
+        //DEBUGGING
+        System.out.println(" ");
+        System.out.println("POST LIST FRAGMENT:");
+        System.out.println("USER: " + Arrays.toString(userdata));
+        System.out.println("IP ADDRESS: " + LOCAL_IP_ADDRESS);
+        System.out.println(" ");
+
+
         //initialize layout items
         topicListView = v.findViewById(R.id.list_view);
         loadingCircle = v.findViewById(R.id.topics_loading);
@@ -95,7 +105,6 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         topicListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println(topicList.get(position).getTopicID());
                 openTopic(topicList.get(position).getTopicID());
             }
         });
@@ -118,7 +127,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.action_buttons, menu);
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -153,7 +162,6 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         }
         return true;
     }
-
 
 
     //custom topic adapter class
@@ -209,7 +217,6 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     //NETWORKING
     //requests topic JSON object from backend
     public void requestTopics() {
-        System.out.println("REQUESTING TOPICS");
         String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/topics";
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
@@ -259,13 +266,11 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     }
 
 
-
-
     //get user data on first load
 
     public void getSingleUser(String username) {
 
-        if(volleyqueue == null){
+        if (volleyqueue == null) {
             System.out.println("NULL QUEUE");
             volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         }
@@ -306,8 +311,18 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setBio(jinfo.getString("bio"));
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setDisplayname(jinfo.getString("displayName"));
         //set nav drawer data
-        ((MainActivity) Objects.requireNonNull(getActivity())).setNavDrawerData(jinfo.getString("username"),jinfo.getString("displayName"));
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.printUserDetails();
+        ((MainActivity) Objects.requireNonNull(getActivity())).setNavDrawerData(jinfo.getString("username"), jinfo.getString("displayName"));
+
+        //set correct userdata array
+        userdata = ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.toArray();
+
+        //DEBUGGING
+        System.out.println(" ");
+        System.out.println("FIRST POST LIST FRAGMENT:");
+        System.out.println("USER: " + Arrays.toString(userdata));
+        System.out.println("IP ADDRESS: " + LOCAL_IP_ADDRESS);
+        System.out.println(" ");
+
     }
 
 

@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class ForumPostFragment extends Fragment implements View.OnClickListener {
@@ -65,7 +66,13 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
                 LOCAL_IP_ADDRESS = bundle.getString("serverIP");
             }
 
-
+            //DEBUGGING
+            System.out.println(" ");
+            System.out.println("POST FRAGMENT:");
+            System.out.println("CURRENT POST: " + postID);
+            System.out.println("USER: " + Arrays.toString(userdata));
+            System.out.println("IP ADDRESS: " + LOCAL_IP_ADDRESS);
+            System.out.println(" ");
 
 
             //initialize layout elements
@@ -120,7 +127,6 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         //NETWORKING
         //requests topic JSON object from backend
         public void requestPost(String postid) {
-            System.out.println("REQUESTING POST");
             String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/posts/" + postid;
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                     new Response.Listener<JSONObject>() {
