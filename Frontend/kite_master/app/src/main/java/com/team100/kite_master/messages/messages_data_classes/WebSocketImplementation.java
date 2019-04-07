@@ -35,6 +35,8 @@ public class WebSocketImplementation {
     private LinearLayout messageView;
     private TextView errorTextView;
 
+    private String lastMessage;
+
     public WebSocketImplementation(String username, Activity WSactivity, Context WScontext, LinearLayout messageView, TextView errorTextView, String IP_ADDRESS) {
 
         this.WSactivity = WSactivity;
@@ -52,16 +54,18 @@ public class WebSocketImplementation {
     }
 
     // Helper methods for this class and outer classes
-    public void sendJSONText(String TextString) {
+    public boolean sendJSONText(String TextString) {
 
         JsonObject JsonText = new JsonObject();
 
         JsonText.addProperty("username", username);
         JsonText.addProperty("text", TextString);
 
-        webSocket.send(JsonText.toString());
+        boolean sent = webSocket.send(JsonText.toString());
 
         output(username, TextString);
+
+        return sent;
     }
 
     public void receiveJSONText(String TextString) {
@@ -87,9 +91,10 @@ public class WebSocketImplementation {
             public void run() {
 
                 Message msg = new Message(username, txt);
-                TextView text = new TextView(WScontext);
+                setLastMessage(msg.getMessageTime() + "\n" + msg.getUsername() + ": " + msg.getText() + "\n");
 
-                text.setText(msg.getMessageTime() + "\n" + msg.getUsername() + ": " + msg.getText() + "\n");
+                TextView text = new TextView(WScontext);
+                text.setText(getLastMessage());
                 messageView.addView(text);
             }
         });
@@ -148,13 +153,27 @@ public class WebSocketImplementation {
 
 
 
+    // For Mockito testing
+    public String getLastMessage() {
+
+        return this.lastMessage;
+    }
+
+    public void setLastMessage(String msg) {
+
+        this.lastMessage = msg;
+    }
+
+
+
+
     // In case retrieving past messages becomes a feature. Used as a Mockito test.
     public JSONArray getMessagesString(int numMessages) {
 
         return null;
     }
 
-    public String getMessage(JSONArray messages, int index) throws JSONException {
+    public String getJSONMessage(JSONArray messages, int index) throws JSONException {
 
         JSONObject obj = (JSONObject) messages.get(index);
 

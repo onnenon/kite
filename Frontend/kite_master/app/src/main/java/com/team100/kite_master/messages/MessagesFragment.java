@@ -78,8 +78,6 @@ public class MessagesFragment extends Fragment {
             }
         });
 
-        bundle.getString("serverIP");
-
         return v;
     }
 
@@ -130,5 +128,10 @@ public class MessagesFragment extends Fragment {
     public View getView() {
 
         return this.getView();
+    }
+
+    public WebSocketImplementation getWebSocketImplementation() {
+
+        return this.implementationWS;
     }
 }
