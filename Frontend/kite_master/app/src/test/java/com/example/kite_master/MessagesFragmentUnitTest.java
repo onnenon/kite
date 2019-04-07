@@ -1,5 +1,7 @@
 package com.example.kite_master;
 
+import android.os.Bundle;
+
 import com.team100.kite_master.messages.MessagesFragment;
 import com.team100.kite_master.messages.messages_data_classes.Message;
 import com.team100.kite_master.messages.messages_data_classes.WebSocketImplementation;
@@ -24,6 +26,8 @@ public class MessagesFragmentUnitTest {
 
     private MessagesFragment messageFrag;
     private WebSocketImplementation impWS;
+    private Message realMessage;
+    private Bundle bundle;
 
     private WebSocketImplementation mockImpWS;
     private Message mockMessage;
