@@ -261,7 +261,9 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
             // iterate through list to set topic entries
             topicTitle.setText(postList.get(i).getPostTitle());
             topicAuthor.setText(postList.get(i).getPostAuthor());
-            topicTime.setText(DateUtil.getTimeAgo(Long.parseLong(postList.get(i).getPostTime())));
+            DateUtil d = new DateUtil();
+            String timeago = d.getTimeAgo(Long.parseLong(postList.get(i).getPostTime()));
+            topicTime.setText(timeago);
             //add images here when support is added
             return view;
         }

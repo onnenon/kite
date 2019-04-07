@@ -176,7 +176,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
             postTitleView.setText(p.getPostTitle());
             String atAuthor = "@" + p.getPostAuthor();
             postAuthorView.setText(atAuthor);
-            String date = d.getCleanDate(Long.parseLong(p.getPostTime()), "dd/MM/yy hh:mma");
+            String date = d.getCleanDate(Long.parseLong(p.getPostTime()), "MM/dd/yy hh:mma");
             postTimeView.setText(date);
             postBodyView.setText(p.getPostBody());
             postScrollView.setVisibility(View.VISIBLE);

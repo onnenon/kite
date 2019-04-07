@@ -66,7 +66,6 @@ public class Post implements Comparable<Post> {
     @Override
     public int compareTo(Post comparepost) {
         return Integer.compare(Integer.parseInt(comparepost.getPostTime()), Integer.parseInt(this.getPostTime()));
-        //return this.getPostTitle().toLowerCase().compareTo(comparepost.getPostTitle().toLowerCase());
     }
 
     //returns a string containing the topic id and description

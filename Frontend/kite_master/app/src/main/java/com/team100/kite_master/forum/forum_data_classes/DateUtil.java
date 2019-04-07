@@ -13,7 +13,7 @@ public class DateUtil {
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
 
-    public static String getTimeAgo(long time) {
+    public String getTimeAgo(long time) {
         if (time < 1000000000000L) {
             time *= 1000;
         }
