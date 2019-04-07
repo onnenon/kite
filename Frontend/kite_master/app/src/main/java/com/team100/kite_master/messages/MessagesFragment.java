@@ -46,6 +46,15 @@ public class MessagesFragment extends Fragment {
             System.out.println("USER DATA:");
             System.out.println(Arrays.toString(userdata));
         }
+        else {
+
+            // This allows the variables to continue to run for mockito testing purposes
+            userdata = new String[6];
+            username = "Username"; // Get the username of the user
+            LOCAL_IP_ADDRESS = "kite.onn.sh";
+            System.out.println("USER DATA:");
+            System.out.println(Arrays.toString(userdata));
+        }
 
         //initialize user interface objects
         messageView = (LinearLayout) v.findViewById(R.id.message_layout);
@@ -82,14 +91,44 @@ public class MessagesFragment extends Fragment {
 
 
 
-    // Used for Mockito testing
+    // Getter and setter methods used for JUnit and Mockito testing
+    public String getUsername() {
+
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+
+        this.username = username;
+    }
+
     public LinearLayout getMessageView() {
 
         return this.messageView;
     }
 
+    public void setMessageView(LinearLayout messageView) {
+
+        this.messageView = messageView;
+    }
+
+    public String getIPaddress() {
+
+        return this.LOCAL_IP_ADDRESS;
+    }
+
+    public void setIPaddress(String LOCAL_IP_ADDRESS) {
+
+        this.LOCAL_IP_ADDRESS = LOCAL_IP_ADDRESS;
+    }
+
     public TextView getErrorTextView() {
 
         return this.errorTextView;
+    }
+
+    public View getView() {
+
+        return this.getView();
     }
 }

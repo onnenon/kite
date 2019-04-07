@@ -10,6 +10,9 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -30,8 +33,12 @@ public class MessagesFragmentUnitTest {
 
         // Regular objects
         messageFrag = new MessagesFragment();
-        impWS = new WebSocketImplementation("Username", messageFrag.getActivity(), messageFrag.getContext(),
-                messageFrag.getMessageView(), messageFrag.getErrorTextView(), "http://chat.kite.onn.sh:5000");
+        messageFrag.setUsername("fadmin");
+        // messageFrag.setMessageView((LinearLayout) messageFrag.getView().findViewById(R.id.message_layout));
+        messageFrag.setIPaddress("kite.onn.sh");
+
+        impWS = new WebSocketImplementation(messageFrag.getUsername(), messageFrag.getActivity(), messageFrag.getContext(),
+                messageFrag.getMessageView(), messageFrag.getErrorTextView(), messageFrag.getIPaddress());
 
         // Mock objects
         mockImpWS = mock(WebSocketImplementation.class);
@@ -72,7 +79,37 @@ public class MessagesFragmentUnitTest {
 
     */
 
+    @Test
+    public void testMessageOutput() {
 
+        Date date = Calendar.getInstance().getTime();
+
+        when(mockMessage.getMessageTime()).thenReturn(date);
+        when(mockMessage.getUsername()).thenReturn(messageFrag.getUsername()); // "Username"
+        when(mockMessage.getText()).thenReturn("A very important message.");
+
+        assertEquals(date.toString() + "\n" + "fadmin: A very important message.\n",
+                mockMessage.getMessageTime() + "\n" + mockMessage.getUsername() + ": " + mockMessage.getText() + "\n");
+    }
+
+    /*
+
+    @Test
+    public void testOutput() {
+
+        Date date = Calendar.getInstance().getTime();
+
+        when(mockMessage.getMessageTime()).thenReturn(date);
+        when(mockMessage.getUsername()).thenReturn(messageFrag.getUsername()); // "Username"
+        when(mockMessage.getText()).thenReturn("A very important message.");
+
+        // Assuming only one TextView was created from the result of posting a message.
+        TextView textview = (TextView) messageFrag.getMessageView().getChildAt(0); // FIXME
+
+        assertEquals(textview.getText().toString(), date.toString() + "\n" + "Username: A very important message.\n");
+    }
+
+    */
 
     @Test
     public void testRecentMessagesRetrieval() throws JSONException {
@@ -111,7 +148,4 @@ public class MessagesFragmentUnitTest {
         assertEquals("4/3/19\nProfessor195: Sucks to be you!\n", secondMessage);
         assertEquals("4/3/19\nTeammate902: Don't talk to my teammate like that!\n", thirdMessage);
     }
-
-
-
 }
