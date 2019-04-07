@@ -46,7 +46,7 @@ public class WebSocketImplementation {
 
         this.client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
         // this.request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
-        this.request = new okhttp3.Request.Builder().url("http://chat." + "kite.onn.sh" + ":5000").build();
+        this.request = new okhttp3.Request.Builder().url("http://chat." + IP_ADDRESS + ":5000").build();
         this.webSocket = client.newWebSocket(request, new KiteWebSocketListener());
     }
 
@@ -143,6 +143,8 @@ public class WebSocketImplementation {
         }
     }
 
+
+    // In case retrieving past messages becomes a feature
     public JSONArray getMessagesString(int numMessages) {
 
         return null;

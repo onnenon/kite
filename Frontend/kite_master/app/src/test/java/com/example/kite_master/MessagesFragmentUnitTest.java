@@ -1,5 +1,7 @@
 package com.example.kite_master;
 
+import android.widget.LinearLayout;
+
 import com.team100.kite_master.messages.MessagesFragment;
 import com.team100.kite_master.messages.messages_data_classes.Message;
 import com.team100.kite_master.messages.messages_data_classes.WebSocketImplementation;
@@ -20,6 +22,7 @@ import static org.mockito.Mockito.when;
 public class MessagesFragmentUnitTest {
 
     private MessagesFragment messageFrag;
+    private LinearLayout messageView;
     private WebSocketImplementation impWS;
 
     private WebSocketImplementation ImplementationWS;
@@ -29,7 +32,7 @@ public class MessagesFragmentUnitTest {
     public void setup() {
 
         messageFrag = new MessagesFragment();
-        impWS = new WebSocketImplementation("Username", messageFrag.getActivity(), messageFrag.getContext(), messageFrag.messageView);
+        impWS = new WebSocketImplementation("Username", messageFrag.getActivity(), messageFrag.getContext(), messageFrag.messageView, "http://chat.kite.onn.sh:5000");
 
         ImplementationWS = mock(WebSocketImplementation.class);
         messageTest = mock(Message.class);
