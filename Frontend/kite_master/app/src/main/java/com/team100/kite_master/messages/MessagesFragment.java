@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.team100.kite_master.R;
 import com.team100.kite_master.messages.messages_data_classes.WebSocketImplementation;
@@ -23,7 +24,8 @@ public class MessagesFragment extends Fragment {
     private String[] userdata;
     private String username;
 
-    public LinearLayout messageView;
+    private LinearLayout messageView;
+    private TextView errorTextView;
     private EditText messageText;
     private Button postButton;
 
@@ -47,11 +49,11 @@ public class MessagesFragment extends Fragment {
 
         //initialize user interface objects
         messageView = (LinearLayout) v.findViewById(R.id.message_layout);
-        // statusText = (TextView) v.findViewById(R.id.message_status_text_view);
+        errorTextView = (TextView) v.findViewById(R.id.error_textView);
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
         postButton = (Button) v.findViewById(R.id.message_button);
 
-        implementationWS = new WebSocketImplementation(username, getActivity(), getContext(), messageView, LOCAL_IP_ADDRESS);
+        implementationWS = new WebSocketImplementation(username, getActivity(), getContext(), messageView, errorTextView, LOCAL_IP_ADDRESS);
 
         //set on click listener
         //postButton.setOnClickListener(this);
@@ -78,6 +80,16 @@ public class MessagesFragment extends Fragment {
         Objects.requireNonNull(getActivity()).setTitle("Messages");
     }
 
-    // private void getTenRecentMessages() {}
 
+
+    // Used for Mockito testing
+    public LinearLayout getMessageView() {
+
+        return this.messageView;
+    }
+
+    public TextView getErrorTextView() {
+
+        return this.errorTextView;
+    }
 }

@@ -13,7 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -34,8 +33,9 @@ public class WebSocketImplementation {
     private WebSocket webSocket;
 
     private LinearLayout messageView;
+    private TextView errorTextView;
 
-    public WebSocketImplementation(String username, Activity WSactivity, Context WScontext, LinearLayout messageView, String IP_ADDRESS) {
+    public WebSocketImplementation(String username, Activity WSactivity, Context WScontext, LinearLayout messageView, TextView errorTextView, String IP_ADDRESS) {
 
         this.WSactivity = WSactivity;
         this.WScontext = WScontext;
@@ -43,6 +43,7 @@ public class WebSocketImplementation {
         this.username = username;
 
         this.messageView = messageView;
+        this.errorTextView = errorTextView;
 
         this.client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
         // this.request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
@@ -60,7 +61,7 @@ public class WebSocketImplementation {
 
         webSocket.send(JsonText.toString());
 
-        output(username + ": " + TextString);
+        output(username, TextString);
     }
 
     public void receiveJSONText(String TextString) {
@@ -75,18 +76,20 @@ public class WebSocketImplementation {
         String stringUsername = jsonUsername.getAsString();
         String stringText = jsonText.getAsString();
 
-        output(stringUsername + ": " + stringText);
+        output(stringUsername, stringText);
     }
 
-    public void output(final String txt) {
+    public void output(final String username, final String txt) {
 
         WSactivity.runOnUiThread(new Runnable() {
 
             @Override
             public void run() {
 
+                Message msg = new Message(username, txt);
                 TextView text = new TextView(WScontext);
-                text.setText(Calendar.getInstance().getTime() + "\n" + txt + "\n");
+
+                text.setText(msg.getMessageTime() + "\n" + msg.getUsername() + ": " + msg.getText() + "\n");
                 messageView.addView(text);
             }
         });
@@ -139,12 +142,13 @@ public class WebSocketImplementation {
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, okhttp3.Response response) {
-            output("Error : " + t.getMessage());
+            errorTextView.setText("Error : " + t.getMessage());
         }
     }
 
 
-    // In case retrieving past messages becomes a feature
+
+    // In case retrieving past messages becomes a feature. Used as a Mockito test.
     public JSONArray getMessagesString(int numMessages) {
 
         return null;
@@ -154,7 +158,7 @@ public class WebSocketImplementation {
 
         JSONObject obj = (JSONObject) messages.get(index);
 
-        String text = obj.getString("username") + ": " + obj.getString("text");
+        String text = obj.getString("date") + "\n" + obj.getString("username") + ": " + obj.getString("text") + "\n";
 
         return text;
     }
