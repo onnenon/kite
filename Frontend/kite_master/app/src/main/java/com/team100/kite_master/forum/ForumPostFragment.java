@@ -134,7 +134,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
                         public void onResponse(JSONObject response) {
                             try {
                                 //parse topics to array from json response
-                                parsePost(response);
+                                setViewElements(parsePost(response));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -155,15 +155,20 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         }
 
 
+
+        public Post getPost(){
+            return new Post("id","title","body","author",false,"topic_name","date");
+        }
+
+
         //convert JSON object from backend to arraylist of topics
-        public void parsePost(JSONObject resp) throws JSONException {
-            //create dateutil
-            DateUtil d = new DateUtil();
+        public Post parsePost(JSONObject resp) throws JSONException {
+            getPost();
             //get json array of posts
             JSONObject jdata = resp.getJSONObject("data");
             JSONObject jpost = jdata.getJSONObject("post");
             //create new post object from data
-            Post p = new Post(jpost.getString("id"),
+            Post po = new Post(jpost.getString("id"),
                     jpost.getString("title"),
                     jpost.getString("body"),
                     jpost.getString("author"),
@@ -171,11 +176,17 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
                     jpost.getString("topic_name"),
                     jpost.getString("date"));
             //hide loading circle
-            loadingCircle.setVisibility(View.GONE);
+            return po;
+        }
 
+
+
+        public void setViewElements(Post p){
+            loadingCircle.setVisibility(View.GONE);
             postTitleView.setText(p.getPostTitle());
             String atAuthor = "@" + p.getPostAuthor();
             postAuthorView.setText(atAuthor);
+            DateUtil d = new DateUtil();
             String date = d.getCleanDate(Long.parseLong(p.getPostTime()), "MM/dd/yy hh:mma");
             postTimeView.setText(date);
             postBodyView.setText(p.getPostBody());

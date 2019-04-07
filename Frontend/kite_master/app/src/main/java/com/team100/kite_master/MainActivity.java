@@ -111,10 +111,19 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment);
         ft.commit();
+    }
+
+
+    public void lockdrawer(Boolean lock){
+        if(lock){
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        } else {
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }
 
     }
 
-    public void setLocalIP(String ip){
+    public void setLocalIP(String ip) {
         LOCAL_IP_ADDRESS = ip;
     }
 
@@ -125,8 +134,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-    public void setNavDrawerData(String username, String displayname){
+    public void setNavDrawerData(String username, String displayname) {
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         TextView navDisplayname = headerView.findViewById(R.id.nav_display_name);
@@ -136,7 +144,7 @@ public class MainActivity extends AppCompatActivity
         navUsername.setText(atUsername);
     }
 
-    public void setCurScreen(int screenID){
+    public void setCurScreen(int screenID) {
         cur_screen = screenID;
     }
 
@@ -163,8 +171,8 @@ public class MainActivity extends AppCompatActivity
                 fragment = new SettingsFragment();
                 break;
             case R.id.nav_help:
-                fragment = new HelpFragment();
-                break;
+                logout();
+                return;
             case R.id.nav_user_tests:
                 fragment = new UserTestsFragment();
                 break;
@@ -180,9 +188,13 @@ public class MainActivity extends AppCompatActivity
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    public void logout() {
+        SaveSharedPreference.setHostIp(MainActivity.this, "");
+        SaveSharedPreference.setUserName(MainActivity.this, "");
+        displayLoginScreen();
     }
 
 

@@ -30,6 +30,7 @@ import com.android.volley.toolbox.Volley;
 import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
 import com.team100.kite_master.forum.forum_data_classes.Topic;
+import com.team100.kite_master.userdata.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -224,7 +225,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
                     public void onResponse(JSONObject response) {
                         try {
                             //parse topics to array from json response
-                            parseTopics(response);
+                            refreshList(parseTopics(response));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -245,7 +246,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     }
 
     //convert JSON object from backend to arraylist of topics
-    public void parseTopics(JSONObject resp) throws JSONException {
+    public ArrayList<Topic> parseTopics(JSONObject resp) throws JSONException {
         //create output list
         ArrayList<Topic> tops = new ArrayList<Topic>();
         //get JSON array of topics
@@ -255,9 +256,19 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
             Topic t = new Topic(topics.getJSONObject(i).getString("name"), topics.getJSONObject(i).getString("descript"));
             tops.add(t);
         }
+        return tops;
+
+    }
+
+    public User getsingleUser() {
+        return new User("josh", "Josh Berg", "I am josh", 12, true, true);
+    }
+
+
+    public void refreshList(ArrayList<Topic> t) {
         //update global topic list
-        topicList = new ArrayList<Topic>(tops);
-        //sort topic list in alphabetical order
+        topicList = new ArrayList<Topic>(t);
+        //sort topiclist
         Collections.sort(topicList);
         //notify adapter to update its list with the new topics
         topicAdapter.notifyDataSetChanged();
@@ -265,15 +276,14 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         loadingCircle.setVisibility(View.GONE);
     }
 
-
     //get user data on first load
 
     public void getSingleUser(String username) {
-
         if (volleyqueue == null) {
             System.out.println("NULL QUEUE");
             volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         }
+        getsingleUser();
 
         String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/users/" + username;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
@@ -281,7 +291,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            parseUserInfo(response);
+                            setUserInfo(parseUserInfo(response));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -300,21 +310,21 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
 
 
     //convert JSON object from backend to arraylist of topics
-    public void parseUserInfo(JSONObject resp) throws JSONException {
+    public User parseUserInfo(JSONObject resp) throws JSONException {
         //get json array of user info
         JSONObject jinfo = resp.getJSONObject("data");
-        //set all the data fields for current user
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setUsername(jinfo.getString("username"));
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setAdmin(Boolean.parseBoolean(jinfo.getString("is_admin")));
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setMod(Boolean.parseBoolean(jinfo.getString("is_mod")));
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setPostCount(Integer.parseInt(jinfo.getString("post_count")));
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setBio(jinfo.getString("bio"));
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setDisplayname(jinfo.getString("displayName"));
-        //set nav drawer data
-        ((MainActivity) Objects.requireNonNull(getActivity())).setNavDrawerData(jinfo.getString("username"), jinfo.getString("displayName"));
 
-        //set correct userdata array
-        userdata = ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.toArray();
+        getsingleUser();
+
+        User u = new User(
+                jinfo.getString("username"),
+                jinfo.getString("displayName"),
+                jinfo.getString("bio"),
+                jinfo.getInt("post_count"),
+                jinfo.getBoolean("is_admin"),
+                jinfo.getBoolean("is_mod")
+        );
+
 
         //DEBUGGING
         System.out.println(" ");
@@ -323,6 +333,23 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         System.out.println("IP ADDRESS: " + LOCAL_IP_ADDRESS);
         System.out.println(" ");
 
+        return u;
+    }
+
+
+    public void setUserInfo(User us) {
+        //set all the data fields for current user
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setUsername(us.getUsername());
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setAdmin(us.isAdmin());
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setMod(us.isMod());
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setPostCount(us.getPostCount());
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setBio(us.getBio());
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setDisplayname(us.getDisplayname());
+        //set nav drawer data
+        ((MainActivity) Objects.requireNonNull(getActivity())).setNavDrawerData(us.getUsername(), us.getDisplayname());
+
+        //set correct userdata array
+        userdata = ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.toArray();
     }
 
 

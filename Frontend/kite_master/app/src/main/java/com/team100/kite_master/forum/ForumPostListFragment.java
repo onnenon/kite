@@ -319,7 +319,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
                     curPost.getString("id"),
                     curPost.getString("title"),
                     curPost.getString("body"),
-                    curPost.getString("author"),
+                    ("@" + curPost.getString("author")),
                     curPost.getBoolean("edited"),
                     curPost.getString("topic_name"),
                     curPost.getString("date"));
