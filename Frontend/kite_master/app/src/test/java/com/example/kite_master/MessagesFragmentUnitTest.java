@@ -99,7 +99,6 @@ public class MessagesFragmentUnitTest {
         arr.put(json2);
         arr.put(json3);
 
-
         // Test
         when(ImplementationWS.getMessagesString(3)).thenReturn(arr);
 

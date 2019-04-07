@@ -122,15 +122,17 @@ public class HTTPImplementation implements HTTPInterface {
 
                         try {
 
-                            JSONObject user = response.getJSONObject("user");
+                            JSONObject user = response.getJSONObject("data");
 
                             String userName = user.getString("username");
                             boolean isAdmin = user.getBoolean("is_admin");
                             boolean isMod = user.getBoolean("is_mod");
                             int postCount = user.getInt("post_count");
                             String bio = user.getString("bio");
+                            String displayName = user.getString("displayName");
 
-                            setInfo(userName + ", " + Boolean.toString(isAdmin) + ", " + Boolean.toString(isMod) + "\n" + Integer.toString(postCount) + ", " + bio);
+                            setInfo(userName + ", " + Boolean.toString(isAdmin) + ", " + Boolean.toString(isMod) + ", "
+                                    + Integer.toString(postCount) + ", " + bio + ", "+ displayName);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
