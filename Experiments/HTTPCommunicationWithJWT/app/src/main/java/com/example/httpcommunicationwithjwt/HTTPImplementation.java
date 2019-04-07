@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.util.Base64;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -28,10 +29,10 @@ public class HTTPImplementation implements HTTPInterface {
     private RequestQueue Requests;
     private String RequestURL;
 
-    private String JWT;
-    private String UserInfo;
+    private TextView TextviewJWT;
+    private TextView UserInfo;
 
-    public HTTPImplementation(Application HTTPactivity, Context HTTPcontext, String RequestURL) {
+    public HTTPImplementation(Application HTTPactivity, Context HTTPcontext, String RequestURL, TextView TextviewJWT, TextView UserInfo) {
 
         this.HTTPactivity = HTTPactivity;
         this.HTTPcontext = HTTPcontext;
@@ -39,14 +40,14 @@ public class HTTPImplementation implements HTTPInterface {
 
         this.Requests = Volley.newRequestQueue(HTTPcontext);
 
-        this.JWT = "";
-        this.UserInfo = "";
+        this.TextviewJWT = TextviewJWT;
+        this.UserInfo = UserInfo;
     }
 
     @Override
     public String login(final String username, final String password) {
 
-        String LoginRequestURL = "http://kite.onn.sh/api/auth/login";
+        String LoginRequestURL = "http://kite.onn.sh:5000/api/auth/login";
 
         JSONObject LoginCredentials = new JSONObject();
 
@@ -129,7 +130,7 @@ public class HTTPImplementation implements HTTPInterface {
                             int postCount = user.getInt("post_count");
                             String bio = user.getString("bio");
 
-                            setUserInfo(userName + "\n" + Boolean.toString(isAdmin) + "\n" + Boolean.toString(isMod) + "\n" + Integer.toString(postCount) + "\n" + bio);
+                            setInfo(userName + ", " + Boolean.toString(isAdmin) + ", " + Boolean.toString(isMod) + "\n" + Integer.toString(postCount) + ", " + bio);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -153,7 +154,7 @@ public class HTTPImplementation implements HTTPInterface {
                 HashMap<String, String> headers = new HashMap<String, String>();
 
                 headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
+                headers.put("Authorization", "Bearer " + TextviewJWT.getText().toString());
 
                 return headers;
             }
@@ -202,7 +203,7 @@ public class HTTPImplementation implements HTTPInterface {
                 HashMap<String, String> headers = new HashMap<String, String>();
 
                 headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
+                headers.put("Authorization", "Bearer " + TextviewJWT.getText().toString());
 
                 return headers;
             }
@@ -251,7 +252,7 @@ public class HTTPImplementation implements HTTPInterface {
                 HashMap<String, String> headers = new HashMap<String, String>();
 
                 headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
+                headers.put("Authorization", "Bearer " + TextviewJWT.getText().toString());
 
                 return headers;
             }
@@ -300,7 +301,7 @@ public class HTTPImplementation implements HTTPInterface {
                 HashMap<String, String> headers = new HashMap<String, String>();
 
                 headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
+                headers.put("Authorization", "Bearer " + TextviewJWT.getText().toString());
 
                 return headers;
             }
@@ -349,7 +350,7 @@ public class HTTPImplementation implements HTTPInterface {
                 HashMap<String, String> headers = new HashMap<String, String>();
 
                 headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
+                headers.put("Authorization", "Bearer " + TextviewJWT.getText().toString());
 
                 return headers;
             }
@@ -401,7 +402,7 @@ public class HTTPImplementation implements HTTPInterface {
                 HashMap<String, String> headers = new HashMap<String, String>();
 
                 headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
+                headers.put("Authorization", "Bearer " + TextviewJWT.getText().toString());
 
                 return headers;
             }
@@ -440,7 +441,7 @@ public class HTTPImplementation implements HTTPInterface {
                 HashMap<String, String> headers = new HashMap<String, String>();
 
                 headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
+                headers.put("Authorization", "Bearer " + TextviewJWT.getText().toString());
 
                 return headers;
             }
@@ -453,22 +454,22 @@ public class HTTPImplementation implements HTTPInterface {
 
     public String getJWT() {
 
-        return this.JWT;
+        return this.TextviewJWT.getText().toString();
     }
 
     public void setJWT(String JWT) {
 
-        this.JWT = JWT;
+        this.TextviewJWT.setText(JWT);
     }
 
-    public String getUserInfo() {
+    public String getInfo() {
 
-        return this.UserInfo;
+        return this.UserInfo.getText().toString();
     }
 
-    public void setUserInfo(String UserInfo) {
+    public void setInfo(String userInfo) {
 
-        this.UserInfo = UserInfo;
+        this.UserInfo.setText(userInfo);
     }
 
     public JSONObject foo() {

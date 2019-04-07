@@ -2,6 +2,7 @@ package com.example.httpcommunicationwithjwt;
 
 public interface HTTPInterface {
 
+    // HTTP communication methods
     String login(final String username, final String password);
 
     boolean getUserInfo(String userName);
@@ -17,4 +18,15 @@ public interface HTTPInterface {
     boolean setAll(String userName, String newPassword, String newBio, boolean isModer, boolean isAdmin);
 
     boolean deleteUser(String userName);
+
+
+
+    // Setter and getter methods
+    String getJWT();
+
+    void setJWT(String JWT);
+
+    String getInfo();
+
+    void setInfo(String userInfo);
 }

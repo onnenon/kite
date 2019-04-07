@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Implementation = new HTTPImplementation(getApplication(), this, "http://kite.onn.sh/api/v3/users");
-
         SignInButton = (Button) findViewById(R.id.SignIn);
 
         LoginJWT = (TextView) findViewById(R.id.LoginStatus);
@@ -74,14 +72,15 @@ public class MainActivity extends AppCompatActivity {
         DeleteUser = (Button) findViewById(R.id.DeleteUser);
         GetUserInfo = (Button) findViewById(R.id.GetUserInfo);
 
+        Implementation = new HTTPImplementation(getApplication(), getApplicationContext(), "http://kite.onn.sh:5000/api/v3/users", LoginJWT, UserInfo);
+
         SignInButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                String username = "fadmin";
-
-                String password = "password";
+                String username = EnterUsername.getText().toString();
+                String password = EnterPassword.getText().toString();
 
                 Implementation.login(username, password);
             }
@@ -94,9 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
                 String userName = EnterUsername.getText().toString();
 
-                // String InfoString = Implementation.getUserInfo();
-
-                // UserInfo.setText(InfoString);
+                Implementation.getUserInfo(userName);
             }
         });
 
