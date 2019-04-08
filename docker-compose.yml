@@ -22,25 +22,28 @@ services:
       - pgdata:/var/lib/postgresql/data
   api:
     restart: always
-    image: "koozie/kite-beta"
+    image: "koozie/kite:beta"
     depends_on:
       - db
     environment:
-      FLASK_APP: "forum_api"
+      FLASK_APP: "kite"
       API_DB_HOST: "db"
       API_DB_PORT: "5432"
       API_DB_USERNAME: "admin"
       API_DB_PASSWORD: "pass"
       API_DB_NAME: "forum_db"
       FORUM_ADMIN: "fadmin"
-      FORUM_ADMIN_PASS: "pass"
+      FORUM_ADMIN_PASS: "password"
     ports:
       - 9000:9000
     labels:
       - "traefik.basic.frontend.rule=PathPrefix: /api"
   chat:
     restart: always
-    image: "koozie/kite-chat"
+    image: "koozie/kite-chat:beta"
+    environment:
+      # Message confirmation should be "true" or null
+      MESSAGE_CONFIRMATION: "true"
     ports:
       - 5500:5500
     labels:

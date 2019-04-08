@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -21,29 +22,36 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.team100.kite_master.R;
+import com.team100.kite_master.forum.forum_data_classes.DateUtil;
 import com.team100.kite_master.forum.forum_data_classes.Post;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class ForumPostFragment extends Fragment implements View.OnClickListener {
 
-        String LOCAL_IP_ADDRESS;
+        //Local ip for testing
+        private String LOCAL_IP_ADDRESS;
+        private String[] userdata;
+
+        //global variables
+        String postID;
+        RequestQueue volleyqueue;
+
+        //declare layout items
         ProgressBar loadingCircle;
         TextView errMessage;
         Button retry;
-        String postID;
-        RequestQueue volleyqueue;
         ImageView postImageView;
         TextView postTitleView;
         TextView postTimeView;
         TextView postAuthorView;
         TextView postBodyView;
         ScrollView postScrollView;
-
 
 
         @Nullable
@@ -53,16 +61,23 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
             //receive bundle
             Bundle bundle = this.getArguments();
             if (bundle != null) {
+                userdata = bundle.getStringArray("userData");
                 postID = bundle.getString("selectedPost");
+                LOCAL_IP_ADDRESS = bundle.getString("serverIP");
             }
-            //set local ip for testing
-            LOCAL_IP_ADDRESS = "10.0.1.2";
+
+            //DEBUGGING
+            System.out.println(" ");
+            System.out.println("POST FRAGMENT:");
+            System.out.println("CURRENT POST: " + postID);
+            System.out.println("USER: " + Arrays.toString(userdata));
+            System.out.println("IP ADDRESS: " + LOCAL_IP_ADDRESS);
+            System.out.println(" ");
 
 
-            //initialize error elements
+            //initialize layout elements
             loadingCircle = v.findViewById(R.id.topics_loading);
             errMessage = v.findViewById(R.id.error_message);
-            //initialize image and text views
             postImageView = v.findViewById(R.id.single_post_image);
             postTitleView = v.findViewById(R.id.single_post_title);
             postTimeView = v.findViewById(R.id.single_post_time);
@@ -70,7 +85,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
             postBodyView = v.findViewById(R.id.single_post_body);
             postScrollView = v.findViewById(R.id.post_scroll_view);
             //hide everything until post is gotten
-            displayElements(false);
+            postScrollView.setVisibility(View.GONE);
             //initialize volley queue
             volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
             //request post from the backend
@@ -91,10 +106,11 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         @Override
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            //set title
             Objects.requireNonNull(getActivity()).setTitle("Post");
+            Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).hide();
         }
 
+        //handle retry button click
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -111,7 +127,6 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         //NETWORKING
         //requests topic JSON object from backend
         public void requestPost(String postid) {
-            System.out.println("REQUESTING POST");
             String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/posts/" + postid;
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                     new Response.Listener<JSONObject>() {
@@ -119,7 +134,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
                         public void onResponse(JSONObject response) {
                             try {
                                 //parse topics to array from json response
-                                parsePost(response);
+                                setViewElements(parsePost(response));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -128,7 +143,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            showToast(error.toString());
+                            Toast.makeText(getActivity(), error.toString() + " ", Toast.LENGTH_LONG).show();
                             loadingCircle.setVisibility(View.GONE);
                             errMessage.setText("Connection Error\n Make sure your forum server is running.");
                             errMessage.setVisibility(View.VISIBLE);
@@ -140,37 +155,41 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         }
 
 
+
+        public Post getPost(){
+            return new Post("id","title","body","author",false,"topic_name","date");
+        }
+
+
         //convert JSON object from backend to arraylist of topics
-        public void parsePost(JSONObject resp) throws JSONException {
-            //get json object and convert to post
-            ArrayList<Post> receivedPosts = new ArrayList<Post>();
+        public Post parsePost(JSONObject resp) throws JSONException {
+            getPost();
             //get json array of posts
             JSONObject jdata = resp.getJSONObject("data");
             JSONObject jpost = jdata.getJSONObject("post");
             //create new post object from data
-            Post p = new Post(jpost.getString("id"), jpost.getString("title"), jpost.getString("body"), jpost.getString("author"), jpost.getBoolean("edited"), jpost.getString("topic_name"), jpost.getString("date"));
+            Post po = new Post(jpost.getString("id"),
+                    jpost.getString("title"),
+                    jpost.getString("body"),
+                    jpost.getString("author"),
+                    jpost.getBoolean("edited"),
+                    jpost.getString("topic_name"),
+                    jpost.getString("date"));
             //hide loading circle
+            return po;
+        }
+
+
+
+        public void setViewElements(Post p){
             loadingCircle.setVisibility(View.GONE);
-
             postTitleView.setText(p.getPostTitle());
-            postAuthorView.setText(p.getPostAuthor());
-            postTimeView.setText(p.getPostDate());
+            String atAuthor = "@" + p.getPostAuthor();
+            postAuthorView.setText(atAuthor);
+            DateUtil d = new DateUtil();
+            String date = d.getCleanDate(Long.parseLong(p.getPostTime()), "MM/dd/yy hh:mma");
+            postTimeView.setText(date);
             postBodyView.setText(p.getPostBody());
-            displayElements(true);
+            postScrollView.setVisibility(View.VISIBLE);
         }
-
-        //display a toast
-        private void showToast(String message) {
-            Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
-        }
-
-        private void displayElements(Boolean areDisplayed){
-            if(areDisplayed){
-                postScrollView.setVisibility(View.VISIBLE);
-            } else {
-                postScrollView.setVisibility(View.GONE);
-            }
-        }
-
-
     }

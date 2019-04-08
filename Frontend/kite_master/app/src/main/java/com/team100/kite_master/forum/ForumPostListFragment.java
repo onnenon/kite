@@ -1,19 +1,26 @@
 package com.team100.kite_master.forum;
 
 import android.annotation.SuppressLint;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,6 +33,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.team100.kite_master.R;
+import com.team100.kite_master.forum.forum_data_classes.DateUtil;
 import com.team100.kite_master.forum.forum_data_classes.Post;
 
 import org.json.JSONArray;
@@ -33,20 +41,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
 
 public class ForumPostListFragment extends Fragment implements View.OnClickListener {
 
-    public String LOCAL_IP_ADDRESS;
+    private String LOCAL_IP_ADDRESS;
+    private String[] userdata;
 
+    //view item instantiation
     ListView postListView;
     ProgressBar loadingCircle;
     TextView errMessage;
     Button retryTopics;
     String topic;
 
+    FloatingActionButton newPostFab;
+
+    //other instantiations
     ArrayList<Post> postList = new ArrayList<Post>();
     private RequestQueue volleyqueue;
     CustomAdapter topicAdapter;
@@ -58,49 +72,55 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         //receive bundle
         Bundle bundle = this.getArguments();
         if (bundle != null) {
+            userdata = bundle.getStringArray("userData");
             topic = bundle.getString("selectedTopic");
+            LOCAL_IP_ADDRESS = bundle.getString("serverIP");
         }
 
 
-        //set local ip for testing
-        LOCAL_IP_ADDRESS = "10.0.1.2";
-        //set topic string for testing
-        //link list view
+        //DEBUGGING
+        System.out.println(" ");
+        System.out.println("POST LIST FRAGMENT:");
+        System.out.println("CURRENT TOPIC: " + topic);
+        System.out.println("USER: " + Arrays.toString(userdata));
+        System.out.println("IP ADDRESS: " + LOCAL_IP_ADDRESS);
+        System.out.println(" ");
+
+
+        //link view items
         postListView = v.findViewById(R.id.list_view);
         loadingCircle = v.findViewById(R.id.topics_loading);
         errMessage = v.findViewById(R.id.error_message);
+        newPostFab = v.findViewById(R.id.new_post_fab);
+        retryTopics = v.findViewById(R.id.retry_topics);
+
+        //set on click listeners
+        newPostFab.setOnClickListener(this);
+        retryTopics.setOnClickListener(this);
 
         //initialize volley queue
         volleyqueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         //request topics from the backend
-        requestPosts(topic); //TODO
 
 
-        postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openPost(postList.get(position).getPostID());
-                Animation animation1 = new AlphaAnimation(0.3f, 4.0f);
-                animation1.setDuration(4000);
-                view.startAnimation(animation1);
 
-                //openTopic(topicList.get(position).getTopicID());
-            }
-        });
 
         //show loading circle until topics received
         loadingCircle.setVisibility(View.VISIBLE);
         //hide error text view
         errMessage.setVisibility(View.GONE);
-        //initialize button
-        retryTopics = v.findViewById(R.id.retry_topics);
-        //set button on click listener
-        retryTopics.setOnClickListener(this);
+        //hide fab
+        newPostFab.show();
         //hide button
         retryTopics.setVisibility(View.GONE);
+
         //initialize custom adapter and set it to list view
         topicAdapter = new CustomAdapter();
         postListView.setAdapter(topicAdapter);
+
+        //show action bar buttons
+        setHasOptionsMenu(true);
+
         return v;
     }
 
@@ -108,10 +128,51 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //set title
         Objects.requireNonNull(getActivity()).setTitle(topic);
+        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).show();
+
+        //set on click listener for menu items
+        postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                openPost(postList.get(position).getPostID());
+                Animation animation1 = new AlphaAnimation(0.3f, 4.0f);
+                animation1.setDuration(4000);
+                view.startAnimation(animation1);
+            }
+        });
+
+
+
+        //hides FAB when scrolling
+        postListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if(scrollState == 1 && newPostFab.isShown()){
+                    newPostFab.hide();
+                } else {
+                    newPostFab.show();
+                }
+            }
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+            }
+        });
+
+        requestPosts(topic);
+
     }
 
+
+    //creates action bar menu
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.action_buttons, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    //handles fragment on click listeners
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -121,29 +182,47 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
                 requestPosts(topic);
                 loadingCircle.setVisibility(View.VISIBLE);
                 break;
+            case R.id.new_post_fab:
+                openNewPost();
+                break;
         }
     }
 
-
+    //handles clicks of the refresh button in the action bar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                Toast.makeText(getContext(), "Back button clicked", Toast.LENGTH_SHORT).show();
+            case R.id.menu_refresh:
+                loadingCircle.setVisibility(View.VISIBLE);
+                requestPosts(topic);
                 break;
         }
         return true;
     }
 
 
+    //switch to new post fragment when fab is clicked
+    public void openNewPost() {
+        Fragment fragment = new ForumNewPostFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("newPostTopic", topic);
+        bundle.putString("serverIP", LOCAL_IP_ADDRESS);
+        bundle.putStringArray("userData", userdata);
+        fragment.setArguments(bundle);
+        FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+        ft.replace(R.id.content_frame, fragment).addToBackStack("tag");
+        ft.commit();
+    }
 
-    //switch to new fragment after list item is selected
+    //switch to post fragment when one is clicked
     public void openPost(String postID) {
         Fragment fragment = new ForumPostFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedPost", postID);
+        bundle.putString("serverIP", LOCAL_IP_ADDRESS);
+        bundle.putStringArray("userData", userdata);
         fragment.setArguments(bundle);
-
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment).addToBackStack("tag");
         ft.commit();
@@ -175,21 +254,27 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = getLayoutInflater().inflate(R.layout.forum_post_list_card, null);
             // initialize text views
-            TextView topicTitle = (TextView) view.findViewById(R.id.text_title);
-            TextView topicAuthor = (TextView) view.findViewById(R.id.text_author);
-            TextView topicDescription = (TextView) view.findViewById(R.id.text_snippet);
+            TextView topicTitle = view.findViewById(R.id.text_title);
+            TextView topicAuthor = view.findViewById(R.id.text_author);
+            TextView topicTime = view.findViewById(R.id.text_time);
+            //ImageView postImage = view.findViewById(R.id.image_postimage);
             // iterate through list to set topic entries
             topicTitle.setText(postList.get(i).getPostTitle());
             topicAuthor.setText(postList.get(i).getPostAuthor());
-            topicDescription.setText(postList.get(i).getPostBody());
+            DateUtil d = new DateUtil();
+            String timeago = d.getTimeAgo(Long.parseLong(postList.get(i).getPostTime()));
+            topicTime.setText(timeago);
+            //add images here when support is added
             return view;
         }
     }
 
+
+
+
     //NETWORKING
     //requests topic JSON object from backend
     public void requestPosts(String topic) {
-        System.out.println("REQUESTING POSTS");
         String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/topics/" + topic;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
@@ -206,11 +291,12 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        showToast(error.toString());
+                        Toast.makeText(getActivity(), error.toString() + " ", Toast.LENGTH_LONG).show();
                         loadingCircle.setVisibility(View.GONE);
                         errMessage.setText("Connection Error\n Make sure your forum server is running.");
                         errMessage.setVisibility(View.VISIBLE);
                         retryTopics.setVisibility(View.VISIBLE);
+                        newPostFab.hide();
                     }
                 }
         );
@@ -229,7 +315,14 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         //for each element in the array create a new topic object and add it to the array list
         for (int i = 0; i < jposts.length(); i++) {
             JSONObject curPost = jposts.getJSONObject(i);
-            Post p = new Post(curPost.getString("id"), curPost.getString("title"), curPost.getString("body"), curPost.getString("author"), curPost.getBoolean("edited"), curPost.getString("topic_name"), curPost.getString("date"));
+            Post p = new Post(
+                    curPost.getString("id"),
+                    curPost.getString("title"),
+                    curPost.getString("body"),
+                    ("@" + curPost.getString("author")),
+                    curPost.getBoolean("edited"),
+                    curPost.getString("topic_name"),
+                    curPost.getString("date"));
             receivedPosts.add(p);
         }
         //update global topic list
@@ -247,12 +340,5 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         } else {
             errMessage.setVisibility(View.GONE);
         }
-
-
-    }
-
-    //display a toast
-    private void showToast(String message) {
-        Toast.makeText(getActivity(), message + " ", Toast.LENGTH_LONG).show();
     }
 }

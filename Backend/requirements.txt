@@ -6,5 +6,8 @@ psycopg2-binary
 bcrypt
 PyJWT
 Gunicorn
+isort
+black
+mock
 
 # -e .

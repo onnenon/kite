@@ -22,6 +22,16 @@ down:
 run:
 	flask run --host=0.0.0.0
 
-test: dbup
-	pip install -r requirements-test.txt
-	bash run-tests.sh
+clean:
+	find . -name '*.pyc' -exec rm '{}' ';'
+	find . -name '__pycache__' -type d -prune -exec rm -rf '{}' '+'
+	find . -name '.pytest_cache' -type d -prune -exec rm -rf '{}' '+'
+
+scrub: clean
+	find . -name '*.egg-info' -type d -prune -exec rm -rf '{}' '+'
+	rm -rf htmlcov
+	rm -f .coverage
+
+format:
+	black kite tests
+	isort -rc kite tests
