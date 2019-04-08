@@ -46,15 +46,6 @@ public class MessagesFragment extends Fragment {
             System.out.println("USER DATA:");
             System.out.println(Arrays.toString(userdata));
         }
-        else {
-
-            // This allows the variables to continue to run for mockito testing purposes
-            userdata = new String[6];
-            username = "Username"; // Get the username of the user
-            LOCAL_IP_ADDRESS = "kite.onn.sh";
-            System.out.println("USER DATA:");
-            System.out.println(Arrays.toString(userdata));
-        }
 
         //initialize user interface objects
         messageView = (LinearLayout) v.findViewById(R.id.message_layout);

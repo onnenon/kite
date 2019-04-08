@@ -33,11 +33,9 @@ import static org.mockito.Mockito.when;
 
 public class MessagesFragmentUnitTest {
 
-    private MainActivity main;
     private MessagesFragment messageFrag;
     private WebSocketImplementation impWS;
     private Message realMessage;
-    private Bundle bundle;
 
     private MessagesFragment mockMessageFrag;
     private WebSocketImplementation mockImpWS;
@@ -47,12 +45,8 @@ public class MessagesFragmentUnitTest {
     public void setup() {
 
         // Regular objects
-        main = new MainActivity();
-
         messageFrag = new MessagesFragment();
         messageFrag.setUsername("fadmin");
-        // messageFrag.setMessageView(new View( (new LayoutInflater()).inflater.inflate(R.layout.messages_fragment, container, false)));
-        messageFrag.setMessageView(null);
         messageFrag.setIPaddress("kite.onn.sh");
 
         impWS = new WebSocketImplementation(messageFrag.getUsername(), messageFrag.getActivity(), messageFrag.getContext(),
