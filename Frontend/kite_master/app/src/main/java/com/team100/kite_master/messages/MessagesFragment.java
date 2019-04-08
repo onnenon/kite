@@ -54,7 +54,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
         postButton = (Button) v.findViewById(R.id.message_button);
 
-        implementationWS = new WebSocketImplementation(this, username, getActivity(), getContext(), messageView, errorTextView, LOCAL_IP_ADDRESS);
+        implementationWS = new WebSocketImplementation(this, username, LOCAL_IP_ADDRESS);
 
         //set on click listener
         //postButton.setOnClickListener(this);
@@ -79,8 +79,6 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         Objects.requireNonNull(getActivity()).setTitle("Messages");
     }
 
-
-
     public void output(final String username, final String txt) {
 
         getActivity().runOnUiThread(new Runnable() {
@@ -96,6 +94,11 @@ public class MessagesFragment extends Fragment implements OutputHandler {
                 messageView.addView(text);
             }
         });
+    }
+
+    public void setErrorText(String errorText) {
+
+        errorTextView.setText(errorText);
     }
 
 

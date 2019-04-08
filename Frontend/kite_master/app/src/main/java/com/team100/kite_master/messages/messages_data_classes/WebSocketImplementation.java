@@ -32,25 +32,18 @@ public class WebSocketImplementation {
     private Request request;
     private WebSocket webSocket;
 
-    private TextView errorTextView;
-
-    // private String lastMessage;
-
-    public WebSocketImplementation(OutputHandler outputHandler, String username, TextView errorTextView, String IP_ADDRESS) {
+    public WebSocketImplementation(OutputHandler outputHandler, String username, String IP_ADDRESS) {
 
         this.outputHandler = outputHandler;
 
         this.username = username;
 
-        this.errorTextView = errorTextView;
-
         this.client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
-        // this.request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
         this.request = new okhttp3.Request.Builder().url("http://chat." + IP_ADDRESS + ":5000").build();
         this.webSocket = client.newWebSocket(request, new KiteWebSocketListener());
     }
 
-    // Helper methods for this class and outer classes
+    // Websocket communication methods
     public boolean sendJSONText(String TextString) {
 
         JsonObject JsonText = new JsonObject();
@@ -80,27 +73,6 @@ public class WebSocketImplementation {
         outputHandler.output(stringUsername, stringText);
     }
 
-    // Getter and setter methods
-    public String getUsername() {
-
-        return username;
-    }
-
-    public void setUsername(String username) {
-
-        this.username = username;
-    }
-
-    public OkHttpClient getClient() {
-
-        return this.client;
-    }
-
-    public okhttp3.Request getRequest() {
-
-        return this.request;
-    }
-
     private class KiteWebSocketListener extends WebSocketListener {
 
         private static final int NORMAL_CLOSURE_STATUS = 1000;
@@ -127,10 +99,32 @@ public class WebSocketImplementation {
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, okhttp3.Response response) {
-            errorTextView.setText("Error : " + t.getMessage());
+            outputHandler.setErrorText("Error : " + t.getMessage());
         }
     }
 
+
+
+    // Getter and setter methods
+    public String getUsername() {
+
+        return username;
+    }
+
+    public void setUsername(String username) {
+
+        this.username = username;
+    }
+
+    public OkHttpClient getClient() {
+
+        return this.client;
+    }
+
+    public okhttp3.Request getRequest() {
+
+        return this.request;
+    }
 
 
 
