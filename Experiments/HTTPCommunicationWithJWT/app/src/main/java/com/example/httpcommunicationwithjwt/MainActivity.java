@@ -35,14 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText EnterPassword;
     private EditText EnterBio;
 
-    private Switch AdminBool;
-    private Switch ModerBool;
-
-    private Button SetPassword;
     private Button SetBio;
-    private Button SetModer;
-    private Button SetAdmin;
-    private Button SetAll;
     private Button DeleteUser;
     private Button GetUserInfo;
 
@@ -53,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Implementation = new HTTPImplementation(getApplication(), this, "http://kite.onn.sh/api/v3/users");
-
         SignInButton = (Button) findViewById(R.id.SignIn);
 
         LoginJWT = (TextView) findViewById(R.id.LoginStatus);
@@ -63,25 +54,20 @@ public class MainActivity extends AppCompatActivity {
         EnterUsername = (EditText) findViewById(R.id.EnterUsername);
         EnterPassword = (EditText) findViewById(R.id.EnterPassword);
         EnterBio = (EditText) findViewById(R.id.EnterBio);
-        AdminBool = (Switch) findViewById(R.id.AdminBool);
-        ModerBool = (Switch) findViewById(R.id.ModerBool);
 
-        SetPassword = (Button) findViewById(R.id.SetPassword);
         SetBio = (Button) findViewById(R.id.SetBio);
-        SetModer = (Button) findViewById(R.id.SetModer);
-        SetAdmin = (Button) findViewById(R.id.SetAdmin);
-        SetAll = (Button) findViewById(R.id.SetAll);
         DeleteUser = (Button) findViewById(R.id.DeleteUser);
         GetUserInfo = (Button) findViewById(R.id.GetUserInfo);
+
+        Implementation = new HTTPImplementation(getApplication(), getApplicationContext(), "http://kite.onn.sh:5000/api/v3/users", LoginJWT, UserInfo);
 
         SignInButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                String username = "fadmin";
-
-                String password = "password";
+                String username = EnterUsername.getText().toString();
+                String password = EnterPassword.getText().toString();
 
                 Implementation.login(username, password);
             }
@@ -94,21 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
                 String userName = EnterUsername.getText().toString();
 
-                // String InfoString = Implementation.getUserInfo();
-
-                // UserInfo.setText(InfoString);
-            }
-        });
-
-        SetPassword.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                String userName = EnterUsername.getText().toString();
-                String password = EnterPassword.getText().toString();
-
-                Implementation.setPassword(userName, password);
+                Implementation.getUserInfo(userName);
             }
         });
 
@@ -121,45 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 String bio = EnterBio.getText().toString();
 
                 Implementation.setBio(userName, bio);
-            }
-        });
-
-        SetModer.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                String userName = EnterUsername.getText().toString();
-                boolean isModer = ModerBool.isChecked();
-
-                Implementation.setModeratorStatus(userName, isModer);
-            }
-        });
-
-        SetAdmin.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                String userName = EnterUsername.getText().toString();
-                boolean isAdmin = AdminBool.isChecked();
-
-                Implementation.setAdministratorStatus(userName, isAdmin);
-            }
-        });
-
-        SetAll.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                String userName = EnterUsername.getText().toString();
-                String password = EnterPassword.getText().toString();
-                String bio = EnterBio.getText().toString();
-                boolean isModer = ModerBool.isChecked();
-                boolean isAdmin = AdminBool.isChecked();
-
-                Implementation.setAll(userName, password, bio, isModer, isAdmin);
             }
         });
 

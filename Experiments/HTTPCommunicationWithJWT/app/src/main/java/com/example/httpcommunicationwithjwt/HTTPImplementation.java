@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.util.Base64;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -28,10 +29,10 @@ public class HTTPImplementation implements HTTPInterface {
     private RequestQueue Requests;
     private String RequestURL;
 
-    private String JWT;
-    private String UserInfo;
+    private TextView TextviewJWT;
+    private TextView UserInfo;
 
-    public HTTPImplementation(Application HTTPactivity, Context HTTPcontext, String RequestURL) {
+    public HTTPImplementation(Application HTTPactivity, Context HTTPcontext, String RequestURL, TextView TextviewJWT, TextView UserInfo) {
 
         this.HTTPactivity = HTTPactivity;
         this.HTTPcontext = HTTPcontext;
@@ -39,14 +40,14 @@ public class HTTPImplementation implements HTTPInterface {
 
         this.Requests = Volley.newRequestQueue(HTTPcontext);
 
-        this.JWT = "";
-        this.UserInfo = "";
+        this.TextviewJWT = TextviewJWT;
+        this.UserInfo = UserInfo;
     }
 
     @Override
     public String login(final String username, final String password) {
 
-        String LoginRequestURL = "http://kite.onn.sh/api/auth/login";
+        String LoginRequestURL = "http://kite.onn.sh:5000/api/auth/login";
 
         JSONObject LoginCredentials = new JSONObject();
 
@@ -121,15 +122,17 @@ public class HTTPImplementation implements HTTPInterface {
 
                         try {
 
-                            JSONObject user = response.getJSONObject("user");
+                            JSONObject user = response.getJSONObject("data");
 
                             String userName = user.getString("username");
                             boolean isAdmin = user.getBoolean("is_admin");
                             boolean isMod = user.getBoolean("is_mod");
                             int postCount = user.getInt("post_count");
                             String bio = user.getString("bio");
+                            String displayName = user.getString("displayName");
 
-                            setUserInfo(userName + "\n" + Boolean.toString(isAdmin) + "\n" + Boolean.toString(isMod) + "\n" + Integer.toString(postCount) + "\n" + bio);
+                            setInfo(userName + ", " + Boolean.toString(isAdmin) + ", " + Boolean.toString(isMod) + ", "
+                                    + Integer.toString(postCount) + ", " + bio + ", "+ displayName);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -153,160 +156,13 @@ public class HTTPImplementation implements HTTPInterface {
                 HashMap<String, String> headers = new HashMap<String, String>();
 
                 headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
+                headers.put("Authorization", "Bearer " + TextviewJWT.getText().toString());
 
                 return headers;
             }
         };
 
         Request success = Requests.add(getRequest);
-
-        return false;
-    }
-
-    @Override
-    public boolean setModeratorStatus(String userName, boolean isModer) {
-
-        JSONObject newUser = new JSONObject();
-
-        try {
-            newUser.put("is_mod", isModer);
-
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest putRequest = new JsonObjectRequest(Request.Method.PUT, RequestURL + "/" + userName, newUser,
-
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        Toast.makeText(HTTPcontext, response + "", Toast.LENGTH_SHORT).show();
-                    }
-                },
-
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(HTTPcontext, error + "", Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-
-            // Credit to the people at this source: https://stackoverflow.com/questions/25941658/volley-how-to-send-jsonobject-using-bearer-accesstoken-authentication
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                HashMap<String, String> headers = new HashMap<String, String>();
-
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
-
-                return headers;
-            }
-        };
-
-        Request success = Requests.add(putRequest);
-
-        return success.hasHadResponseDelivered();
-    }
-
-    @Override
-    public boolean setAdministratorStatus(String userName, boolean isAdmin) {
-
-        JSONObject newUser = new JSONObject();
-
-        try {
-            newUser.put("is_admin", isAdmin);
-
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest putRequest = new JsonObjectRequest(Request.Method.PUT, RequestURL + "/" + userName, newUser,
-
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        Toast.makeText(HTTPcontext, response + "", Toast.LENGTH_SHORT).show();
-                    }
-                },
-
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(HTTPcontext, error + "", Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-
-            // Credit to the people at this source: https://stackoverflow.com/questions/25941658/volley-how-to-send-jsonobject-using-bearer-accesstoken-authentication
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                HashMap<String, String> headers = new HashMap<String, String>();
-
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
-
-                return headers;
-            }
-        };
-
-        Request success = Requests.add(putRequest);
-
-        return false;
-    }
-
-    @Override
-    public boolean setPassword(String userName, String newPassword) {
-
-        JSONObject newUser = new JSONObject();
-
-        try {
-            newUser.put("password", newPassword);
-
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest putRequest = new JsonObjectRequest(Request.Method.PUT, RequestURL + "/" + userName, newUser,
-
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        Toast.makeText(HTTPcontext, response + "", Toast.LENGTH_SHORT).show();
-                    }
-                },
-
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(HTTPcontext, error + "", Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-
-            // Credit to the people at this source: https://stackoverflow.com/questions/25941658/volley-how-to-send-jsonobject-using-bearer-accesstoken-authentication
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                HashMap<String, String> headers = new HashMap<String, String>();
-
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
-
-                return headers;
-            }
-        };
-
-        Request success = Requests.add(putRequest);
 
         return false;
     }
@@ -349,59 +205,7 @@ public class HTTPImplementation implements HTTPInterface {
                 HashMap<String, String> headers = new HashMap<String, String>();
 
                 headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
-
-                return headers;
-            }
-        };
-
-        Request success = Requests.add(putRequest);
-
-        return false;
-    }
-
-    @Override
-    public boolean setAll(String userName, String newPassword, String newBio, boolean isModer, boolean isAdmin) {
-
-        JSONObject newUser = new JSONObject();
-
-        try {
-            newUser.put("password", newPassword);
-            newUser.put("bio", newBio);
-            newUser.put("is_mod", isModer);
-            newUser.put("is_admin", isAdmin);
-
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest putRequest = new JsonObjectRequest(Request.Method.PUT, RequestURL + "/" + userName, newUser,
-
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        Toast.makeText(HTTPcontext, response + "", Toast.LENGTH_SHORT).show();
-                    }
-                },
-
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(HTTPcontext, error + "", Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-
-            // Credit to the people at this source: https://stackoverflow.com/questions/25941658/volley-how-to-send-jsonobject-using-bearer-accesstoken-authentication
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                HashMap<String, String> headers = new HashMap<String, String>();
-
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
+                headers.put("Authorization", "Bearer " + TextviewJWT.getText().toString());
 
                 return headers;
             }
@@ -440,7 +244,7 @@ public class HTTPImplementation implements HTTPInterface {
                 HashMap<String, String> headers = new HashMap<String, String>();
 
                 headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer " + JWT);
+                headers.put("Authorization", "Bearer " + TextviewJWT.getText().toString());
 
                 return headers;
             }
@@ -453,22 +257,22 @@ public class HTTPImplementation implements HTTPInterface {
 
     public String getJWT() {
 
-        return this.JWT;
+        return this.TextviewJWT.getText().toString();
     }
 
     public void setJWT(String JWT) {
 
-        this.JWT = JWT;
+        this.TextviewJWT.setText(JWT);
     }
 
-    public String getUserInfo() {
+    public String getInfo() {
 
-        return this.UserInfo;
+        return this.UserInfo.getText().toString();
     }
 
-    public void setUserInfo(String UserInfo) {
+    public void setInfo(String userInfo) {
 
-        this.UserInfo = UserInfo;
+        this.UserInfo.setText(userInfo);
     }
 
     public JSONObject foo() {
