@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.team100.kite_master.messages.OutputHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,8 +24,7 @@ import okhttp3.WebSocketListener;
 
 public class WebSocketImplementation {
 
-    private Activity WSactivity;
-    private Context WScontext;
+    private OutputHandler outputHandler;
 
     private String username;
 
@@ -32,19 +32,16 @@ public class WebSocketImplementation {
     private Request request;
     private WebSocket webSocket;
 
-    private LinearLayout messageView;
     private TextView errorTextView;
 
-    private String lastMessage;
+    // private String lastMessage;
 
-    public WebSocketImplementation(String username, Activity WSactivity, Context WScontext, LinearLayout messageView, TextView errorTextView, String IP_ADDRESS) {
+    public WebSocketImplementation(OutputHandler outputHandler, String username, TextView errorTextView, String IP_ADDRESS) {
 
-        this.WSactivity = WSactivity;
-        this.WScontext = WScontext;
+        this.outputHandler = outputHandler;
 
         this.username = username;
 
-        this.messageView = messageView;
         this.errorTextView = errorTextView;
 
         this.client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
@@ -63,7 +60,7 @@ public class WebSocketImplementation {
 
         boolean sent = webSocket.send(JsonText.toString());
 
-        output(username, TextString);
+        outputHandler.output(username, TextString);
 
         return sent;
     }
@@ -80,24 +77,7 @@ public class WebSocketImplementation {
         String stringUsername = jsonUsername.getAsString();
         String stringText = jsonText.getAsString();
 
-        output(stringUsername, stringText);
-    }
-
-    public void output(final String username, final String txt) {
-
-        WSactivity.runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-
-                Message msg = new Message(username, txt);
-                setLastMessage(msg.getMessageTime() + "\n" + msg.getUsername() + ": " + msg.getText() + "\n");
-
-                TextView text = new TextView(WScontext);
-                text.setText(getLastMessage());
-                messageView.addView(text);
-            }
-        });
+        outputHandler.output(stringUsername, stringText);
     }
 
     // Getter and setter methods
@@ -149,19 +129,6 @@ public class WebSocketImplementation {
         public void onFailure(WebSocket webSocket, Throwable t, okhttp3.Response response) {
             errorTextView.setText("Error : " + t.getMessage());
         }
-    }
-
-
-
-    // For Mockito testing
-    public String getLastMessage() {
-
-        return this.lastMessage;
-    }
-
-    public void setLastMessage(String msg) {
-
-        this.lastMessage = msg;
     }
 
 
