@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -67,6 +68,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         Objects.requireNonNull(getActivity()).setTitle("Login");
         Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).hide();
         successfulIP = false;
+
         render();
     }
 
@@ -97,6 +99,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
 
     private void render() {
+        ((MainActivity) Objects.requireNonNull(getActivity())).lockdrawer(true);
         if (successfulIP) {
             loginUsername.getText().clear();
             loginUsername.setHint("Username");
@@ -212,6 +215,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
 
     private void moveToForumFrag(String username, String ip) {
+        ((MainActivity) Objects.requireNonNull(getActivity())).lockdrawer(false);
         SaveSharedPreference.setUserName(getActivity(), username);
         SaveSharedPreference.setHostIp(getActivity(), ip);
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setUsername(username);
