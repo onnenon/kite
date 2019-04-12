@@ -67,4 +67,4 @@ Build APK:
     - ./gradlew assemble
   artifacts:
     paths:
-      - app/build/outputs/
+      - Frontend/kite_master/app/build/outputs/
