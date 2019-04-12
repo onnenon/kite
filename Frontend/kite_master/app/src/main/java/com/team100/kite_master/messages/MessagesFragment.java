@@ -12,13 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.team100.kite_master.R;
+import com.team100.kite_master.messages.messages_data_classes.Message;
 import com.team100.kite_master.messages.messages_data_classes.WebSocketImplementation;
 
 import java.util.Arrays;
 import java.util.Objects;
 
 
-public class MessagesFragment extends Fragment {
+public class MessagesFragment extends Fragment implements OutputHandler {
 
     private String LOCAL_IP_ADDRESS;
     private String[] userdata;
@@ -53,7 +54,7 @@ public class MessagesFragment extends Fragment {
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
         postButton = (Button) v.findViewById(R.id.message_button);
 
-        implementationWS = new WebSocketImplementation(username, getActivity(), getContext(), messageView, errorTextView, LOCAL_IP_ADDRESS);
+        implementationWS = new WebSocketImplementation(this, username, LOCAL_IP_ADDRESS);
 
         //set on click listener
         //postButton.setOnClickListener(this);
@@ -76,6 +77,28 @@ public class MessagesFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getActivity()).setTitle("Messages");
+    }
+
+    public void output(final String username, final String txt) {
+
+        getActivity().runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                Message msg = new Message(username, txt);
+                String messageString = msg.getMessageTime() + "\n" + msg.getUsername() + ": " + msg.getText() + "\n";
+
+                TextView text = new TextView(getContext());
+                text.setText(messageString);
+                messageView.addView(text);
+            }
+        });
+    }
+
+    public void setErrorText(String errorText) {
+
+        errorTextView.setText(errorText);
     }
 
 
