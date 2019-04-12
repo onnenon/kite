@@ -43,7 +43,7 @@ stages:
 
 Build APK:
   stage: Build
-  image: java:8-jdk
+  image: openjdk:8-jdk
   variables:
     ANDROID_COMPILE_SDK: "28"
     ANDROID_BUILD_TOOLS: "28.0.2"
