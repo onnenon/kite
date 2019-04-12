@@ -45,9 +45,9 @@ Build APK:
   stage: Build
   image: java:8-jdk
   before_script:
-    - export GRADLE_USER_HOME=`pwd`/.gradle
+    - export GRADLE_USER_HOME=$(pwd)/Frontend/kite_master/.gradle
   script:
-    - ./Frontend/kite_master/gradlew kite_master:app:assemble
+    - ./gradlew app:assemble
   artifacts:
     paths:
       - app/build/outputs/
