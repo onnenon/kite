@@ -41,11 +41,11 @@ Build App:
   script:
     - ./Frontend/kite_master/gradlew build
 
-  Build APK:
-    stage: Frontend
-    image: java:8-jdk
-    script:
-      - ./Frontend/kite_master/gradlew assembleDebug
-    artifacts:
-      paths:
-        - app/build/outputs/
+Build APK:
+  stage: Frontend
+  image: java:8-jdk
+  script:
+    - ./Frontend/kite_master/gradlew assembleDebug
+  artifacts:
+    paths:
+      - app/build/outputs/
