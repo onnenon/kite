@@ -1,11 +1,11 @@
 stages:
-  - Backend
-  - Frontend
+  - Test 
+  - Build
 
 
 # Backend Jobs
 Test API:
-  stage: Backend
+  stage: Test
   image: python:3.6
 
   services:
@@ -27,7 +27,7 @@ Test API:
 
 # Frontend Jobs
 Build App:
-  stage: Frontend
+  stage: Test
   image: java:8-jdk
   before_script:
     - echo `pwd`
@@ -42,12 +42,12 @@ Build App:
     - ./Frontend/kite_master/gradlew build
 
 Build APK:
-  stage: Frontend
+  stage: Build
   image: java:8-jdk
   before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
   script:
-    - ./Frontend/kite_master/gradlew build
+    - ./Frontend/kite_master/gradlew assembleDebug
   artifacts:
     paths:
       - app/build/outputs/
