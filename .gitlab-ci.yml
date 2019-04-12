@@ -1,6 +1,6 @@
-# stages:
-#   - Test 
-#   - Build
+stages:
+  - Test 
+  - Build
 
 
 # # Backend Jobs
