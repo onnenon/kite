@@ -62,9 +62,9 @@ Build APK:
     - set +o pipefail
     - yes | android-sdk-linux/tools/bin/sdkmanager --licenses
     - set -o pipefail
-    - export GRADLE_USER_HOME=$(pwd)/Frontend/kite_master/.gradle
+    - cd Frontend/kite_master
   script:
-    - ./Frontend/kite_master/gradlew assemble
+    - ./gradlew assemble
   artifacts:
     paths:
       - app/build/outputs/
