@@ -47,7 +47,7 @@ Build APK:
   before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
   script:
-    - ./Frontend/kite_master/gradlew assembleDebug
+    - ./Frontend/kite_master/gradlew build
   artifacts:
     paths:
       - app/build/outputs/
