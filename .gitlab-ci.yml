@@ -50,7 +50,7 @@ Build App:
       - .gradle/wrapper
       - .gradle/caches
   script:
-    - ./Frontend/kite_master/gradlew test
+    - ./gradlew test
 
 Build APK:
   only:
