@@ -41,6 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -73,10 +74,18 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         if (bundle != null) {
             userdata = bundle.getStringArray("userData");
             topic = bundle.getString("selectedTopic");
+            LOCAL_IP_ADDRESS = bundle.getString("serverIP");
         }
 
-        //set local ip for testing
-        LOCAL_IP_ADDRESS = "10.0.1.2";
+
+        //DEBUGGING
+        System.out.println(" ");
+        System.out.println("POST LIST FRAGMENT:");
+        System.out.println("CURRENT TOPIC: " + topic);
+        System.out.println("USER: " + Arrays.toString(userdata));
+        System.out.println("IP ADDRESS: " + LOCAL_IP_ADDRESS);
+        System.out.println(" ");
+
 
         //link view items
         postListView = v.findViewById(R.id.list_view);
@@ -197,6 +206,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         Fragment fragment = new ForumNewPostFragment();
         Bundle bundle = new Bundle();
         bundle.putString("newPostTopic", topic);
+        bundle.putString("serverIP", LOCAL_IP_ADDRESS);
         bundle.putStringArray("userData", userdata);
         fragment.setArguments(bundle);
         FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
@@ -210,6 +220,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         Fragment fragment = new ForumPostFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedPost", postID);
+        bundle.putString("serverIP", LOCAL_IP_ADDRESS);
         bundle.putStringArray("userData", userdata);
         fragment.setArguments(bundle);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -250,7 +261,9 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
             // iterate through list to set topic entries
             topicTitle.setText(postList.get(i).getPostTitle());
             topicAuthor.setText(postList.get(i).getPostAuthor());
-            topicTime.setText(DateUtil.getTimeAgo(Long.parseLong(postList.get(i).getPostTime())));
+            DateUtil d = new DateUtil();
+            String timeago = d.getTimeAgo(Long.parseLong(postList.get(i).getPostTime()));
+            topicTime.setText(timeago);
             //add images here when support is added
             return view;
         }
@@ -262,7 +275,6 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
     //NETWORKING
     //requests topic JSON object from backend
     public void requestPosts(String topic) {
-        System.out.println("REQUESTING POSTS");
         String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/topics/" + topic;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
@@ -307,7 +319,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
                     curPost.getString("id"),
                     curPost.getString("title"),
                     curPost.getString("body"),
-                    curPost.getString("author"),
+                    ("@" + curPost.getString("author")),
                     curPost.getBoolean("edited"),
                     curPost.getString("topic_name"),
                     curPost.getString("date"));

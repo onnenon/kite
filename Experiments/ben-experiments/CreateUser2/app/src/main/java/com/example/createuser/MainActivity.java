@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private void jsonParse() {
 
         // jsonParse material from video
-        String URL = "http://kite.onn.sh/api/user";
+        String URL = "http://kite.onn.sh/api/v2/users";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, URL, null,
 

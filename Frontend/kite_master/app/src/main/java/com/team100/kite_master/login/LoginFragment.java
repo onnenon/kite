@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -43,7 +44,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     EditText loginUsername;
     EditText loginPassword;
     private boolean successfulIP;
-    String LOCAL_IP_ADDRESS = "10.0.1.2";
+    String LOCAL_IP_ADDRESS = "";
 
     private RequestQueue volleyqueue;
     private String webToken;
@@ -55,7 +56,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         View v = inflater.inflate(R.layout.login_screen, container, false);
         loginUsername = v.findViewById(R.id.login_username);
         loginPassword = v.findViewById(R.id.login_password);
-        loginButton = (Button) v.findViewById(R.id.login_button);
+        loginButton = v.findViewById(R.id.login_button);
         loginButton.setOnClickListener(this);
         return v;
     }
@@ -67,6 +68,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         Objects.requireNonNull(getActivity()).setTitle("Login");
         Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).hide();
         successfulIP = false;
+
         render();
     }
 
@@ -83,9 +85,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.login_button:
                 if (successfulIP) {
+                    System.out.println("SET LOCAL IP TO: " + LOCAL_IP_ADDRESS);
                     loginPassword.onEditorAction(EditorInfo.IME_ACTION_DONE);
                     loginUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
-                    login(loginUsername.getText().toString(), loginPassword.getText().toString(), "http://" + LOCAL_IP_ADDRESS + ":5000/api/auth/login");
+                    login(loginUsername.getText().toString(), loginPassword.getText().toString(), LOCAL_IP_ADDRESS);
                 } else {
                     checkIP(loginUsername.getText().toString());
                     loginUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
@@ -96,6 +99,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
 
     private void render() {
+        ((MainActivity) Objects.requireNonNull(getActivity())).lockdrawer(true);
         if (successfulIP) {
             loginUsername.getText().clear();
             loginUsername.setHint("Username");
@@ -122,6 +126,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void getIpStatus(String inputIP) {
 
         String URL = "http://" + inputIP + ":5000/api/status";
+
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -136,6 +141,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         if (status.equals("Online")) {
                             Toast.makeText(getActivity(), "Connected!" + " ", Toast.LENGTH_LONG).show();
                             successfulIP = true;
+                            LOCAL_IP_ADDRESS = loginUsername.getText().toString();
                             render();
                         }
                     }
@@ -152,7 +158,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void login(final String username, final String password, final String URL) {
+    private void login(final String username, final String password, final String ip) {
+
+        String URL = "http://" + ip + ":5000/api/auth/login";
+
 
         JSONObject LoginCredentials = new JSONObject();
         try {
@@ -172,7 +181,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             webToken = token.getString("access_token");
                             System.out.println("TOKEN: " + webToken);
                             Toast.makeText(getActivity(), "Logging In!" + " ", Toast.LENGTH_LONG).show();
-                            moveToFoumFrag(username);
+                            moveToForumFrag(username,LOCAL_IP_ADDRESS);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -205,12 +214,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void moveToFoumFrag(String username) {
+    private void moveToForumFrag(String username, String ip) {
+        ((MainActivity) Objects.requireNonNull(getActivity())).lockdrawer(false);
         SaveSharedPreference.setUserName(getActivity(), username);
+        SaveSharedPreference.setHostIp(getActivity(), ip);
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setUsername(username);
+        ((MainActivity) Objects.requireNonNull(getActivity())).setLocalIP(LOCAL_IP_ADDRESS);
         Fragment fragment = new ForumTopicListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("curUser", username);
+        bundle.putString("serverIP", ip);
         fragment.setArguments(bundle);
         FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment);
