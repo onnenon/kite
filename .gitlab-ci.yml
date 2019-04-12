@@ -44,6 +44,8 @@ Build App:
 Build APK:
   stage: Frontend
   image: java:8-jdk
+  before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
   script:
     - ./Frontend/kite_master/gradlew assembleDebug
   artifacts:
