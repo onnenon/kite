@@ -24,6 +24,7 @@ public class DateUtilTest {
         d = mock(DateUtil.class);
     }
 
+    /*
     @Test
     public void testCleanDate() {
         when(d.getCleanDate(1551997448, "MM/dd/yy hh:mma")).thenCallRealMethod();
@@ -69,6 +70,8 @@ public class DateUtilTest {
         assertEquals(d.getCleanDate(1553969660, "MM/dd/yy hh:mma"), "3/30/19 1:14pm");
     }
 
+
+*/
     @Test
     public void testTimeAgo1() {
         when(d.getCurMillis()).thenReturn(1554676736748L);
