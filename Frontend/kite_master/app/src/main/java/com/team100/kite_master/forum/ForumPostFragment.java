@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -15,14 +14,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonObject;
-import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
 import com.team100.kite_master.forum.forum_data_classes.DateUtil;
 import com.team100.kite_master.forum.forum_data_classes.Post;
@@ -32,17 +24,11 @@ import com.team100.kite_master.networking.VolleyListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class ForumPostFragment extends Fragment implements View.OnClickListener {
 
-    //Local ip for testing
-    private String server_ip;
-    private String[] userdata;
-
-    //global variables
+    //declare global vars
     String postID;
 
     //declare error layout items
@@ -66,18 +52,13 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         //receive bundle
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            userdata = bundle.getStringArray("userData");
-            postID = bundle.getString("selectedPost");
+            postID = bundle.getString("selected_post");
         }
-
-
 
         //LOCAL DEBUGGING
         System.out.println(" ");
         System.out.println("POST FRAGMENT:");
         System.out.println("CURRENT POST: " + postID);
-        System.out.println("USER: " + Arrays.toString(userdata));
-        System.out.println("IP ADDRESS: " + server_ip);
         System.out.println(" ");
 
         //initialize layout elements
@@ -122,7 +103,6 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
             case R.id.retry_topics:
                 retry.setVisibility(View.GONE);
                 errMessage.setVisibility(View.GONE);
-                //requestPost(postID);
                 requestPost(postID);
                 loadingCircle.setVisibility(View.VISIBLE);
                 break;

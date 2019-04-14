@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,28 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
-import com.team100.kite_master.forum.ForumPostListFragment;
 import com.team100.kite_master.forum.ForumTopicListFragment;
 import com.team100.kite_master.networking.NetworkManager;
 import com.team100.kite_master.networking.VolleyListener;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 
@@ -129,6 +114,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(getActivity(), "Connected!" + " ", Toast.LENGTH_LONG).show();
                 successfulIP = true;
                 server_ip = loginUsername.getText().toString();
+                ((MainActivity) Objects.requireNonNull(getActivity())).setServerIP(server_ip);
                 showLoginScreen();
             }
 
@@ -149,7 +135,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         SaveSharedPreference.setHostIp(getActivity(), ip);
         //set current username and ip
         ((MainActivity) Objects.requireNonNull(getActivity())).setSavedContextData(username, ip);
-
         //launch forum fragment
         Fragment fragment = new ForumTopicListFragment();
         FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();

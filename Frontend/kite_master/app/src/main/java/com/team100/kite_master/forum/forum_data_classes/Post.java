@@ -1,5 +1,7 @@
 package com.team100.kite_master.forum.forum_data_classes;
 
+import android.support.annotation.NonNull;
+
 public class Post implements Comparable<Post> {
 
     private String postTitle;
@@ -69,6 +71,7 @@ public class Post implements Comparable<Post> {
     }
 
     //returns a string containing the topic id and description
+    @NonNull
     @Override
     public String toString() {
         return "|" + postTitle + " -> " + postTopic + "->" + postAuthor + "->" + postBody;

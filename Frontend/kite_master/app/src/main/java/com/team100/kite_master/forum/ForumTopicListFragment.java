@@ -55,11 +55,6 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         //set current screen in main activity
         ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen(R.id.nav_forum);
 
-        //get bundle data
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            userdata = bundle.getStringArray("userData");
-        }
 
         //DEBUGGING
         System.out.println(" ");
@@ -193,8 +188,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     public void openTopic(String topic) {
         Fragment fragment = new ForumPostListFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("selectedTopic", topic);
-        bundle.putStringArray("user_data", userdata);
+        bundle.putString("selected_topic", topic);
         fragment.setArguments(bundle);
         FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment).addToBackStack("tag");

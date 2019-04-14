@@ -4,6 +4,6 @@ import com.android.volley.VolleyError;
 
 public interface VolleyListener<T>
 {
-    public void getResult(T object);
-    public void getError(VolleyError err);
+    void getResult(T object);
+    void getError(VolleyError err);
 }

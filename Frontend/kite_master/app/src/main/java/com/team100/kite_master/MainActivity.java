@@ -2,6 +2,7 @@ package com.team100.kite_master;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -16,7 +17,6 @@ import android.widget.TextView;
 
 import com.team100.kite_master.devtests.UserTestsFragment;
 import com.team100.kite_master.forum.ForumTopicListFragment;
-import com.team100.kite_master.help.HelpFragment;
 import com.team100.kite_master.login.LoginFragment;
 import com.team100.kite_master.login.SaveSharedPreference;
 import com.team100.kite_master.messages.MessagesFragment;
@@ -56,19 +56,19 @@ public class MainActivity extends AppCompatActivity
 
 
         //setup toolbar
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
         //setup drawer
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         //set navigation view
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         //instantiate user with blank fields
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
     //back button goes to forum unless it is on forum, then it closes app
     @Override
     public void onBackPressed() {
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity
 
     //handles selecting other fragments from nav drawer
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         displaySelectedScreen(item.getItemId());
         return true;
