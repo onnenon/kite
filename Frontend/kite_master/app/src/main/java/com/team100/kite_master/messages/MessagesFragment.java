@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.team100.kite_master.R;
@@ -25,7 +26,9 @@ public class MessagesFragment extends Fragment implements OutputHandler {
     private String[] userdata;
     private String username;
 
+    private ScrollView scrollView;
     private LinearLayout messageView;
+
     private TextView errorTextView;
     private EditText messageText;
     private Button postButton;
@@ -49,6 +52,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         }
 
         //initialize user interface objects
+        scrollView = (ScrollView) v.findViewById(R.id.message_scroll_view);
         messageView = (LinearLayout) v.findViewById(R.id.message_layout);
         errorTextView = (TextView) v.findViewById(R.id.error_textView);
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
@@ -91,7 +95,24 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
                 TextView text = new TextView(getContext());
                 text.setText(messageString);
+
+                // Position the messages that you yourself send to the right
+                // Position the messages of other users to the left
+                /*
+                if (username == getUsername()) {
+
+                    text.setX(messageView.getWidth() - 10.0f);
+                }
+                else {
+
+                    text.setX(10.0f);
+                }
+                */
+
                 messageView.addView(text);
+
+                // Scroll to bottom upon receiving new messages
+                scrollView.fullScroll(text.FOCUS_DOWN);
             }
         });
     }
