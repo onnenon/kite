@@ -28,6 +28,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
 import com.team100.kite_master.forum.forum_data_classes.Post;
 
@@ -43,7 +44,7 @@ import java.util.Objects;
 
 public class ForumNewPostFragment extends Fragment implements View.OnClickListener {
 
-    private String LOCAL_IP_ADDRESS;
+    private String server_ip;
     private String[] userdata;
 
     //declare global vars
@@ -64,9 +65,10 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
         if (bundle != null) {
             userdata = bundle.getStringArray("userData");
             newPostTopicString = bundle.getString("newPostTopic");
-            LOCAL_IP_ADDRESS = bundle.getString("serverIP");
         }
 
+        //set server ip
+        server_ip = ((MainActivity) Objects.requireNonNull(getActivity())).getServerIP();
 
 
         //DEBUGGING
@@ -74,7 +76,7 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
         System.out.println("NEW POST FRAGMENT:");
         System.out.println("POSTING TO TOPIC: " + newPostTopicString);
         System.out.println("USER: " + Arrays.toString(userdata));
-        System.out.println("IP ADDRESS: " + LOCAL_IP_ADDRESS);
+        System.out.println("IP ADDRESS: " + server_ip);
         System.out.println(" ");
 
 
@@ -114,7 +116,7 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
         Fragment fragment = new ForumPostListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedTopic", newPostTopicString);
-        bundle.putString("serverIP", LOCAL_IP_ADDRESS);
+        bundle.putString("serverIP", server_ip);
         bundle.putStringArray("userData", userdata);
         getActivity().getSupportFragmentManager().popBackStack();
         //fragment.setArguments(bundle);
@@ -129,7 +131,7 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
 
     //send new post
     public void sendPost(String title, String body, String author) {
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/posts";
+        String URL = "http://" + server_ip + ":5000/api/v2/posts";
 
         if (title.equals("") || body.equals("") || author.equals("")) {
             Toast.makeText(getActivity(), "Please fill out all fields!", Toast.LENGTH_LONG).show();

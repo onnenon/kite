@@ -32,6 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
 import com.team100.kite_master.forum.forum_data_classes.DateUtil;
 import com.team100.kite_master.forum.forum_data_classes.Post;
@@ -48,7 +49,7 @@ import java.util.Objects;
 
 public class ForumPostListFragment extends Fragment implements View.OnClickListener {
 
-    private String LOCAL_IP_ADDRESS;
+    private String server_ip;
     private String[] userdata;
 
     //view item instantiation
@@ -74,8 +75,10 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         if (bundle != null) {
             userdata = bundle.getStringArray("userData");
             topic = bundle.getString("selectedTopic");
-            LOCAL_IP_ADDRESS = bundle.getString("serverIP");
         }
+
+        //set server ip
+        server_ip = ((MainActivity) Objects.requireNonNull(getActivity())).getServerIP();
 
 
         //DEBUGGING
@@ -83,7 +86,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         System.out.println("POST LIST FRAGMENT:");
         System.out.println("CURRENT TOPIC: " + topic);
         System.out.println("USER: " + Arrays.toString(userdata));
-        System.out.println("IP ADDRESS: " + LOCAL_IP_ADDRESS);
+        System.out.println("IP ADDRESS: " + server_ip);
         System.out.println(" ");
 
 
@@ -206,7 +209,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         Fragment fragment = new ForumNewPostFragment();
         Bundle bundle = new Bundle();
         bundle.putString("newPostTopic", topic);
-        bundle.putString("serverIP", LOCAL_IP_ADDRESS);
+        bundle.putString("serverIP", server_ip);
         bundle.putStringArray("userData", userdata);
         fragment.setArguments(bundle);
         FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
@@ -220,7 +223,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         Fragment fragment = new ForumPostFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedPost", postID);
-        bundle.putString("serverIP", LOCAL_IP_ADDRESS);
+        bundle.putString("serverIP", server_ip);
         bundle.putStringArray("userData", userdata);
         fragment.setArguments(bundle);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -275,7 +278,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
     //NETWORKING
     //requests topic JSON object from backend
     public void requestPosts(String topic) {
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/topics/" + topic;
+        String URL = "http://" + server_ip + ":5000/api/v2/topics/" + topic;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override

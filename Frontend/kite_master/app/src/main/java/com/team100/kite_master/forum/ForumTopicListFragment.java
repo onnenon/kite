@@ -44,7 +44,7 @@ import java.util.Objects;
 
 public class ForumTopicListFragment extends Fragment implements View.OnClickListener {
 
-    private String LOCAL_IP_ADDRESS;
+    private String server_ip;
     private String[] userdata;
 
     //declare layout items
@@ -70,15 +70,17 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             userdata = bundle.getStringArray("userData");
-            LOCAL_IP_ADDRESS = bundle.getString("serverIP");
         }
+
+        //set server ip
+        server_ip = ((MainActivity) Objects.requireNonNull(getActivity())).getServerIP();
 
 
         //DEBUGGING
         System.out.println(" ");
         System.out.println("POST LIST FRAGMENT:");
         System.out.println("USER: " + Arrays.toString(userdata));
-        System.out.println("IP ADDRESS: " + LOCAL_IP_ADDRESS);
+        System.out.println("IP ADDRESS: " + server_ip);
         System.out.println(" ");
 
 
@@ -206,7 +208,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         Fragment fragment = new ForumPostListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedTopic", topic);
-        bundle.putString("serverIP", LOCAL_IP_ADDRESS);
+        bundle.putString("serverIP", server_ip);
         bundle.putStringArray("userData", userdata);
         fragment.setArguments(bundle);
         FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
@@ -218,7 +220,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     //NETWORKING
     //requests topic JSON object from backend
     public void requestTopics() {
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/topics";
+        String URL = "http://" + server_ip + ":5000/api/v2/topics";
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -285,7 +287,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         }
         getsingleUser();
 
-        String URL = "http://" + LOCAL_IP_ADDRESS + ":5000/api/v2/users/" + username;
+        String URL = "http://" + server_ip + ":5000/api/v2/users/" + username;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -330,7 +332,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         System.out.println(" ");
         System.out.println("FIRST POST LIST FRAGMENT:");
         System.out.println("USER: " + Arrays.toString(userdata));
-        System.out.println("IP ADDRESS: " + LOCAL_IP_ADDRESS);
+        System.out.println("IP ADDRESS: " + server_ip);
         System.out.println(" ");
 
         return u;
