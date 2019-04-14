@@ -122,13 +122,56 @@ public class NetworkManager
         requestQueue.add(getRequest);
     }
 
+    //USERS
+
+    public void requestUserData(String username, final VolleyListener<JSONObject> listener) {
+        String URL = url + "/api/v2/users/" + username;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        );
+        requestQueue.add(getRequest);
+    }
 
 
-    //POSTS
+
+    //TOPICS
+
+    public void requestTopics(final VolleyListener<JSONObject> listener) {
+        String URL = url + "/api/v2/topics";
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        );
+        requestQueue.add(getRequest);
+    }
+
+
+    //POST
 
 
     public void requestPost(String post_id, final VolleyListener<JSONObject> listener) {
-        String URL = url + "api/v2/posts/" + post_id;
+        String URL = url + "/api/v2/posts/" + post_id;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override

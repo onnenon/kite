@@ -152,9 +152,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         //launch forum fragment
         Fragment fragment = new ForumTopicListFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("current_user", username);
-        fragment.setArguments(bundle);
         FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment);
         ft.commit();
