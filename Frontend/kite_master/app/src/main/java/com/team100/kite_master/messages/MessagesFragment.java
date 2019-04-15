@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.team100.kite_master.R;
 import com.team100.kite_master.messages.messages_data_classes.Message;
@@ -67,11 +68,21 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             @Override
             public void onClick(View v) {
 
-                // Send the message
-                implementationWS.sendJSONText(messageText.getText().toString());
+                String messageString = messageText.getText().toString();
 
-                // Clear the message text
-                messageText.setText("");
+                // Make sure the string isn't empty
+                if (!messageString.equals("")) {
+
+                    // Send the message
+                    implementationWS.sendJSONText(messageString);
+
+                    // Clear the message text
+                    messageText.setText("");
+                }
+                else {
+
+                    Toast.makeText(getActivity(), "Please enter a message" + " ", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -91,14 +102,18 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             @Override
             public void run() {
 
+                final int TEXT_OFFSET = 350;
+                final int THIS_USER_BACKGROUND_COLOR = 0xff2bc3ff;
+                final int OTHER_USER_BACKGROUND_COLOR = 0xffffea00;
+
                 Message msg = new Message(username, txt);
                 String messageString = msg.getMessageTime() + "\n" + msg.getUsername() + ": " + msg.getText() + "\n";
 
                 TextView text = new TextView(getContext());
                 text.setText(messageString);
-                text.setTextColor(0xff000000);
+                text.setTextColor(0xff000000); // Set text color to black
 
-                int width = messageView.getMeasuredWidth() - 350;
+                int width = messageView.getMeasuredWidth() - TEXT_OFFSET;
                 int height = LinearLayout.LayoutParams.MATCH_PARENT;
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
                 text.setLayoutParams(lp);
@@ -109,16 +124,15 @@ public class MessagesFragment extends Fragment implements OutputHandler {
                 // Position the messages of other users to the left
                 if (username == getUsername()) {
 
-                    text.setX(350);
+                    text.setX(TEXT_OFFSET - 10);
 
-                    text.setBackgroundColor(0xff2bc3ff);
+                    text.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
                 }
                 else {
 
-                    // text.setX(10.0f);
-
+                    text.setX(10);
                     // text.setBackgroundColor(0xff2bff2b);
-                    text.setBackgroundColor(0xffffea00);
+                    text.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
                 }
 
                 messageView.addView(text);
