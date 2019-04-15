@@ -63,7 +63,6 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         implementationWS = new WebSocketImplementation(this, username, LOCAL_IP_ADDRESS);
 
         //set on click listener
-        //postButton.setOnClickListener(this);
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,41 +103,45 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
                 final int TEXT_OFFSET = 350;
                 final int THIS_USER_BACKGROUND_COLOR = 0xff2bc3ff;
-                final int OTHER_USER_BACKGROUND_COLOR = 0xffffea00;
+                final int OTHER_USER_BACKGROUND_COLOR = 0xffd9d1c9;
+                final int BLACK_COLOR = 0xff000000;
 
                 Message msg = new Message(username, txt);
                 String messageString = msg.getMessageTime() + "\n" + msg.getUsername() + ": " + msg.getText() + "\n";
 
                 TextView text = new TextView(getContext());
                 text.setText(messageString);
-                text.setTextColor(0xff000000); // Set text color to black
+                text.setTextColor(BLACK_COLOR);
 
                 int width = messageView.getMeasuredWidth() - TEXT_OFFSET;
                 int height = LinearLayout.LayoutParams.MATCH_PARENT;
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
                 text.setLayoutParams(lp);
-                // text.setWidth(200);
-                // text.setMaxWidth(250);
 
                 // Position the messages that you yourself send to the right
                 // Position the messages of other users to the left
                 if (username == getUsername()) {
 
                     text.setX(TEXT_OFFSET - 10);
-
                     text.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
                 }
                 else {
 
                     text.setX(10);
-                    // text.setBackgroundColor(0xff2bff2b);
                     text.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
                 }
 
+                // Add the message to the Linearlayout
                 messageView.addView(text);
 
+                // Credit to this source: https://stackoverflow.com/questions/21926644/get-height-and-width-of-a-layout-programmatically
                 // Scroll to bottom upon receiving new messages
-                scrollView.fullScroll(text.FOCUS_DOWN);
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
             }
         });
     }
