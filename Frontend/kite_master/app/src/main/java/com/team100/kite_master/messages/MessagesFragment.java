@@ -96,14 +96,20 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
                 TextView text = new TextView(getContext());
                 text.setText(messageString);
-                text.setWidth(200);
+                text.setTextColor(0xff000000);
+
+                int width = messageView.getMeasuredWidth() - 350;
+                int height = LinearLayout.LayoutParams.MATCH_PARENT;
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
+                text.setLayoutParams(lp);
+                // text.setWidth(200);
                 // text.setMaxWidth(250);
 
                 // Position the messages that you yourself send to the right
                 // Position the messages of other users to the left
                 if (username == getUsername()) {
 
-                    // text.setX(messageView.getWidth() - 750.0f);
+                    text.setX(350);
 
                     text.setBackgroundColor(0xff2bc3ff);
                 }
