@@ -1,5 +1,6 @@
 package com.team100.kite_master.messages;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -95,19 +96,24 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
                 TextView text = new TextView(getContext());
                 text.setText(messageString);
+                text.setWidth(200);
+                // text.setMaxWidth(250);
 
                 // Position the messages that you yourself send to the right
                 // Position the messages of other users to the left
-                /*
                 if (username == getUsername()) {
 
-                    text.setX(messageView.getWidth() - 10.0f);
+                    // text.setX(messageView.getWidth() - 750.0f);
+
+                    text.setBackgroundColor(0xff2bc3ff);
                 }
                 else {
 
-                    text.setX(10.0f);
+                    // text.setX(10.0f);
+
+                    // text.setBackgroundColor(0xff2bff2b);
+                    text.setBackgroundColor(0xffffea00);
                 }
-                */
 
                 messageView.addView(text);
 
