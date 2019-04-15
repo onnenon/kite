@@ -101,35 +101,11 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             @Override
             public void run() {
 
-                final int TEXT_OFFSET = 350;
-                final int THIS_USER_BACKGROUND_COLOR = 0xff2bc3ff;
-                final int OTHER_USER_BACKGROUND_COLOR = 0xffd9d1c9;
-                final int BLACK_COLOR = 0xff000000;
-
                 Message msg = new Message(username, txt);
                 String messageString = msg.getMessageTime() + "\n" + msg.getUsername() + ": " + msg.getText() + "\n";
 
-                TextView text = new TextView(getContext());
-                text.setText(messageString);
-                text.setTextColor(BLACK_COLOR);
-
-                int width = messageView.getMeasuredWidth() - TEXT_OFFSET;
-                int height = LinearLayout.LayoutParams.MATCH_PARENT;
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
-                text.setLayoutParams(lp);
-
-                // Position the messages that you yourself send to the right
-                // Position the messages of other users to the left
-                if (username == getUsername()) {
-
-                    text.setX(TEXT_OFFSET - 10);
-                    text.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
-                }
-                else {
-
-                    text.setX(10);
-                    text.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
-                }
+                // Create a textview, and set it up
+                TextView text = setupTextView(username, messageString);
 
                 // Add the message to the Linearlayout
                 messageView.addView(text);
@@ -142,13 +118,48 @@ public class MessagesFragment extends Fragment implements OutputHandler {
                         scrollView.fullScroll(View.FOCUS_DOWN);
                     }
                 });
+
             }
+
         });
+
     }
 
     public void setErrorText(String errorText) {
 
         errorTextView.setText(errorText);
+    }
+
+    public TextView setupTextView(String username, String messageString) {
+
+        final int TEXT_OFFSET = 350;
+        final int THIS_USER_BACKGROUND_COLOR = 0xff2bc3ff;
+        final int OTHER_USER_BACKGROUND_COLOR = 0xffd9d1c9;
+        final int BLACK_COLOR = 0xff000000;
+
+        TextView textview = new TextView(getContext());
+        textview.setText(messageString);
+        textview.setTextColor(BLACK_COLOR);
+
+        int width = messageView.getMeasuredWidth() - TEXT_OFFSET;
+        int height = LinearLayout.LayoutParams.MATCH_PARENT;
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
+        textview.setLayoutParams(lp);
+
+        // Position the messages that you yourself send to the right
+        // Position the messages of other users to the left
+        if (username == getUsername()) {
+
+            textview.setX(TEXT_OFFSET - 10);
+            textview.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
+        }
+        else {
+
+            textview.setX(10);
+            textview.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
+        }
+
+        return textview;
     }
 
 

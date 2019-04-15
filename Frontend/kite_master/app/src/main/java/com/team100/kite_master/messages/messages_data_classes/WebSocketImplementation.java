@@ -99,7 +99,7 @@ public class WebSocketImplementation {
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, okhttp3.Response response) {
-            outputHandler.setErrorText("Error : " + t.getMessage());
+            outputHandler.setErrorText("Error : " + t.getLocalizedMessage());
         }
     }
 
