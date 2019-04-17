@@ -143,31 +143,8 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         final int OTHER_USER_BACKGROUND_COLOR = 0xffd9d1c9;
         final int BLACK_COLOR = 0xff000000;
 
-        RelativeLayout messageLayout = new RelativeLayout(getContext());
-
-        // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
-        // Set parameters of relativeLayout object
-        /*
-        LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        linearParams.setMargins(30, 30, 30, 0);
-        */
-
-        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        relativeParams.setMargins(30, 30, 30, 0);
-
-        messageLayout.setLayoutParams(relativeParams);
-        messageLayout.requestLayout();
-
-        // messageLayout.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
-        messageLayout.setBackgroundResource(R.drawable.message_layout);
-
-        // RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) messageLayout.getLayoutParams();
-        // relativeParams.setMargins(10, 10, 10, 10);
-        // messageLayout.setLayoutParams(relativeParams);
-
-
-        TextView timeText = new TextView(getContext());
-        timeText.setText(messageTime);
+        // TextView timeText = new TextView(getContext());
+        // timeText.setText(messageTime);
 
         TextView messageText = new TextView(getContext());
         messageText.setText(messageString);
@@ -194,7 +171,21 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             // textview.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
         }
 
-        // messageLayout.addView(timeText);
+        RelativeLayout messageLayout = new RelativeLayout(getContext());
+
+        // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
+        // Set parameters of relativeLayout object
+        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        relativeParams.setMargins(30, 30, 30, 0);
+        relativeParams.setMarginStart(30);
+        // relativeParams.setMarginEnd(30);
+
+        messageLayout.setLayoutParams(relativeParams);
+        messageLayout.requestLayout();
+        messageLayout.setBackgroundResource(R.drawable.message_layout);
+        // messageLayout.getLayoutParams().width = 600;
+
+                // messageLayout.addView(timeText);
         messageLayout.addView(messageText);
         // messageLayout.setGravity(Gravity.NO_GRAVITY);
         // messageLayout.setGravity(Gravity.START);
