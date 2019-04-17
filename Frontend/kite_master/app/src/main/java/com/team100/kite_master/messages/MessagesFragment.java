@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +30,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
     private String username;
 
     private ScrollView scrollView;
-    private LinearLayout messageView;
+    private LinearLayout messageLayout;
 
     private TextView errorTextView;
     private EditText messageText;
@@ -55,7 +56,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         //initialize user interface objects
         scrollView = (ScrollView) v.findViewById(R.id.message_scroll_view);
-        messageView = (LinearLayout) v.findViewById(R.id.message_layout);
+        messageLayout = (LinearLayout) v.findViewById(R.id.message_linear_layout);
         errorTextView = (TextView) v.findViewById(R.id.error_textView);
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
         postButton = (Button) v.findViewById(R.id.message_button);
@@ -108,10 +109,12 @@ public class MessagesFragment extends Fragment implements OutputHandler {
                 TextView text = setupTextView(username, messageString);
 
                 // Add the message to the Linearlayout
-                messageView.addView(text);
+                messageLayout.addView(text);
+
 
                 // Credit to this source: https://stackoverflow.com/questions/21926644/get-height-and-width-of-a-layout-programmatically
                 // Scroll to bottom upon receiving new messages
+
                 scrollView.post(new Runnable() {
                     @Override
                     public void run() {
@@ -141,7 +144,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         textview.setText(messageString);
         textview.setTextColor(BLACK_COLOR);
 
-        int width = messageView.getMeasuredWidth() - TEXT_OFFSET;
+        int width = messageLayout.getMeasuredWidth() - TEXT_OFFSET;
         int height = LinearLayout.LayoutParams.MATCH_PARENT;
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
         textview.setLayoutParams(lp);
@@ -177,12 +180,12 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
     public LinearLayout getMessageView() {
 
-        return this.messageView;
+        return this.messageLayout;
     }
 
     public void setMessageView(LinearLayout messageView) {
 
-        this.messageView = messageView;
+        this.messageLayout = messageView;
     }
 
     public String getIPaddress() {
