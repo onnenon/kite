@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +31,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
     private String username;
 
     private ScrollView scrollView;
-    private LinearLayout messageLayout;
+    private LinearLayout messageList;
 
     private TextView errorTextView;
     private EditText messageText;
@@ -56,7 +57,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         //initialize user interface objects
         scrollView = (ScrollView) v.findViewById(R.id.message_scroll_view);
-        messageLayout = (LinearLayout) v.findViewById(R.id.message_linear_layout);
+        messageList = (LinearLayout) v.findViewById(R.id.message_linear_layout);
         errorTextView = (TextView) v.findViewById(R.id.error_textView);
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
         postButton = (Button) v.findViewById(R.id.message_button);
@@ -106,10 +107,10 @@ public class MessagesFragment extends Fragment implements OutputHandler {
                 String messageString = msg.getMessageTime() + "\n" + msg.getUsername() + ": " + msg.getText() + "\n";
 
                 // Create a textview, and set it up
-                TextView text = setupTextView(username, messageString);
+                RelativeLayout text = setupTextView(username, messageString);
 
                 // Add the message to the Linearlayout
-                messageLayout.addView(text);
+                messageList.addView(text);
 
 
                 // Credit to this source: https://stackoverflow.com/questions/21926644/get-height-and-width-of-a-layout-programmatically
@@ -133,18 +134,20 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         errorTextView.setText(errorText);
     }
 
-    public TextView setupTextView(String username, String messageString) {
+    public RelativeLayout setupTextView(String username, String messageString) {
 
         final int TEXT_OFFSET = 350;
         final int THIS_USER_BACKGROUND_COLOR = 0xff2bc3ff;
         final int OTHER_USER_BACKGROUND_COLOR = 0xffd9d1c9;
         final int BLACK_COLOR = 0xff000000;
 
+        RelativeLayout messageLayout = new RelativeLayout(getContext());
+
         TextView textview = new TextView(getContext());
         textview.setText(messageString);
         textview.setTextColor(BLACK_COLOR);
 
-        int width = messageLayout.getMeasuredWidth() - TEXT_OFFSET;
+        int width = messageList.getMeasuredWidth() - TEXT_OFFSET;
         int height = LinearLayout.LayoutParams.MATCH_PARENT;
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
         textview.setLayoutParams(lp);
@@ -162,7 +165,9 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             textview.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
         }
 
-        return textview;
+        messageLayout.addView(textview);
+
+        return messageLayout;
     }
 
 
@@ -180,12 +185,12 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
     public LinearLayout getMessageView() {
 
-        return this.messageLayout;
+        return this.messageList;
     }
 
     public void setMessageView(LinearLayout messageView) {
 
-        this.messageLayout = messageView;
+        this.messageList = messageView;
     }
 
     public String getIPaddress() {
