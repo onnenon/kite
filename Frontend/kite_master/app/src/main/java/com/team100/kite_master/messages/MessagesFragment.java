@@ -105,8 +105,8 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             public void run() {
 
                 Message msg = new Message(username, txt);
-                String messageTime = msg.getMessageTime() + "\n";
-                String messageString =  msg.getUsername() + ": " + msg.getText() + "\n";
+                String messageTime = msg.getMessageTime().toString();
+                String messageString =  msg.getUsername() + ": " + msg.getText();
 
                 // Create a textview, and set it up
                 RelativeLayout text = setupTextView(username, messageTime, messageString);
@@ -158,7 +158,8 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         messageLayout.setLayoutParams(relativeParams);
         messageLayout.requestLayout();
 
-        messageLayout.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
+        // messageLayout.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
+        messageLayout.setBackgroundResource(R.drawable.message_layout);
 
         // RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) messageLayout.getLayoutParams();
         // relativeParams.setMargins(10, 10, 10, 10);
@@ -171,6 +172,9 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         TextView messageText = new TextView(getContext());
         messageText.setText(messageString);
         messageText.setTextColor(BLACK_COLOR);
+        // messageText.setLayoutParams(relativeParams);
+        // messageText.requestLayout();
+        messageText.setPadding(30, 30, 30, 30);
 
         int width = messageList.getMeasuredWidth() - TEXT_OFFSET;
         int height = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -190,11 +194,11 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             // textview.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
         }
 
-        messageLayout.addView(timeText);
+        // messageLayout.addView(timeText);
         messageLayout.addView(messageText);
         // messageLayout.setGravity(Gravity.NO_GRAVITY);
         // messageLayout.setGravity(Gravity.START);
-        messageLayout.setGravity(Gravity.END);
+        // messageLayout.setGravity(Gravity.END);
 
         return messageLayout;
     }
