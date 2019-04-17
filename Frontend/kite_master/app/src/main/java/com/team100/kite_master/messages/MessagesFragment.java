@@ -143,6 +143,20 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         RelativeLayout messageLayout = new RelativeLayout(getContext());
 
+        // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
+        // Set parameters of relativeLayout object
+        LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        linearParams.setMargins(30, 30, 30, 0);
+        messageLayout.setLayoutParams(linearParams);
+        messageLayout.requestLayout();
+
+        // RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) messageLayout.getLayoutParams();
+        // relativeParams.setMargins(10, 10, 10, 10);
+        // messageLayout.setLayoutParams(relativeParams);
+
+
+
+
         TextView textview = new TextView(getContext());
         textview.setText(messageString);
         textview.setTextColor(BLACK_COLOR);
@@ -156,13 +170,13 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         // Position the messages of other users to the left
         if (username == getUsername()) {
 
-            textview.setX(TEXT_OFFSET - 10);
-            textview.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
+            // textview.setX(TEXT_OFFSET - 10);
+            // textview.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
         }
         else {
 
-            textview.setX(10);
-            textview.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
+            // textview.setX(10);
+            // textview.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
         }
 
         messageLayout.addView(textview);
