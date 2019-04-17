@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,10 +105,11 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             public void run() {
 
                 Message msg = new Message(username, txt);
-                String messageString = msg.getMessageTime() + "\n" + msg.getUsername() + ": " + msg.getText() + "\n";
+                String messageTime = msg.getMessageTime() + "\n";
+                String messageString =  msg.getUsername() + ": " + msg.getText() + "\n";
 
                 // Create a textview, and set it up
-                RelativeLayout text = setupTextView(username, messageString);
+                RelativeLayout text = setupTextView(username, messageTime, messageString);
 
                 // Add the message to the Linearlayout
                 messageList.addView(text);
@@ -134,7 +136,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         errorTextView.setText(errorText);
     }
 
-    public RelativeLayout setupTextView(String username, String messageString) {
+    public RelativeLayout setupTextView(String username, String messageTime, String messageString) {
 
         final int TEXT_OFFSET = 350;
         final int THIS_USER_BACKGROUND_COLOR = 0xff2bc3ff;
@@ -145,26 +147,35 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
         // Set parameters of relativeLayout object
+        /*
         LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         linearParams.setMargins(30, 30, 30, 0);
-        messageLayout.setLayoutParams(linearParams);
+        */
+
+        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        relativeParams.setMargins(30, 30, 30, 0);
+
+        messageLayout.setLayoutParams(relativeParams);
         messageLayout.requestLayout();
+
+        messageLayout.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
 
         // RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) messageLayout.getLayoutParams();
         // relativeParams.setMargins(10, 10, 10, 10);
         // messageLayout.setLayoutParams(relativeParams);
 
 
+        TextView timeText = new TextView(getContext());
+        timeText.setText(messageTime);
 
-
-        TextView textview = new TextView(getContext());
-        textview.setText(messageString);
-        textview.setTextColor(BLACK_COLOR);
+        TextView messageText = new TextView(getContext());
+        messageText.setText(messageString);
+        messageText.setTextColor(BLACK_COLOR);
 
         int width = messageList.getMeasuredWidth() - TEXT_OFFSET;
         int height = LinearLayout.LayoutParams.MATCH_PARENT;
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
-        textview.setLayoutParams(lp);
+        messageText.setLayoutParams(lp);
 
         // Position the messages that you yourself send to the right
         // Position the messages of other users to the left
@@ -179,7 +190,11 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             // textview.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
         }
 
-        messageLayout.addView(textview);
+        messageLayout.addView(timeText);
+        messageLayout.addView(messageText);
+        // messageLayout.setGravity(Gravity.NO_GRAVITY);
+        // messageLayout.setGravity(Gravity.START);
+        messageLayout.setGravity(Gravity.END);
 
         return messageLayout;
     }
