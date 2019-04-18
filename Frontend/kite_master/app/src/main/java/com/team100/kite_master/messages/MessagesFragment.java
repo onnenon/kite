@@ -184,8 +184,9 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         messageLayout.requestLayout();
         messageLayout.setBackgroundResource(R.drawable.message_layout);
         // messageLayout.getLayoutParams().width = 600;
+        // messageLayout.setMinimumWidth(0);
 
-                // messageLayout.addView(timeText);
+        // messageLayout.addView(timeText);
         messageLayout.addView(messageText);
         // messageLayout.setGravity(Gravity.NO_GRAVITY);
         // messageLayout.setGravity(Gravity.START);
