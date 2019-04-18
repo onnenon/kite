@@ -143,20 +143,8 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         final int OTHER_USER_BACKGROUND_COLOR = 0xffd9d1c9;
         final int BLACK_COLOR = 0xff000000;
 
-        // TextView timeText = new TextView(getContext());
-        // timeText.setText(messageTime);
-
-        TextView messageText = new TextView(getContext());
-        messageText.setText(messageString);
-        messageText.setTextColor(BLACK_COLOR);
-        // messageText.setLayoutParams(relativeParams);
-        // messageText.requestLayout();
-        messageText.setPadding(30, 30, 30, 30);
-
-        int width = messageList.getMeasuredWidth() - TEXT_OFFSET;
-        int height = LinearLayout.LayoutParams.MATCH_PARENT;
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
-        messageText.setLayoutParams(lp);
+        // TextView timeText = setupTimeTextView(messageTime);
+        TextView messageText = setupMessageTextView(username, messageString);
 
         // Position the messages that you yourself send to the right
         // Position the messages of other users to the left
@@ -185,13 +173,41 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         messageLayout.setBackgroundResource(R.drawable.message_layout);
         // messageLayout.getLayoutParams().width = 600;
 
-                // messageLayout.addView(timeText);
+        // messageLayout.addView(timeText);
         messageLayout.addView(messageText);
         // messageLayout.setGravity(Gravity.NO_GRAVITY);
         // messageLayout.setGravity(Gravity.START);
         // messageLayout.setGravity(Gravity.END);
 
         return messageLayout;
+    }
+
+    public TextView setupTimeTextView(String messageTime) {
+
+        // TextView timeText = new TextView(getContext());
+        // timeText.setText(messageTime);
+
+        return null;
+    }
+
+    public TextView setupMessageTextView(String username, String messageString) {
+
+        final int TEXT_OFFSET = 350;
+        final int BLACK_COLOR = 0xff000000;
+
+        TextView messageText = new TextView(getContext());
+        messageText.setText(messageString);
+        messageText.setTextColor(BLACK_COLOR);
+        // messageText.setLayoutParams(relativeParams);
+        // messageText.requestLayout();
+        messageText.setPadding(30, 30, 30, 30);
+
+        int width = messageList.getMeasuredWidth() - TEXT_OFFSET;
+        int height = LinearLayout.LayoutParams.MATCH_PARENT;
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
+        messageText.setLayoutParams(lp);
+
+        return messageText;
     }
 
 
