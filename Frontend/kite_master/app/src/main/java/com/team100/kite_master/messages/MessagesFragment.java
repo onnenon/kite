@@ -163,7 +163,10 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
         // Set parameters of relativeLayout object
-        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        int width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(width, height);
+
         relativeParams.setMargins(30, 30, 30, 0);
         relativeParams.setMarginStart(30);
         // relativeParams.setMarginEnd(30);
@@ -202,8 +205,8 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         // messageText.requestLayout();
         messageText.setPadding(30, 30, 30, 30);
 
-        int width = messageList.getMeasuredWidth() - TEXT_OFFSET;
-        int height = LinearLayout.LayoutParams.MATCH_PARENT;
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
         messageText.setLayoutParams(lp);
 
