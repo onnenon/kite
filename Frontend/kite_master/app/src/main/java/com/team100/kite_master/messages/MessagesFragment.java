@@ -143,20 +143,8 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         final int OTHER_USER_BACKGROUND_COLOR = 0xffd9d1c9;
         final int BLACK_COLOR = 0xff000000;
 
-        // TextView timeText = new TextView(getContext());
-        // timeText.setText(messageTime);
-
-        TextView messageText = new TextView(getContext());
-        messageText.setText(messageString);
-        messageText.setTextColor(BLACK_COLOR);
-        // messageText.setLayoutParams(relativeParams);
-        // messageText.requestLayout();
-        messageText.setPadding(30, 30, 30, 30);
-
-        int width = messageList.getMeasuredWidth() - TEXT_OFFSET;
-        int height = LinearLayout.LayoutParams.MATCH_PARENT;
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
-        messageText.setLayoutParams(lp);
+        // TextView timeText = setupTimeTextView(messageTime);
+        TextView messageText = setupMessageTextView(username, messageString);
 
         // Position the messages that you yourself send to the right
         // Position the messages of other users to the left
@@ -175,7 +163,10 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
         // Set parameters of relativeLayout object
-        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        int width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(width, height);
+
         relativeParams.setMargins(30, 30, 30, 0);
         relativeParams.setMarginStart(30);
         // relativeParams.setMarginEnd(30);
@@ -184,7 +175,6 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         messageLayout.requestLayout();
         messageLayout.setBackgroundResource(R.drawable.message_layout);
         // messageLayout.getLayoutParams().width = 600;
-        // messageLayout.setMinimumWidth(0);
 
         // messageLayout.addView(timeText);
         messageLayout.addView(messageText);
@@ -193,6 +183,34 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         // messageLayout.setGravity(Gravity.END);
 
         return messageLayout;
+    }
+
+    public TextView setupTimeTextView(String messageTime) {
+
+        // TextView timeText = new TextView(getContext());
+        // timeText.setText(messageTime);
+
+        return null;
+    }
+
+    public TextView setupMessageTextView(String username, String messageString) {
+
+        final int TEXT_OFFSET = 350;
+        final int BLACK_COLOR = 0xff000000;
+
+        TextView messageText = new TextView(getContext());
+        messageText.setText(messageString);
+        messageText.setTextColor(BLACK_COLOR);
+        // messageText.setLayoutParams(relativeParams);
+        // messageText.requestLayout();
+        messageText.setPadding(30, 30, 30, 30);
+
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
+        messageText.setLayoutParams(lp);
+
+        return messageText;
     }
 
 
