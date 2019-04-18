@@ -1,9 +1,12 @@
 package com.team100.kite_master.messages;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -136,51 +139,56 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         errorTextView.setText(errorText);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public RelativeLayout setupTextView(String username, String messageTime, String messageString) {
 
-        final int TEXT_OFFSET = 350;
+        final int DISTANCE_FROM_CLOSE_EDGE = 30;
+        final int DISTANCE_FROM_FAR_EDGE = 240;
+
         final int THIS_USER_BACKGROUND_COLOR = 0xff2bc3ff;
         final int OTHER_USER_BACKGROUND_COLOR = 0xffd9d1c9;
-        final int BLACK_COLOR = 0xff000000;
 
         // TextView timeText = setupTimeTextView(messageTime);
         TextView messageText = setupMessageTextView(username, messageString);
 
-        // Position the messages that you yourself send to the right
-        // Position the messages of other users to the left
-        if (username == getUsername()) {
 
-            // textview.setX(TEXT_OFFSET - 10);
-            // textview.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
-        }
-        else {
-
-            // textview.setX(10);
-            // textview.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
-        }
 
         RelativeLayout messageLayout = new RelativeLayout(getContext());
+        messageLayout.setBackgroundResource(R.drawable.message_layout);
 
         // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
         // Set parameters of relativeLayout object
         int width = RelativeLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(width, height);
+        relativeParams.setMargins(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, 0);
+        relativeParams.setMarginStart(DISTANCE_FROM_CLOSE_EDGE);
+        relativeParams.setMarginEnd(DISTANCE_FROM_FAR_EDGE);
 
-        relativeParams.setMargins(30, 30, 30, 0);
-        relativeParams.setMarginStart(30);
-        // relativeParams.setMarginEnd(30);
+        // RelativeLayout
+
+        // Position the messages that you yourself send to the right
+        // Position the messages of other users to the left
+        if (username == getUsername()) {
+
+            // messageText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+
+            // messageLayout.setGravity(0);
+            // messageLayout.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
+        }
+        else {
+
+
+
+            // messageLayout.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
+        }
 
         messageLayout.setLayoutParams(relativeParams);
         messageLayout.requestLayout();
-        messageLayout.setBackgroundResource(R.drawable.message_layout);
-        // messageLayout.getLayoutParams().width = 600;
+
 
         // messageLayout.addView(timeText);
         messageLayout.addView(messageText);
-        // messageLayout.setGravity(Gravity.NO_GRAVITY);
-        // messageLayout.setGravity(Gravity.START);
-        // messageLayout.setGravity(Gravity.END);
 
         return messageLayout;
     }
@@ -195,15 +203,13 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
     public TextView setupMessageTextView(String username, String messageString) {
 
-        final int TEXT_OFFSET = 350;
+        final int DISTANCE_FROM_CLOSE_EDGE = 30;
         final int BLACK_COLOR = 0xff000000;
 
         TextView messageText = new TextView(getContext());
         messageText.setText(messageString);
         messageText.setTextColor(BLACK_COLOR);
-        // messageText.setLayoutParams(relativeParams);
-        // messageText.requestLayout();
-        messageText.setPadding(30, 30, 30, 30);
+        messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE);
 
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
