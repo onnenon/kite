@@ -164,25 +164,20 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         // relativeParams.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         // relativeParams.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 
-        messageLayout.setLayoutParams(relativeParams);
-        messageLayout.requestLayout();
-        messageLayout.setBackgroundResource(R.drawable.message_layout);
+
+
+/*        messageLayout.setBackgroundResource(R.drawable.message_layout);*/
         // messageLayout.getLayoutParams().width = 600;
 
         // Position the messages that you yourself send to the right
         // Position the messages of other users to the left
         if (username == getUsername()) {
 
+            // relativeParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             relativeParams.setMarginStart(DISTANCE_FROM_FAR_EDGE);
             relativeParams.setMarginEnd(DISTANCE_FROM_CLOSE_EDGE);
 
             messageLayout.setBackgroundResource(R.drawable.message_layout_this_user);
-
-
-            // messageText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
-
-            // textview.setX(TEXT_OFFSET - 10);
-            // textview.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
         }
         else {
 
@@ -190,9 +185,10 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             relativeParams.setMarginEnd(DISTANCE_FROM_FAR_EDGE);
 
             messageLayout.setBackgroundResource(R.drawable.message_layout);
-
-            // messageLayout.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
         }
+
+        messageLayout.setLayoutParams(relativeParams);
+        messageLayout.requestLayout();
 
         // messageLayout.addView(timeText);
         messageLayout.addView(messageText);
@@ -213,6 +209,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
     public TextView setupMessageTextView(String username, String messageString) {
 
+        final int DISTANCE_FROM_CLOSE_EDGE = 30;
         final int TEXT_OFFSET = 350;
         final int BLACK_COLOR = 0xff000000;
 
@@ -221,7 +218,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         messageText.setTextColor(BLACK_COLOR);
         // messageText.setLayoutParams(relativeParams);
         // messageText.requestLayout();
-        messageText.setPadding(30, 30, 30, 30);
+        messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE);
 
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
