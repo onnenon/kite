@@ -138,19 +138,23 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
     public RelativeLayout setupTextView(String username, String messageTime, String messageString) {
 
-        final int DISTANCE_FROM_CLOSE_EDGE = 30;
-        final int DISTANCE_FROM_FAR_EDGE = 240;
-        final int TEXT_OFFSET = 350;
-        final int THIS_USER_BACKGROUND_COLOR = 0xff2bc3ff;
-        final int OTHER_USER_BACKGROUND_COLOR = 0xffd9d1c9;
-        final int BLACK_COLOR = 0xff000000;
+        RelativeLayout messageLayout = setupRelativeLayout(username);
 
         // TextView timeText = setupTimeTextView(messageTime);
         TextView messageText = setupMessageTextView(username, messageString);
 
-        RelativeLayout messageLayout = new RelativeLayout(getContext());
+        // messageLayout.addView(timeText);
+        messageLayout.addView(messageText);
 
-        // messageLayout.setBackgroundResource(R.drawable.message_layout);
+        return messageLayout;
+    }
+
+    public RelativeLayout setupRelativeLayout(String username) {
+
+        final int DISTANCE_FROM_CLOSE_EDGE = 30;
+        final int DISTANCE_FROM_FAR_EDGE = 240;
+
+        RelativeLayout messageLayout = new RelativeLayout(getContext());
 
         // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
         // Set parameters of relativeLayout object
@@ -159,21 +163,10 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(width, height);
         relativeParams.setMargins(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, 0);
 
-
-
-        // relativeParams.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        // relativeParams.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-
-
-
-/*        messageLayout.setBackgroundResource(R.drawable.message_layout);*/
-        // messageLayout.getLayoutParams().width = 600;
-
         // Position the messages that you yourself send to the right
         // Position the messages of other users to the left
         if (username == getUsername()) {
 
-            // relativeParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             relativeParams.setMarginStart(DISTANCE_FROM_FAR_EDGE);
             relativeParams.setMarginEnd(DISTANCE_FROM_CLOSE_EDGE);
 
@@ -190,42 +183,42 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         messageLayout.setLayoutParams(relativeParams);
         messageLayout.requestLayout();
 
-        // messageLayout.addView(timeText);
-        messageLayout.addView(messageText);
-        // messageLayout.setGravity(Gravity.NO_GRAVITY);
-        // messageLayout.setGravity(Gravity.START);
-        // messageLayout.setGravity(Gravity.END);
-
         return messageLayout;
     }
 
     public TextView setupTimeTextView(String messageTime) {
 
-        // TextView timeText = new TextView(getContext());
-        // timeText.setText(messageTime);
-
-        return null;
-    }
-
-    public TextView setupMessageTextView(String username, String messageString) {
-
         final int DISTANCE_FROM_CLOSE_EDGE = 30;
-        final int TEXT_OFFSET = 350;
         final int BLACK_COLOR = 0xff000000;
 
         TextView messageText = new TextView(getContext());
-        messageText.setText(messageString);
+        messageText.setText(messageTime);
+        // messageText.setTextSize(10.0f);
         messageText.setTextColor(BLACK_COLOR);
-        // messageText.setLayoutParams(relativeParams);
-        // messageText.requestLayout();
         messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE);
 
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
 
-        // layoutParams.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        // layoutParams.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        messageText.setLayoutParams(layoutParams);
+
+        return messageText;
+    }
+
+    public TextView setupMessageTextView(String username, String messageString) {
+
+        final int DISTANCE_FROM_CLOSE_EDGE = 30;
+        final int BLACK_COLOR = 0xff000000;
+
+        TextView messageText = new TextView(getContext());
+        messageText.setText(messageString);
+        messageText.setTextColor(BLACK_COLOR);
+        messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE);
+
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
 
         messageText.setLayoutParams(layoutParams);
 
