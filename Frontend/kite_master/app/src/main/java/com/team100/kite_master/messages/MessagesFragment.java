@@ -108,16 +108,16 @@ public class MessagesFragment extends Fragment implements OutputHandler {
                 String messageTime = msg.getMessageTime().toString();
                 String messageString =  msg.getUsername() + ": " + msg.getText();
 
-                // Create a textview, and set it up
-                RelativeLayout text = setupTextView(username, messageTime, messageString);
+                // Create a message, and set it up
+                TextView time = setupTimeTextView(username, messageTime);
+                RelativeLayout message = setupMessage(username, messageString);
 
                 // Add the message to the Linearlayout
-                messageList.addView(text);
-
+                messageList.addView(time);
+                messageList.addView(message);
 
                 // Credit to this source: https://stackoverflow.com/questions/21926644/get-height-and-width-of-a-layout-programmatically
                 // Scroll to bottom upon receiving new messages
-
                 scrollView.post(new Runnable() {
                     @Override
                     public void run() {
@@ -136,14 +136,11 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         errorTextView.setText(errorText);
     }
 
-    public RelativeLayout setupTextView(String username, String messageTime, String messageString) {
+    public RelativeLayout setupMessage(String username, String messageString) {
 
         RelativeLayout messageLayout = setupRelativeLayout(username);
 
-        // TextView timeText = setupTimeTextView(messageTime);
         TextView messageText = setupMessageTextView(username, messageString);
-
-        // messageLayout.addView(timeText);
         messageLayout.addView(messageText);
 
         return messageLayout;
@@ -181,14 +178,16 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         }
 
         messageLayout.setLayoutParams(relativeParams);
+        // messageLayout.setGravity(Gravity.TOP);
         messageLayout.requestLayout();
 
         return messageLayout;
     }
 
-    public TextView setupTimeTextView(String messageTime) {
+    public TextView setupTimeTextView(String username, String messageTime) {
 
         final int DISTANCE_FROM_CLOSE_EDGE = 30;
+        final int DISTANCE_FROM_FAR_EDGE = 240;
         final int BLACK_COLOR = 0xff000000;
 
         TextView messageText = new TextView(getContext());
@@ -200,6 +199,17 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+
+        if (username == getUsername()) {
+
+            layoutParams.setMarginStart(DISTANCE_FROM_FAR_EDGE);
+            layoutParams.setMarginEnd(DISTANCE_FROM_CLOSE_EDGE);
+        }
+        else {
+
+            layoutParams.setMarginStart(DISTANCE_FROM_CLOSE_EDGE);
+            layoutParams.setMarginEnd(DISTANCE_FROM_FAR_EDGE);
+        }
 
         messageText.setLayoutParams(layoutParams);
 
