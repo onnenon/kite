@@ -158,7 +158,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         int width = RelativeLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(width, height);
-        relativeParams.setMargins(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, 0);
+        relativeParams.setMargins(DISTANCE_FROM_CLOSE_EDGE, 0, DISTANCE_FROM_CLOSE_EDGE, 0);
 
         // Position the messages that you yourself send to the right
         // Position the messages of other users to the left
@@ -194,7 +194,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         messageText.setText(messageTime);
         // messageText.setTextSize(10.0f);
         messageText.setTextColor(BLACK_COLOR);
-        messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE);
+        messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, 0);
 
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
