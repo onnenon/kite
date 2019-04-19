@@ -146,18 +146,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         // TextView timeText = setupTimeTextView(messageTime);
         TextView messageText = setupMessageTextView(username, messageString);
 
-        // Position the messages that you yourself send to the right
-        // Position the messages of other users to the left
-        if (username == getUsername()) {
 
-            // textview.setX(TEXT_OFFSET - 10);
-            // textview.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
-        }
-        else {
-
-            // textview.setX(10);
-            // textview.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
-        }
 
         RelativeLayout messageLayout = new RelativeLayout(getContext());
 
@@ -175,6 +164,23 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         messageLayout.requestLayout();
         messageLayout.setBackgroundResource(R.drawable.message_layout);
         // messageLayout.getLayoutParams().width = 600;
+
+        // Position the messages that you yourself send to the right
+        // Position the messages of other users to the left
+        if (username == getUsername()) {
+
+            messageLayout.setBackgroundResource(R.drawable.message_layout_this_user);
+
+            // textview.setX(TEXT_OFFSET - 10);
+            // textview.setBackgroundColor(THIS_USER_BACKGROUND_COLOR);
+        }
+        else {
+
+            messageLayout.setBackgroundResource(R.drawable.message_layout);
+
+            // textview.setX(10);
+            // textview.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
+        }
 
         // messageLayout.addView(timeText);
         messageLayout.addView(messageText);
