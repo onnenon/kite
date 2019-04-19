@@ -154,7 +154,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
 
         RelativeLayout messageLayout = new RelativeLayout(getContext());
-        messageLayout.setBackgroundResource(R.drawable.message_layout);
+        // messageLayout.setBackgroundResource(R.drawable.message_layout);
 
         // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
         // Set parameters of relativeLayout object
@@ -162,14 +162,25 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(width, height);
         relativeParams.setMargins(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, 0);
-        relativeParams.setMarginStart(DISTANCE_FROM_CLOSE_EDGE);
-        relativeParams.setMarginEnd(DISTANCE_FROM_FAR_EDGE);
+
+
+
+        // relativeParams.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        // relativeParams.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+
+
 
         // RelativeLayout
 
         // Position the messages that you yourself send to the right
         // Position the messages of other users to the left
         if (username == getUsername()) {
+
+            relativeParams.setMarginStart(DISTANCE_FROM_FAR_EDGE);
+            relativeParams.setMarginEnd(DISTANCE_FROM_CLOSE_EDGE);
+
+            messageLayout.setBackgroundResource(R.drawable.message_layout_this_user);
+
 
             // messageText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
 
@@ -178,7 +189,10 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         }
         else {
 
+            relativeParams.setMarginStart(DISTANCE_FROM_CLOSE_EDGE);
+            relativeParams.setMarginEnd(DISTANCE_FROM_FAR_EDGE);
 
+            messageLayout.setBackgroundResource(R.drawable.message_layout);
 
             // messageLayout.setBackgroundColor(OTHER_USER_BACKGROUND_COLOR);
         }
@@ -213,8 +227,12 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
-        messageText.setLayoutParams(lp);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+
+        // layoutParams.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        // layoutParams.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+
+        messageText.setLayoutParams(layoutParams);
 
         return messageText;
     }
