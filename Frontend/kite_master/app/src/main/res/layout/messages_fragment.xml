@@ -8,17 +8,14 @@
 
     <ScrollView
         android:id="@+id/message_scroll_view"
-        android:layout_width="395dp"
+        android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/message_layout"
+            android:id="@+id/message_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
@@ -29,19 +26,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="520dp"
+        android:layout_marginEnd="379dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message_scroll_view" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/message_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="Type your message here..."
         android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/message_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/message_scroll_view" />
 
@@ -49,10 +49,11 @@
         android:id="@+id/message_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:text="Post"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/message_edit_text"
         app:layout_constraintTop_toBottomOf="@+id/message_scroll_view" />
 
 </android.support.constraint.ConstraintLayout>
