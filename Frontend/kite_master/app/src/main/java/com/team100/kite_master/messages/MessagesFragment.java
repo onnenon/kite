@@ -101,7 +101,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             public void run() {
 
                 Message msg = new Message(username, txt);
-                String messageTime = msg.getMessageTime().toString();
+                String messageTime = msg.getMessageTime();
                 String messageString =  msg.getUsername() + ": " + msg.getText();
 
                 // Create a message, and set it up
