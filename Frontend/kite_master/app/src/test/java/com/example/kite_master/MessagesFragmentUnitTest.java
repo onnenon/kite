@@ -69,13 +69,13 @@ public class MessagesFragmentUnitTest {
     @Test
     public void testMessageOutput() {
 
-        Date date = Calendar.getInstance().getTime();
+        String date = "4/20/2019 3:23 PM";
 
         when(mockMessage.getMessageTime()).thenReturn(date);
         when(mockMessage.getUsername()).thenReturn(messageFrag.getUsername()); // "Username"
         when(mockMessage.getText()).thenReturn("A very important message.");
 
-        assertEquals(date.toString() + "\n" + "fadmin: A very important message.\n",
+        assertEquals(date + "\n" + "fadmin: A very important message.\n",
                 mockMessage.getMessageTime() + "\n" + mockMessage.getUsername() + ": " + mockMessage.getText() + "\n");
     }
 
@@ -163,9 +163,13 @@ public class MessagesFragmentUnitTest {
 
         */
 
+        /*
+
         mockImpWS.sendJSONText("String");
 
         verify(mockImpWS, times(1)).sendJSONText("String");
+
+        */
 
         // verify(mockImpWS, times(1)).output("fadmin", "String");
     }
