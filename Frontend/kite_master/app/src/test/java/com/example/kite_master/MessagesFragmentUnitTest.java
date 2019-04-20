@@ -1,16 +1,8 @@
 package com.example.kite_master;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
-
-import com.android.volley.toolbox.HttpResponse;
-import com.team100.kite_master.MainActivity;
-import com.team100.kite_master.R;
 import com.team100.kite_master.messages.MessagesFragment;
 import com.team100.kite_master.messages.messages_data_classes.Message;
-import com.team100.kite_master.messages.messages_data_classes.WebSocketImplementation;
+import com.team100.kite_master.messages.WebSocketImplementation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,11 +10,8 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
-
-import okhttp3.Response;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;

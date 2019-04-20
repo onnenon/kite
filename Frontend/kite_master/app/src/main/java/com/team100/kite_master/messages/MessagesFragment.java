@@ -1,17 +1,14 @@
 package com.team100.kite_master.messages;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -19,7 +16,6 @@ import android.widget.Toast;
 
 import com.team100.kite_master.R;
 import com.team100.kite_master.messages.messages_data_classes.Message;
-import com.team100.kite_master.messages.messages_data_classes.WebSocketImplementation;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -138,9 +134,12 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
     public RelativeLayout setupMessage(String username, String messageString) {
 
-        RelativeLayout messageLayout = setupRelativeLayout(username);
+        RelativeLayout messageLayout;
+        TextView messageText;
 
-        TextView messageText = setupMessageTextView(username, messageString);
+        messageText = setupMessageTextView(username, messageString);
+
+        messageLayout = setupRelativeLayout(username);
         messageLayout.addView(messageText);
 
         return messageLayout;
@@ -151,13 +150,19 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         final int DISTANCE_FROM_CLOSE_EDGE = 30;
         final int DISTANCE_FROM_FAR_EDGE = 240;
 
+        int width;
+        int height;
+
+        TextView messageText;
+        RelativeLayout.LayoutParams relativeParams;
+
         RelativeLayout messageLayout = new RelativeLayout(getContext());
 
         // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
         // Set parameters of relativeLayout object
-        int width = RelativeLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(width, height);
+        width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        relativeParams = new RelativeLayout.LayoutParams(width, height);
         relativeParams.setMargins(DISTANCE_FROM_CLOSE_EDGE, 0, DISTANCE_FROM_CLOSE_EDGE, 0);
 
         // Position the messages that you yourself send to the right
@@ -178,7 +183,6 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         }
 
         messageLayout.setLayoutParams(relativeParams);
-        // messageLayout.setGravity(Gravity.TOP);
         messageLayout.requestLayout();
 
         return messageLayout;
@@ -190,15 +194,21 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         final int DISTANCE_FROM_FAR_EDGE = 240;
         final int BLACK_COLOR = 0xff000000;
 
-        TextView messageText = new TextView(getContext());
+        int width;
+        int height;
+
+        TextView messageText;
+        LinearLayout.LayoutParams layoutParams;
+
+        messageText = new TextView(getContext());
         messageText.setText(messageTime);
         // messageText.setTextSize(10.0f);
         messageText.setTextColor(BLACK_COLOR);
         messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, 0);
 
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+        width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        layoutParams = new LinearLayout.LayoutParams(width, height);
 
         if (username == getUsername()) {
 
@@ -221,14 +231,20 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         final int DISTANCE_FROM_CLOSE_EDGE = 30;
         final int BLACK_COLOR = 0xff000000;
 
-        TextView messageText = new TextView(getContext());
+        int width;
+        int height;
+
+        TextView messageText;
+        LinearLayout.LayoutParams layoutParams;
+
+        messageText = new TextView(getContext());
         messageText.setText(messageString);
         messageText.setTextColor(BLACK_COLOR);
         messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE);
 
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+        width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        layoutParams = new LinearLayout.LayoutParams(width, height);
 
         messageText.setLayoutParams(layoutParams);
 
