@@ -14,6 +14,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
 import com.team100.kite_master.messages.messages_data_classes.Message;
 
@@ -42,15 +43,10 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         View v = inflater.inflate(R.layout.messages_fragment, container, false);
 
-        //receive bundle
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            userdata = bundle.getStringArray("userData");
-            username = userdata[0]; // Get the username of the user
-            LOCAL_IP_ADDRESS = bundle.getString("serverIP");
-            System.out.println("USER DATA:");
-            System.out.println(Arrays.toString(userdata));
-        }
+
+        userdata = ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.toArray();
+        username = userdata[0];
+        LOCAL_IP_ADDRESS = ((MainActivity) Objects.requireNonNull(getActivity())).getServerIP();
 
         //initialize user interface objects
         scrollView = (ScrollView) v.findViewById(R.id.message_scroll_view);

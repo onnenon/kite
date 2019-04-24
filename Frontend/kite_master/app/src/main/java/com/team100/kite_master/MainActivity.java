@@ -2,6 +2,7 @@ package com.team100.kite_master;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -16,10 +17,10 @@ import android.widget.TextView;
 
 import com.team100.kite_master.devtests.UserTestsFragment;
 import com.team100.kite_master.forum.ForumTopicListFragment;
-import com.team100.kite_master.help.HelpFragment;
 import com.team100.kite_master.login.LoginFragment;
 import com.team100.kite_master.login.SaveSharedPreference;
 import com.team100.kite_master.messages.MessagesFragment;
+import com.team100.kite_master.networking.NetworkManager;
 import com.team100.kite_master.profile.ProfileFragment;
 import com.team100.kite_master.search.SearchFragment;
 import com.team100.kite_master.settings.SettingsFragment;
@@ -33,10 +34,10 @@ public class MainActivity extends AppCompatActivity
     //global variables
     public int cur_screen;
     public User currentUser;
-    private String LOCAL_IP_ADDRESS;
+    private String server_ip;
 
     //global layout elements
-    DrawerLayout drawer;
+    public DrawerLayout drawer;
     public Toolbar toolbar;
 
 
@@ -46,20 +47,28 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //set toolbar
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //instantiate network manager
+        if (SaveSharedPreference.getHostIp(MainActivity.this).length() != 0) {
+            NetworkManager.getInstance(this).setUrl(SaveSharedPreference.getHostIp(MainActivity.this));
+        } else {
+            NetworkManager.getInstance(this);
+        }
+
+
+        //setup toolbar
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
-        //set drawer
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //setup drawer
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         //set navigation view
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         //instantiate user with blank fields
@@ -77,7 +86,7 @@ public class MainActivity extends AppCompatActivity
     //back button goes to forum unless it is on forum, then it closes app
     @Override
     public void onBackPressed() {
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -96,15 +105,15 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    //handles selecting other fragments from nav drawer
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         displaySelectedScreen(item.getItemId());
         return true;
     }
 
-
+    //loads login screen
     private void displayLoginScreen() {
         cur_screen = R.id.login_screen;
         Fragment fragment = new LoginFragment();
@@ -113,24 +122,38 @@ public class MainActivity extends AppCompatActivity
         ft.commit();
     }
 
+    private void logIn() {
+        currentUser.setUsername(SaveSharedPreference.getUserName(MainActivity.this));
+        server_ip = SaveSharedPreference.getHostIp(MainActivity.this);
+        displaySelectedScreen(R.id.nav_forum);
+    }
 
-    public void lockdrawer(Boolean lock){
-        if(lock){
+
+    public void logout() {
+        SaveSharedPreference.setHostIp(MainActivity.this, "");
+        SaveSharedPreference.setUserName(MainActivity.this, "");
+        displayLoginScreen();
+    }
+
+    public void lockDrawer(Boolean lock) {
+        if (lock) {
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         } else {
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
-
     }
 
-    public void setLocalIP(String ip) {
-        LOCAL_IP_ADDRESS = ip;
+    public void setServerIP(String ip) {
+        server_ip = ip;
     }
 
-    private void logIn() {
-        currentUser.setUsername(SaveSharedPreference.getUserName(MainActivity.this));
-        LOCAL_IP_ADDRESS = SaveSharedPreference.getHostIp(MainActivity.this);
-        displaySelectedScreen(R.id.nav_forum);
+    public String getServerIP() {
+        return server_ip;
+    }
+
+    public void setSavedContextData(String username, String ip){
+        SaveSharedPreference.setUserName(MainActivity.this, username);
+        SaveSharedPreference.setHostIp(MainActivity.this, ip);
     }
 
 
@@ -181,7 +204,6 @@ public class MainActivity extends AppCompatActivity
         //replacing the fragment
         if (fragment != null) {
             Bundle bundle = new Bundle();
-            bundle.putString("serverIP", LOCAL_IP_ADDRESS);
             bundle.putStringArray("userData", currentUser.toArray());
             fragment.setArguments(bundle);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -189,12 +211,6 @@ public class MainActivity extends AppCompatActivity
             ft.commit();
         }
         drawer.closeDrawer(GravityCompat.START);
-    }
-
-    public void logout() {
-        SaveSharedPreference.setHostIp(MainActivity.this, "");
-        SaveSharedPreference.setUserName(MainActivity.this, "");
-        displayLoginScreen();
     }
 
 
