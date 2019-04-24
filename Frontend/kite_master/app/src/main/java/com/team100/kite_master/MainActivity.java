@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (cur_screen == R.id.login_screen) {
+        } else if (cur_screen == R.id.nav_logout) {
             Intent startMain = new Intent(Intent.ACTION_MAIN);
             startMain.addCategory(Intent.CATEGORY_HOME);
             startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity
 
     //loads login screen
     private void displayLoginScreen() {
-        cur_screen = R.id.login_screen;
+        cur_screen = R.id.nav_logout;
         Fragment fragment = new LoginFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment);
@@ -193,11 +193,8 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_settings:
                 fragment = new SettingsFragment();
                 break;
-            case R.id.nav_help:
+            case R.id.nav_logout:
                 logout();
-                return;
-            case R.id.nav_user_tests:
-                fragment = new UserTestsFragment();
                 break;
         }
 

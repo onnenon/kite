@@ -128,12 +128,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
 
     private void moveToForumFrag(String username, String ip) {
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setUsername(username);
         //unlock drawer
         ((MainActivity) Objects.requireNonNull(getActivity())).lockDrawer(false);
-        //save username and ip
-        SaveSharedPreference.setUserName(getActivity(), username);
-        SaveSharedPreference.setHostIp(getActivity(), ip);
         //set current username and ip
+        ((MainActivity) Objects.requireNonNull(getActivity())).setSavedContextData(username, ip);
         ((MainActivity) Objects.requireNonNull(getActivity())).setSavedContextData(username, ip);
         //launch forum fragment
         Fragment fragment = new ForumTopicListFragment();
