@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.team100.kite_master.R;
 import com.team100.kite_master.messages.messages_data_classes.Message;
-import com.team100.kite_master.messages.messages_data_classes.WebSocketImplementation;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -25,7 +27,9 @@ public class MessagesFragment extends Fragment implements OutputHandler {
     private String[] userdata;
     private String username;
 
-    private LinearLayout messageView;
+    private ScrollView scrollView;
+    private LinearLayout messageList;
+
     private TextView errorTextView;
     private EditText messageText;
     private Button postButton;
@@ -49,7 +53,8 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         }
 
         //initialize user interface objects
-        messageView = (LinearLayout) v.findViewById(R.id.message_layout);
+        scrollView = (ScrollView) v.findViewById(R.id.message_scroll_view);
+        messageList = (LinearLayout) v.findViewById(R.id.message_linear_layout);
         errorTextView = (TextView) v.findViewById(R.id.error_textView);
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
         postButton = (Button) v.findViewById(R.id.message_button);
@@ -57,16 +62,25 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         implementationWS = new WebSocketImplementation(this, username, LOCAL_IP_ADDRESS);
 
         //set on click listener
-        //postButton.setOnClickListener(this);
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                // Send the message
-                implementationWS.sendJSONText(messageText.getText().toString());
+                String messageString = messageText.getText().toString();
 
-                // Clear the message text
-                messageText.setText("");
+                // Make sure the string isn't empty
+                if (!messageString.equals("")) {
+
+                    // Send the message
+                    implementationWS.sendJSONText(messageString);
+
+                    // Clear the message text
+                    messageText.setText("");
+                }
+                else {
+
+                    Toast.makeText(getActivity(), "Please enter a message" + " ", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -87,18 +101,154 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             public void run() {
 
                 Message msg = new Message(username, txt);
-                String messageString = msg.getMessageTime() + "\n" + msg.getUsername() + ": " + msg.getText() + "\n";
+                String messageTime = msg.getMessageTime();
+                String messageString =  msg.getUsername() + ": " + msg.getText();
 
-                TextView text = new TextView(getContext());
-                text.setText(messageString);
-                messageView.addView(text);
+                // Create a message, and set it up
+                TextView time = setupTimeTextView(username, messageTime);
+                RelativeLayout message = setupMessage(username, messageString);
+
+                // Add the message to the Linearlayout
+                messageList.addView(time);
+                messageList.addView(message);
+
+                // Credit to this source: https://stackoverflow.com/questions/21926644/get-height-and-width-of-a-layout-programmatically
+                // Scroll to bottom upon receiving new messages
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
+
             }
+
         });
+
     }
 
     public void setErrorText(String errorText) {
 
         errorTextView.setText(errorText);
+    }
+
+    public RelativeLayout setupMessage(String username, String messageString) {
+
+        RelativeLayout messageLayout;
+        TextView messageText;
+
+        messageText = setupMessageTextView(username, messageString);
+
+        messageLayout = setupRelativeLayout(username);
+        messageLayout.addView(messageText);
+
+        return messageLayout;
+    }
+
+    public RelativeLayout setupRelativeLayout(String username) {
+
+        final int DISTANCE_FROM_CLOSE_EDGE = 30;
+        final int DISTANCE_FROM_FAR_EDGE = 240;
+
+        int width;
+        int height;
+
+        TextView messageText;
+        RelativeLayout.LayoutParams relativeParams;
+
+        RelativeLayout messageLayout = new RelativeLayout(getContext());
+
+        // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
+        // Set parameters of relativeLayout object
+        width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        relativeParams = new RelativeLayout.LayoutParams(width, height);
+        relativeParams.setMargins(DISTANCE_FROM_CLOSE_EDGE, 0, DISTANCE_FROM_CLOSE_EDGE, 0);
+
+        // Position the messages that you yourself send to the right
+        // Position the messages of other users to the left
+        if (username == getUsername()) {
+
+            relativeParams.setMarginStart(DISTANCE_FROM_FAR_EDGE);
+            relativeParams.setMarginEnd(DISTANCE_FROM_CLOSE_EDGE);
+
+            messageLayout.setBackgroundResource(R.drawable.message_layout_this_user);
+        }
+        else {
+
+            relativeParams.setMarginStart(DISTANCE_FROM_CLOSE_EDGE);
+            relativeParams.setMarginEnd(DISTANCE_FROM_FAR_EDGE);
+
+            messageLayout.setBackgroundResource(R.drawable.message_layout);
+        }
+
+        messageLayout.setLayoutParams(relativeParams);
+        messageLayout.requestLayout();
+
+        return messageLayout;
+    }
+
+    public TextView setupTimeTextView(String username, String messageTime) {
+
+        final int DISTANCE_FROM_CLOSE_EDGE = 30;
+        final int DISTANCE_FROM_FAR_EDGE = 240;
+        final int BLACK_COLOR = 0xff000000;
+
+        int width;
+        int height;
+
+        TextView messageText;
+        LinearLayout.LayoutParams layoutParams;
+
+        messageText = new TextView(getContext());
+        messageText.setText(messageTime);
+        // messageText.setTextSize(10.0f);
+        messageText.setTextColor(BLACK_COLOR);
+        messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, 0);
+
+        width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        layoutParams = new LinearLayout.LayoutParams(width, height);
+
+        if (username == getUsername()) {
+
+            layoutParams.setMarginStart(DISTANCE_FROM_FAR_EDGE);
+            layoutParams.setMarginEnd(DISTANCE_FROM_CLOSE_EDGE);
+        }
+        else {
+
+            layoutParams.setMarginStart(DISTANCE_FROM_CLOSE_EDGE);
+            layoutParams.setMarginEnd(DISTANCE_FROM_FAR_EDGE);
+        }
+
+        messageText.setLayoutParams(layoutParams);
+
+        return messageText;
+    }
+
+    public TextView setupMessageTextView(String username, String messageString) {
+
+        final int DISTANCE_FROM_CLOSE_EDGE = 30;
+        final int BLACK_COLOR = 0xff000000;
+
+        int width;
+        int height;
+
+        TextView messageText;
+        LinearLayout.LayoutParams layoutParams;
+
+        messageText = new TextView(getContext());
+        messageText.setText(messageString);
+        messageText.setTextColor(BLACK_COLOR);
+        messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE);
+
+        width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        layoutParams = new LinearLayout.LayoutParams(width, height);
+
+        messageText.setLayoutParams(layoutParams);
+
+        return messageText;
     }
 
 
@@ -116,12 +266,12 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
     public LinearLayout getMessageView() {
 
-        return this.messageView;
+        return this.messageList;
     }
 
     public void setMessageView(LinearLayout messageView) {
 
-        this.messageView = messageView;
+        this.messageList = messageView;
     }
 
     public String getIPaddress() {
