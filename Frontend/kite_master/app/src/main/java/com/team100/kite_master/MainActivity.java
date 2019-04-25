@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.team100.kite_master.devtests.UserTestsFragment;
@@ -58,6 +59,10 @@ public class MainActivity extends AppCompatActivity
         //setup toolbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        //set keybaord pan
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
 
         //setup drawer
