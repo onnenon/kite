@@ -41,6 +41,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
     TextView errMessage;
     Button retry;
     Post currentPost;
+    boolean isFavorited;
 
     //declare layout items
     ScrollView postScrollView;
@@ -79,6 +80,9 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         postScrollView = v.findViewById(R.id.post_scroll_view);
         retry = v.findViewById(R.id.retry_topics);
 
+        //initialize boolean
+        isFavorited = false;
+
         //set button on click listener
         retry.setOnClickListener(this);
 
@@ -93,6 +97,9 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         //show action menu
         Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).show();
         setHasOptionsMenu(true);
+
+        //set current screen
+        ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen("post");
 
         //hide error elements
         errMessage.setVisibility(View.GONE);
@@ -137,8 +144,15 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_post_favorite:
-                ((MainActivity) Objects.requireNonNull(getActivity())).addFavoritePost(currentPost);
-                favorite.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_menu_star_filled));
+                if(isFavorited){
+                    ((MainActivity) Objects.requireNonNull(getActivity())).removeFavoritePost(currentPost);
+                    favorite.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_menu_favorite));
+                    isFavorited = false;
+                } else {
+                    ((MainActivity) Objects.requireNonNull(getActivity())).addFavoritePost(currentPost);
+                    favorite.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_menu_star_filled));
+                    isFavorited = true;
+                }
                 break;
         }
         return true;
@@ -192,6 +206,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         if (((MainActivity) Objects.requireNonNull(getActivity())).getFavoritePostIDList() != null) {
             System.out.println("HERE");
             if (((MainActivity) Objects.requireNonNull(getActivity())).getFavoritePostIDList().contains(p.getPostID())) {
+                isFavorited = true;
                 favorite.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_menu_star_filled));
             }
         }

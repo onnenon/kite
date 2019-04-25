@@ -52,9 +52,6 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.forum_topic_list, container, false);
 
-        //set current screen in main activity
-        ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen(R.id.nav_forum);
-
 
         //DEBUGGING
         System.out.println(" ");
@@ -94,6 +91,10 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         //show the action bar and buttons
         Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).show();
         setHasOptionsMenu(true);
+
+
+        //set current screen
+        ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen("topic_list");
 
         return v;
     }

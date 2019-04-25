@@ -1,16 +1,11 @@
-package com.team100.kite_master.profile;
+package com.team100.kite_master.favorites;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -22,28 +17,18 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
-import com.team100.kite_master.forum.ForumNewPostFragment;
-import com.team100.kite_master.forum.ForumParser;
 import com.team100.kite_master.forum.ForumPostFragment;
-import com.team100.kite_master.forum.ForumPostListFragment;
 import com.team100.kite_master.forum.forum_data_classes.DateUtil;
 import com.team100.kite_master.forum.forum_data_classes.Post;
-import com.team100.kite_master.forum.forum_data_classes.Topic;
-import com.team100.kite_master.networking.NetworkManager;
-import com.team100.kite_master.networking.VolleyListener;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 
 
-public class ProfileFragment extends Fragment implements View.OnClickListener {
+public class FavoritesFragment extends Fragment implements View.OnClickListener {
 
     ProgressBar loadingCircle;
     TextView errMessage;
@@ -91,7 +76,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Objects.requireNonNull(getActivity()).setTitle("Profile");
+        Objects.requireNonNull(getActivity()).setTitle("Favorites");
 
         //set on click listener for menu items
         postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -164,8 +149,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     //sets post list array list and notifies adapter to update
     private void setPostList() {
         favPostList = ((MainActivity) Objects.requireNonNull(getActivity())).getFavoritePostList();
+        System.out.println(favPostList.toString());
         //sort topic list in alphabetical order
-        if (favPostList != null) {
+        if (favPostList != null && favPostList.size() != 0) {
+            System.out.println("UPDATING LIST");
             Collections.sort(favPostList);
             //notify adapter to update its list with the new topics
             favoritePostAdapter.notifyDataSetChanged();

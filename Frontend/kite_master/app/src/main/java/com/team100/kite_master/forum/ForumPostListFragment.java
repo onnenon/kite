@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
 import com.team100.kite_master.forum.forum_data_classes.DateUtil;
 import com.team100.kite_master.forum.forum_data_classes.Post;
@@ -99,6 +100,9 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
 
         //show action bar buttons
         setHasOptionsMenu(true);
+
+        //set current screen
+        ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen("post_list");
 
         return v;
     }

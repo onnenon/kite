@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ForumParser {
 
     //convert JSON object from backend to arraylist of topics
-    Post parsePost(JSONObject resp) throws JSONException {
+    public Post parsePost(JSONObject resp) throws JSONException {
         //get json array of posts
         JSONObject jdata = resp.getJSONObject("data");
         JSONObject jpost = jdata.getJSONObject("post");

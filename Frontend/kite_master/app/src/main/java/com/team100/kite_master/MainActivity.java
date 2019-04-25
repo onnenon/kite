@@ -16,14 +16,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.team100.kite_master.devtests.UserTestsFragment;
+import com.team100.kite_master.favorites.FavoriteStorageHandler;
 import com.team100.kite_master.forum.ForumTopicListFragment;
 import com.team100.kite_master.forum.forum_data_classes.Post;
 import com.team100.kite_master.login.LoginFragment;
 import com.team100.kite_master.login.SaveSharedPreference;
 import com.team100.kite_master.messages.MessagesFragment;
 import com.team100.kite_master.networking.NetworkManager;
-import com.team100.kite_master.profile.ProfileFragment;
+import com.team100.kite_master.favorites.FavoritesFragment;
 import com.team100.kite_master.search.SearchFragment;
 import com.team100.kite_master.settings.SettingsFragment;
 import com.team100.kite_master.userdata.User;
@@ -36,11 +36,12 @@ public class MainActivity extends AppCompatActivity
 
 
     //global variables
-    public int cur_screen;
+    public String cur_screen;
     public User currentUser;
     private String server_ip;
     private ArrayList<Post> favoritePostList = new ArrayList<>();
     private ArrayList<String> favoritePostIDList = new ArrayList<>();
+    private FavoriteStorageHandler fsh = new FavoriteStorageHandler();
 
     //global layout elements
     public DrawerLayout drawer;
@@ -97,16 +98,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         drawer = findViewById(R.id.drawer_layout);
+
         int count = getSupportFragmentManager().getBackStackEntryCount();
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (cur_screen == R.id.nav_logout) {
+
+        } else if (cur_screen.equals("login") || cur_screen.equals("topic_list")) {
             Intent startMain = new Intent(Intent.ACTION_MAIN);
             startMain.addCategory(Intent.CATEGORY_HOME);
             startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(startMain);
-        } else if (cur_screen != R.id.nav_forum) {
-            displaySelectedScreen(R.id.nav_forum);
         } else if (count > 0) {
             getSupportFragmentManager().popBackStack();
         } else {
@@ -125,7 +127,7 @@ public class MainActivity extends AppCompatActivity
 
     //loads login screen
     private void displayLoginScreen() {
-        cur_screen = R.id.nav_logout;
+        cur_screen = "login";
         Fragment fragment = new LoginFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment);
@@ -135,6 +137,10 @@ public class MainActivity extends AppCompatActivity
     private void logIn() {
         currentUser.setUsername(SaveSharedPreference.getUserName(MainActivity.this));
         server_ip = SaveSharedPreference.getHostIp(MainActivity.this);
+        if(SaveSharedPreference.getFavoritesList(MainActivity.this).length() != 0){
+            favoritePostIDList = fsh.stringToFavID(SaveSharedPreference.getFavoritesList(MainActivity.this));
+            favoritePostList = fsh.getAllFavPosts(favoritePostIDList);
+        }
         displaySelectedScreen(R.id.nav_forum);
     }
 
@@ -142,6 +148,7 @@ public class MainActivity extends AppCompatActivity
     public void logout() {
         SaveSharedPreference.setHostIp(MainActivity.this, "");
         SaveSharedPreference.setUserName(MainActivity.this, "");
+        SaveSharedPreference.setFavoritesList(MainActivity.this, fsh.favIDtoString(favoritePostList));
         displayLoginScreen();
     }
 
@@ -179,7 +186,7 @@ public class MainActivity extends AppCompatActivity
         navUsername.setText(atUsername);
     }
 
-    public void setCurScreen(int screenID) {
+    public void setCurScreen(String screenID) {
         cur_screen = screenID;
     }
 
@@ -189,12 +196,41 @@ public class MainActivity extends AppCompatActivity
             if (!favoritePostIDList.contains(f.getPostID())) {
                 favoritePostList.add(f);
                 favoritePostIDList.add(f.getPostID());
+                SaveSharedPreference.setFavoritesList(MainActivity.this, fsh.favIDtoString(favoritePostList));
             }
         } else {
             favoritePostList.add(f);
             favoritePostIDList.add(f.getPostID());
+            SaveSharedPreference.setFavoritesList(MainActivity.this, fsh.favIDtoString(favoritePostList));
         }
     }
+
+
+    public void removeFavoritePost(Post f) {
+        System.out.println("PRE REMOVED LIST: " + favoritePostList.toString());
+        if (favoritePostList != null) {
+            if (favoritePostIDList.contains(f.getPostID())) {
+                System.out.println("REMOVING");
+
+                for(int i = 0; i < favoritePostList.size(); i++){
+                    if(favoritePostList.get(i).getPostID().equals(f.getPostID())){
+                        favoritePostList.remove(i);
+                    }
+                }
+
+                for(int i = 0; i < favoritePostIDList.size(); i++){
+                    if(favoritePostIDList.get(i).equals(f.getPostID())){
+                        favoritePostIDList.remove(i);
+                    }
+                }
+                System.out.println("REMOVED LIST: " + favoritePostList.toString());
+                SaveSharedPreference.setFavoritesList(MainActivity.this, fsh.favIDtoString(favoritePostList));
+            }
+        }
+    }
+
+
+
 
     public ArrayList<Post> getFavoritePostList() {
         return favoritePostList;
@@ -206,27 +242,32 @@ public class MainActivity extends AppCompatActivity
 
 
     private void displaySelectedScreen(int itemId) {
-        cur_screen = itemId;
         //creating fragment object
         Fragment fragment = null;
         //initializing the fragment object which is selected
         switch (itemId) {
             case R.id.nav_forum:
+                cur_screen = "topic_list";
                 fragment = new ForumTopicListFragment();
                 break;
             case R.id.nav_search:
+                cur_screen = "search";
                 fragment = new SearchFragment();
                 break;
             case R.id.nav_messages:
+                cur_screen = "messages";
                 fragment = new MessagesFragment();
                 break;
             case R.id.nav_favorites:
-                fragment = new ProfileFragment();
+                cur_screen = "favorites";
+                fragment = new FavoritesFragment();
                 break;
             case R.id.nav_settings:
+                cur_screen = "settings";
                 fragment = new SettingsFragment();
                 break;
             case R.id.nav_logout:
+                cur_screen = "login";
                 logout();
                 break;
         }
@@ -237,7 +278,7 @@ public class MainActivity extends AppCompatActivity
             bundle.putStringArray("userData", currentUser.toArray());
             fragment.setArguments(bundle);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame, fragment);
+            ft.replace(R.id.content_frame, fragment).addToBackStack("tag");
             ft.commit();
         }
         drawer.closeDrawer(GravityCompat.START);
