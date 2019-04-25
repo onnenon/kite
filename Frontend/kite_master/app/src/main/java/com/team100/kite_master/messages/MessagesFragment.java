@@ -157,7 +157,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
         // Set parameters of relativeLayout object
         width = RelativeLayout.LayoutParams.WRAP_CONTENT;
-        height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        height = RelativeLayout.LayoutParams.WRAP_CONTENT;
         relativeParams = new RelativeLayout.LayoutParams(width, height);
         relativeParams.setMargins(DISTANCE_FROM_CLOSE_EDGE, 0, DISTANCE_FROM_CLOSE_EDGE, 0);
 

@@ -1,5 +1,7 @@
 package com.example.kite_master;
 
+import android.widget.RelativeLayout;
+
 import com.team100.kite_master.messages.MessagesFragment;
 import com.team100.kite_master.messages.messages_data_classes.Message;
 import com.team100.kite_master.messages.WebSocketImplementation;
@@ -174,49 +176,21 @@ public class MessagesFragmentUnitTest {
         // verify(mockImpWS, times(1)).output("fadmin", "String");
     }
 
-    /*
-
     @Test
-    public void testMessageTime() {
+    public void testRelativeLayoutSetup() {
 
-        when(messageTest.getMessageTime()).thenReturn(Calendar.getInstance().getTime());
+        RelativeLayout layout = messageFrag.setupRelativeLayout("fadmin"); // NullpointerException?
 
-        System.out.println(messageTest.getMessageTime());
+        // Setting the margins throws "java.lang.reflect.InvocationTargetException"
 
-        assertEquals(Calendar.getInstance().getTime(), messageTest.getMessageTime());
+
     }
 
     @Test
-    public void testSuccessfulCommunication() throws IOException {
+    public void test() {
 
-        impWS.sendJSONText();
 
-        // Response httpResponse = impWS.getClient().newCall(impWS.getRequest()).execute();
-        Response httpResponse = mock(Response.class);
-
-        when(httpResponse.code()).thenReturn(1000);
-
-        int reponseCode = httpResponse.code();
-
-        assertEquals(1000, httpResponse.code());
     }
-
-    @Test
-    public void testOutput() {
-
-        Date date = Calendar.getInstance().getTime();
-
-        when(mockMessage.getMessageTime()).thenReturn(date);
-        when(mockMessage.getUsername()).thenReturn(messageFrag.getUsername()); // "Username"
-        when(mockMessage.getText()).thenReturn("A very important message.");
-
-        // Assuming only one TextView was created from the result of posting a message.
-        String message = messageFrag.getWebSocketImplementation().getLastMessage(); // FIXME
-
-        assertEquals(date.toString() + "\n" + "Username: A very important message.\n", message);
-    }
-
-    */
 
 
 }
