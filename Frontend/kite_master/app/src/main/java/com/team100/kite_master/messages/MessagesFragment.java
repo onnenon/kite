@@ -80,6 +80,11 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             }
         });
 
+        //set current screen
+        ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen("messages");
+        ((MainActivity) Objects.requireNonNull(getActivity())).setDrawerItemSelection(2);
+
+
         return v;
     }
 

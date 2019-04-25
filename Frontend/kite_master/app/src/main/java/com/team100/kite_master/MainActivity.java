@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     //global layout elements
     public DrawerLayout drawer;
     public Toolbar toolbar;
+    public NavigationView navigationView;
 
 
     //on create method
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         //set navigation view
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         //instantiate user with blank fields
@@ -123,6 +124,11 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         displaySelectedScreen(item.getItemId());
         return true;
+    }
+
+
+    public void setDrawerItemSelection(int sel){
+        navigationView.getMenu().getItem(sel).setChecked(true);
     }
 
     //loads login screen

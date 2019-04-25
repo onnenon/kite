@@ -95,6 +95,9 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
 
         //set current screen
         ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen("topic_list");
+        ((MainActivity) Objects.requireNonNull(getActivity())).setDrawerItemSelection(0);
+
+
 
         return v;
     }

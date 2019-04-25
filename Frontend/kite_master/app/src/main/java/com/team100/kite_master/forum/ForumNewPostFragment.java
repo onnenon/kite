@@ -49,6 +49,13 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
         titleText = v.findViewById(R.id.title_edit_text);
         bodyText = v.findViewById(R.id.body_edit_text);
         Button postButton = v.findViewById(R.id.post_button);
+
+
+        //set current screen
+        ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen("new_post");
+        ((MainActivity) Objects.requireNonNull(getActivity())).setDrawerItemSelection(0);
+
+
         //set on click listener
         postButton.setOnClickListener(this);
         return v;

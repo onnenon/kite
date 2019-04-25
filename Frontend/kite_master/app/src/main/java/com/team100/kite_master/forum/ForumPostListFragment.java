@@ -101,8 +101,9 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         //show action bar buttons
         setHasOptionsMenu(true);
 
-        //set current screen
+        //set current screen and nav drawer check
         ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen("post_list");
+        ((MainActivity) Objects.requireNonNull(getActivity())).setDrawerItemSelection(0);
 
         return v;
     }

@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
 import java.util.Objects;
 
@@ -23,5 +25,6 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getActivity()).setTitle("Search");
+        ((MainActivity) Objects.requireNonNull(getActivity())).setDrawerItemSelection(1);
     }
 }

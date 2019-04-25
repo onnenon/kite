@@ -69,6 +69,10 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener 
 
         setPostList();
 
+        //set current screen
+        ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen("favorites");
+        ((MainActivity) Objects.requireNonNull(getActivity())).setDrawerItemSelection(3);
+
         return v;
     }
 

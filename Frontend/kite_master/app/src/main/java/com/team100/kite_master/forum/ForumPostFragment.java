@@ -100,6 +100,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
 
         //set current screen
         ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen("post");
+        ((MainActivity) Objects.requireNonNull(getActivity())).setDrawerItemSelection(0);
 
         //hide error elements
         errMessage.setVisibility(View.GONE);
