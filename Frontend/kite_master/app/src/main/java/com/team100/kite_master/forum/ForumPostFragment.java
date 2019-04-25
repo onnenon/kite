@@ -3,8 +3,12 @@ package com.team100.kite_master.forum;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
 import com.team100.kite_master.forum.forum_data_classes.DateUtil;
 import com.team100.kite_master.forum.forum_data_classes.Post;
@@ -35,6 +40,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
     ProgressBar loadingCircle;
     TextView errMessage;
     Button retry;
+    Post currentPost;
 
     //declare layout items
     ScrollView postScrollView;
@@ -43,6 +49,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
     TextView postTimeView;
     TextView postAuthorView;
     TextView postBodyView;
+    MenuItem favorite;
 
 
     @Nullable
@@ -83,18 +90,32 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         //show loading circle until topics received
         loadingCircle.setVisibility(View.VISIBLE);
 
+        //show action menu
+        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).show();
+        setHasOptionsMenu(true);
+
         //hide error elements
         errMessage.setVisibility(View.GONE);
         retry.setVisibility(View.GONE);
         return v;
     }
 
+    //creates action bar menu
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.action_buttons, menu);
+        MenuItem refresh = menu.findItem(R.id.menu_refresh);
+        favorite = menu.findItem(R.id.menu_post_favorite);
+        refresh.setVisible(false);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getActivity()).setTitle("Post");
-        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).hide();
     }
+
 
     //handle retry button click
     @Override
@@ -108,6 +129,22 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
                 break;
         }
     }
+
+
+
+    //handles click of buttons in the action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_post_favorite:
+                ((MainActivity) Objects.requireNonNull(getActivity())).addFavoritePost(currentPost);
+                favorite.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_menu_star_filled));
+                break;
+        }
+        return true;
+    }
+
+
 
     //NETWORKING
     //requests topic JSON object from backend
@@ -141,6 +178,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
 
 
     public void setViewElements(Post p) {
+        currentPost = p;
         loadingCircle.setVisibility(View.GONE);
         postTitleView.setText(p.getPostTitle());
         String atAuthor = "@" + p.getPostAuthor();
@@ -150,5 +188,13 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         postTimeView.setText(date);
         postBodyView.setText(p.getPostBody());
         postScrollView.setVisibility(View.VISIBLE);
+
+        if (((MainActivity) Objects.requireNonNull(getActivity())).getFavoritePostIDList() != null) {
+            System.out.println("HERE");
+            if (((MainActivity) Objects.requireNonNull(getActivity())).getFavoritePostIDList().contains(p.getPostID())) {
+                favorite.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_menu_star_filled));
+            }
+        }
+
     }
 }

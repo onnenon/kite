@@ -102,6 +102,8 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.action_buttons, menu);
+        MenuItem favorite = menu.findItem(R.id.menu_post_favorite);
+        favorite.setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

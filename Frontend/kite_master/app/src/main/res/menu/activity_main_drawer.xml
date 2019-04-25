@@ -20,7 +20,7 @@
             android:title="@string/nav_drawer_messages" />
         <item
             android:id="@+id/nav_favorites"
-            android:icon="@drawable/ic_menu_favorite"
+            android:icon="@drawable/ic_action_menu_favorite"
             android:title="@string/nav_drawer_profile" />
     </group>
     <group android:checkableBehavior="single"

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.team100.kite_master.devtests.UserTestsFragment;
 import com.team100.kite_master.forum.ForumTopicListFragment;
+import com.team100.kite_master.forum.forum_data_classes.Post;
 import com.team100.kite_master.login.LoginFragment;
 import com.team100.kite_master.login.SaveSharedPreference;
 import com.team100.kite_master.messages.MessagesFragment;
@@ -26,6 +27,8 @@ import com.team100.kite_master.profile.ProfileFragment;
 import com.team100.kite_master.search.SearchFragment;
 import com.team100.kite_master.settings.SettingsFragment;
 import com.team100.kite_master.userdata.User;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity
     public int cur_screen;
     public User currentUser;
     private String server_ip;
+    private ArrayList<Post> favoritePostList = new ArrayList<>();
+    private ArrayList<String> favoritePostIDList = new ArrayList<>();
 
     //global layout elements
     public DrawerLayout drawer;
@@ -148,6 +153,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+    //getters and setters
     public void setServerIP(String ip) {
         server_ip = ip;
     }
@@ -156,7 +163,7 @@ public class MainActivity extends AppCompatActivity
         return server_ip;
     }
 
-    public void setSavedContextData(String username, String ip){
+    public void setSavedContextData(String username, String ip) {
         SaveSharedPreference.setUserName(MainActivity.this, username);
         SaveSharedPreference.setHostIp(MainActivity.this, ip);
     }
@@ -174,6 +181,27 @@ public class MainActivity extends AppCompatActivity
 
     public void setCurScreen(int screenID) {
         cur_screen = screenID;
+    }
+
+
+    public void addFavoritePost(Post f) {
+        if (favoritePostList != null) {
+            if (!favoritePostIDList.contains(f.getPostID())) {
+                favoritePostList.add(f);
+                favoritePostIDList.add(f.getPostID());
+            }
+        } else {
+            favoritePostList.add(f);
+            favoritePostIDList.add(f.getPostID());
+        }
+    }
+
+    public ArrayList<Post> getFavoritePostList() {
+        return favoritePostList;
+    }
+
+    public ArrayList<String> getFavoritePostIDList() {
+        return favoritePostIDList;
     }
 
 

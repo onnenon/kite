@@ -24,6 +24,10 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
+import static android.text.InputType.TYPE_CLASS_NUMBER;
+import static android.text.InputType.TYPE_CLASS_PHONE;
+import static android.text.InputType.TYPE_CLASS_TEXT;
+
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 

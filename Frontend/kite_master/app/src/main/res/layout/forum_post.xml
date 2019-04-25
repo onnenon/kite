@@ -152,7 +152,11 @@
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+
             </android.support.constraint.ConstraintLayout>
+
+
 
             <TextView
                 android:id="@+id/single_post_body"
