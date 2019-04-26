@@ -1,5 +1,9 @@
 package com.example.kite_master;
 
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+
 import com.team100.kite_master.messages.MessagesFragment;
 import com.team100.kite_master.messages.messages_data_classes.Message;
 import com.team100.kite_master.messages.WebSocketImplementation;
@@ -69,13 +73,13 @@ public class MessagesFragmentUnitTest {
     }
 
     @Test
-    public void testGetUsername() {
+    public void testMessageGetUsername() {
 
         assertEquals("fadmin", realMessage.getUsername()); // Username before
     }
 
     @Test
-    public void testSetUsername() {
+    public void testMessageSetUsername() {
 
         realMessage.setUsername("UserOne");
 
@@ -96,10 +100,19 @@ public class MessagesFragmentUnitTest {
         assertEquals("new text", realMessage.getText()); // Text after
     }
 
+    @Test
+    public void testGetMessageTime() {
 
+        when(mockMessage.getMessageTime()).thenReturn("4/26/2019 1:02 PM");
+        when(mockMessage.getCurrentDateAndTime()).thenReturn("4/26/2019 1:02 PM");
+        assertEquals("4/26/2019 1:02 PM", mockMessage.getMessageTime());
+        assertEquals("4/26/2019 1:02 PM", mockMessage.getCurrentDateAndTime());
+    }
+
+    /*
 
     @Test
-    public void testMessageOutput() {
+    public void testMessageOutputReal() {
 
         String date = "4/20/2019 3:23 PM";
 
@@ -110,6 +123,30 @@ public class MessagesFragmentUnitTest {
         assertEquals(date + "\n" + "fadmin: A very important message.\n",
                 mockMessage.getMessageTime() + "\n" + mockMessage.getUsername() + ": " + mockMessage.getText() + "\n");
     }
+
+    */
+
+    @Test
+    public void testMessageOutputMock() {
+
+        String date = "4/20/2019 3:23 PM";
+
+        when(mockMessage.getMessageTime()).thenReturn(date);
+        when(mockMessage.getUsername()).thenReturn(messageFrag.getUsername()); // "Username"
+        when(mockMessage.getText()).thenReturn("A very important message.");
+
+        assertEquals(date + "\n" + "fadmin: A very important message.\n",
+                mockMessage.getMessageTime() + "\n" + mockMessage.getUsername() + ": " + mockMessage.getText() + "\n");
+    }
+
+
+
+    @Test
+    public void stuff() {
+
+    }
+
+
 
     @Test
     public void testRecentMessagesRetrieval() throws JSONException {
@@ -148,6 +185,8 @@ public class MessagesFragmentUnitTest {
         assertEquals("4/3/19\nProfessor195: Sucks to be you!\n", secondMessage);
         assertEquals("4/3/19\nTeammate902: Don't talk to my teammate like that!\n", thirdMessage);
     }
+
+
 
 
     // Test not working...
