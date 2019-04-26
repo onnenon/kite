@@ -5,14 +5,12 @@ import java.util.Date;
 
 public class Message {
 
-    private int ID;
     private String username;
     private String text;
     private Calendar date;
 
     public Message(String username, String text) {
 
-        this.ID = ID;
         this.username = username;
         this.text = text;
         this.date = Calendar.getInstance();

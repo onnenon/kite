@@ -40,6 +40,8 @@ public class MessagesFragmentUnitTest {
 
         impWS = new WebSocketImplementation(messageFrag, messageFrag.getUsername(), messageFrag.getIPaddress());
 
+        realMessage = new Message("fadmin", "Text!");
+
         // Mock objects
         mockMessageFrag = mock(MessagesFragment.class);
         mockImpWS = mock(WebSocketImplementation.class);
@@ -49,14 +51,14 @@ public class MessagesFragmentUnitTest {
 
 
     @Test
-    public void testUsername() {
+    public void testUsernameMock() {
 
         when(mockMessage.getUsername()).thenReturn("fadmin");
         assertEquals("fadmin", mockMessage.getUsername());
     }
 
     @Test
-    public void testMessage() {
+    public void testMessageMock() {
 
         for (int i = 0; i < 3; i++) {
 
@@ -65,6 +67,36 @@ public class MessagesFragmentUnitTest {
 
         verify(mockMessage, times(3)).setText("A message for someone special.");
     }
+
+    @Test
+    public void testGetUsername() {
+
+        assertEquals("fadmin", realMessage.getUsername()); // Username before
+    }
+
+    @Test
+    public void testSetUsername() {
+
+        realMessage.setUsername("UserOne");
+
+        assertEquals("UserOne", realMessage.getUsername()); // Username after
+    }
+
+    @Test
+    public void testGetMessageText() {
+
+        assertEquals("Text!", realMessage.getText()); // Text before
+    }
+
+    @Test
+    public void testSetMessageText() {
+
+        realMessage.setText("new text");
+
+        assertEquals("new text", realMessage.getText()); // Text after
+    }
+
+
 
     @Test
     public void testMessageOutput() {
@@ -218,5 +250,9 @@ public class MessagesFragmentUnitTest {
 
     */
 
+    @Test
+    public void test() {
 
+
+    }
 }
