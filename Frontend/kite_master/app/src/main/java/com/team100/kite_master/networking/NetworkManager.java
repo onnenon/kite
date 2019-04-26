@@ -161,6 +161,26 @@ public class NetworkManager {
 
     //POSTS
 
+    public void requestAllPosts(final VolleyListener<JSONObject> listener) {
+        String URL = url + "/api/v2/posts";
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        );
+        requestQueue.add(getRequest);
+    }
+
+
     public void requestPostList(String topic, final VolleyListener<JSONObject> listener) {
         String URL = url + "/api/v2/topics/" + topic;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,

@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity
     public void logout() {
         SaveSharedPreference.setHostIp(MainActivity.this, "");
         SaveSharedPreference.setUserName(MainActivity.this, "");
-        SaveSharedPreference.setFavoritesList(MainActivity.this, fsh.favIDtoString(favoritePostList));
+        SaveSharedPreference.setFavoritesList(MainActivity.this, "");
         displayLoginScreen();
     }
 
