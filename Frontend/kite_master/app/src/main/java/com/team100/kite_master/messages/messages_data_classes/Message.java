@@ -21,10 +21,6 @@ public class Message {
         // Initialize time variables
         Calendar now;
 
-        int year;
-        int month;
-        int day;
-
         int hour_int;
         String hour_string;
         int minute_int;
@@ -34,11 +30,6 @@ public class Message {
         String meridiem_string;
 
         now = Calendar.getInstance();
-
-        // Get the date information
-        year = now.get(Calendar.YEAR);
-        month = now.get(Calendar.MONTH) + 1;
-        day = now.get(Calendar.DAY_OF_MONTH);
 
         // Get the time information
         hour_int = now.get(Calendar.HOUR);
@@ -75,7 +66,7 @@ public class Message {
             meridiem_string = "PM";
         }
 
-        return month + "/" + day + "/" + year + " " + hour_string + ":" + minute_string + " " + meridiem_string;
+        return hour_string + ":" + minute_string + " " + meridiem_string;
     }
 
     // Getter and setter methods
