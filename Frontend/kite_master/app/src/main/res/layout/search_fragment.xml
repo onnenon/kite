@@ -8,26 +8,10 @@
     android:background="#F7F7F7">
 
 
-    <ProgressBar
-        android:id="@+id/topics_loading"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:indeterminateTint="@color/colorSecondaryTextDefaultMaterialLight"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/list_view" />
-
     <ListView
         android:id="@+id/list_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
         android:cacheColorHint="#E6FFFFFF"
         android:clipToPadding="false"
         android:divider="@android:color/transparent"
@@ -63,6 +47,7 @@
             android:background="@drawable/round_button_pressed"
             android:elevation="10dp"
             android:ems="10"
+            android:hint="Search"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"

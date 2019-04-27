@@ -128,9 +128,20 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
     }
 
-    public void setErrorText(String errorText) {
+    public void setErrorText(final String errorText) {
 
-        errorTextView.setText(errorText);
+
+
+        getActivity().runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                errorTextView.setText(errorText);
+            }
+        });
+
+
+
     }
 
     public RelativeLayout setupMessage(String username, String messageString) {

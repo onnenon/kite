@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 
@@ -47,7 +48,6 @@ public class SearchFragment extends Fragment {
     ArrayList<Post> resultList = new ArrayList<>();
     CustomAdapter searchAdapter;
     ListView postListView;
-    ProgressBar loadingCircle;
 
 
 
@@ -59,10 +59,8 @@ public class SearchFragment extends Fragment {
 
 
         postListView = v.findViewById(R.id.list_view);
-        loadingCircle = v.findViewById(R.id.topics_loading);
 
 
-        loadingCircle.setVisibility(View.GONE);
         searchAdapter = new CustomAdapter();
         postListView.setAdapter(searchAdapter);
 
@@ -103,6 +101,22 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        requestAllPostsList();
+
+
+        searchBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    search(searchBox.getText().toString());
+                    System.out.println("SEARCHING");
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
 
     }
 
@@ -114,7 +128,7 @@ public class SearchFragment extends Fragment {
     class CustomAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return postList.size();
+            return resultList.size();
         }
 
         @Override
@@ -136,10 +150,10 @@ public class SearchFragment extends Fragment {
             TextView topicAuthor = view.findViewById(R.id.text_author);
             TextView topicTime = view.findViewById(R.id.text_time);
             // iterate through list to set topic entries
-            topicTitle.setText(postList.get(i).getPostTitle());
-            topicAuthor.setText(postList.get(i).getPostAuthor());
+            topicTitle.setText(resultList.get(i).getPostTitle());
+            topicAuthor.setText(resultList.get(i).getPostAuthor());
             DateUtil d = new DateUtil();
-            String timeago = d.getTimeAgo(Long.parseLong(postList.get(i).getPostTime()));
+            String timeago = d.getTimeAgo(Long.parseLong(resultList.get(i).getPostTime()));
             topicTime.setText(timeago);
             //add images here when support is added
             return view;
@@ -147,6 +161,15 @@ public class SearchFragment extends Fragment {
     }
 
 
+
+    private void search(String searchstring){
+        SearchHelper sh = new SearchHelper();
+        resultList = sh.search(searchstring, postList);
+        Collections.sort(resultList);
+        searchAdapter.notifyDataSetChanged();
+        searchBox.onEditorAction(EditorInfo.IME_ACTION_DONE);
+
+    }
 
 
 
@@ -161,6 +184,29 @@ public class SearchFragment extends Fragment {
         ft.commit();
     }
 
+
+
+    //NETWORKING
+    //requests topic list JSON object from backend
+    public void requestAllPostsList() {
+        NetworkManager.getInstance().requestAllPosts(new VolleyListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject object) {
+                try {
+                    ForumParser fp = new ForumParser();
+                    postList = fp.parseAllPostList(object);
+                } catch (JSONException e) {
+                    System.out.println(e.toString());
+                    System.out.println("Parse error");
+                }
+            }
+
+            @Override
+            public void getError(VolleyError err) {
+                System.out.println("Post List Error: " + err.toString());
+            }
+        });
+    }
 
 
 

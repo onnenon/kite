@@ -30,7 +30,7 @@ public class ForumParser {
 
 
     //convert JSON object from backend to arraylist of topics
-    ArrayList<Topic> parseTopics(JSONObject resp) throws JSONException {
+    public ArrayList<Topic> parseTopics(JSONObject resp) throws JSONException {
         //create output list
         ArrayList<Topic> tops = new ArrayList<>();
         //get JSON array of topics
@@ -46,7 +46,7 @@ public class ForumParser {
 
 
     //convert JSON object from backend to arraylist of topics
-    ArrayList<Post> parsePostList(JSONObject resp) throws JSONException {
+    public ArrayList<Post> parsePostList(JSONObject resp) throws JSONException {
         //create output list
         ArrayList<Post> receivedPosts = new ArrayList<>();
         //get json array of posts
@@ -67,6 +67,31 @@ public class ForumParser {
             receivedPosts.add(p);
         }
        return receivedPosts;
+    }
+
+
+
+    //convert JSON object from backend to arraylist of topics
+    public ArrayList<Post> parseAllPostList(JSONObject resp) throws JSONException {
+        //create output list
+        ArrayList<Post> receivedPosts = new ArrayList<>();
+        //get json array of posts
+        JSONObject jdata = resp.getJSONObject("data");
+        JSONArray jposts = jdata.getJSONArray("posts");
+        //for each element in the array create a new topic object and add it to the array list
+        for (int i = 0; i < jposts.length(); i++) {
+            JSONObject curPost = jposts.getJSONObject(i);
+            Post p = new Post(
+                    curPost.getString("id"),
+                    curPost.getString("title"),
+                    curPost.getString("body"),
+                    ("@" + curPost.getString("author")),
+                    curPost.getBoolean("edited"),
+                    curPost.getString("topic_name"),
+                    curPost.getString("date"));
+            receivedPosts.add(p);
+        }
+        return receivedPosts;
     }
 
 }
