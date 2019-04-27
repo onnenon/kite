@@ -42,6 +42,9 @@ public class MessagesFragment extends Fragment implements OutputHandler {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        final int DISTANCE_FROM_CLOSE_EDGE = 30;
+        final int BLACK_COLOR = 0xff000000;
+
         View v = inflater.inflate(R.layout.messages_fragment, container, false);
 
 
@@ -54,8 +57,10 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         messageList = (LinearLayout) v.findViewById(R.id.message_linear_layout);
         errorTextView = (TextView) v.findViewById(R.id.error_textView);
 
-
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
+        messageText.setBackgroundResource(R.drawable.message_edit_text_layout);
+        messageText.setTextColor(BLACK_COLOR);
+        messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE);
 
         postButton = (Button) v.findViewById(R.id.message_button);
 
