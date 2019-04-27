@@ -1,5 +1,6 @@
 package com.team100.kite_master.login;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,10 +24,6 @@ import com.team100.kite_master.networking.VolleyListener;
 import org.json.JSONObject;
 
 import java.util.Objects;
-
-import static android.text.InputType.TYPE_CLASS_NUMBER;
-import static android.text.InputType.TYPE_CLASS_PHONE;
-import static android.text.InputType.TYPE_CLASS_TEXT;
 
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
@@ -75,22 +72,21 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     //handle button clicks
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.login_button:
-                if (successfulIP) {
-                    System.out.println("SET IP TO: " + server_ip);
-                    loginPassword.onEditorAction(EditorInfo.IME_ACTION_DONE);
-                    loginUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
-                    login(loginUsername.getText().toString(), loginPassword.getText().toString());
-                } else {
-                    checkIP(loginUsername.getText().toString());
-                    loginUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
-                }
-                break;
+        if (v.getId() == R.id.login_button) {
+            if (successfulIP) {
+                System.out.println("SET IP TO: " + server_ip);
+                loginPassword.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                loginUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                login(loginUsername.getText().toString(), loginPassword.getText().toString());
+            } else {
+                checkIP(loginUsername.getText().toString());
+                loginUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
+            }
         }
     }
 
 
+    @SuppressLint("SetTextI18n")
     private void showLoginScreen() {
         //lock drawer
         ((MainActivity) Objects.requireNonNull(getActivity())).lockDrawer(true);

@@ -10,8 +10,8 @@
         android:id="@+id/settings_hello_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="Connect to new IP address"
+        android:layout_marginTop="32dp"
+        android:text="Moderator Settings"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

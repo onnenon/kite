@@ -120,7 +120,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         replyListView.setAdapter(replyAdapter);
 
         //show action menu
-        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).show();
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).show();
         setHasOptionsMenu(true);
 
         //request posts
@@ -179,18 +179,16 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
     //handles click of buttons in the action bar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_post_favorite:
-                if (isFavorited) {
-                    ((MainActivity) Objects.requireNonNull(getActivity())).removeFavoritePost(currentPost);
-                    favorite.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_menu_favorite));
-                    isFavorited = false;
-                } else {
-                    ((MainActivity) Objects.requireNonNull(getActivity())).addFavoritePost(currentPost);
-                    favorite.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_menu_star_filled));
-                    isFavorited = true;
-                }
-                break;
+        if (item.getItemId() == R.id.menu_post_favorite) {
+            if (isFavorited) {
+                ((MainActivity) Objects.requireNonNull(getActivity())).removeFavoritePost(currentPost);
+                favorite.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_menu_favorite));
+                isFavorited = false;
+            } else {
+                ((MainActivity) Objects.requireNonNull(getActivity())).addFavoritePost(currentPost);
+                favorite.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_menu_star_filled));
+                isFavorited = true;
+            }
         }
         return true;
     }

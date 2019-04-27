@@ -176,11 +176,9 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
     //handles clicks of the refresh button in the action bar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_refresh:
-                loadingCircle.setVisibility(View.VISIBLE);
-                requestPostList(topic);
-                break;
+        if (item.getItemId() == R.id.menu_refresh) {
+            loadingCircle.setVisibility(View.VISIBLE);
+            requestPostList(topic);
         }
         return true;
     }
@@ -222,6 +220,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
     }
 
     //sets post list array list and notifies adapter to update
+    @SuppressLint("SetTextI18n")
     private void setPostList(ArrayList<Post> p) {
         //update global topic list
         postList = new ArrayList<>(p);

@@ -99,13 +99,11 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener 
     //handles fragment on click listeners
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.retry_topics:
-                retryTopics.setVisibility(View.GONE);
-                errMessage.setVisibility(View.GONE);
-                setPostList();
-                loadingCircle.setVisibility(View.VISIBLE);
-                break;
+        if (v.getId() == R.id.retry_topics) {
+            retryTopics.setVisibility(View.GONE);
+            errMessage.setVisibility(View.GONE);
+            setPostList();
+            loadingCircle.setVisibility(View.VISIBLE);
         }
     }
 
@@ -151,6 +149,7 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener 
     }
 
     //sets post list array list and notifies adapter to update
+    @SuppressLint("SetTextI18n")
     private void setPostList() {
         favPostList = ((MainActivity) Objects.requireNonNull(getActivity())).getFavoritePostList();
         System.out.println(favPostList.toString());

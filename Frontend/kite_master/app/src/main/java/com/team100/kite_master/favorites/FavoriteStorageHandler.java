@@ -1,7 +1,6 @@
 package com.team100.kite_master.favorites;
 
 import com.android.volley.VolleyError;
-import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.forum.ForumParser;
 import com.team100.kite_master.forum.forum_data_classes.Post;
 import com.team100.kite_master.networking.NetworkManager;
@@ -12,11 +11,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class FavoriteStorageHandler {
 
-    ArrayList<Post> favList = new ArrayList<>();
+    private ArrayList<Post> favList = new ArrayList<>();
 
     public String favIDtoString(ArrayList<Post> plist) {
         StringBuilder sb = new StringBuilder();
@@ -31,22 +29,18 @@ public class FavoriteStorageHandler {
     public ArrayList<String> stringToFavID(String s) {
 
         String[] sa = s.split("%");
-        ArrayList<String> out = new ArrayList<>(Arrays.asList(sa));
-
-        return out;
+        return new ArrayList<>(Arrays.asList(sa));
     }
 
 
     public ArrayList<Post> getAllFavPosts(ArrayList<String> postIDS) {
 
-        for (int i = 0; i < postIDS.size(); i++) {
-            requestPost(postIDS.get(i));
-        }
+        for (int i = 0; i < postIDS.size(); i++) requestPost(postIDS.get(i));
         return favList;
     }
 
     //requests topic JSON object from backend
-    public void requestPost(String postid) {
+    private void requestPost(String postid) {
         NetworkManager.getInstance().requestPost(postid, new VolleyListener<JSONObject>() {
             @Override
             public void getResult(JSONObject object) {

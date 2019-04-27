@@ -71,17 +71,15 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.post_button:
-                titleText.onEditorAction(EditorInfo.IME_ACTION_DONE);
-                bodyText.onEditorAction(EditorInfo.IME_ACTION_DONE);
-                if (titleText.getText().toString().equals("") || bodyText.getText().toString().equals("")) {
-                    Toast.makeText(getActivity(), "Please fill out all fields!", Toast.LENGTH_LONG).show();
-                } else {
-                    String username = ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.getUsername();
-                    sendPost(titleText.getText().toString(), bodyText.getText().toString(), username, topic);
-                }
-                break;
+        if (v.getId() == R.id.post_button) {
+            titleText.onEditorAction(EditorInfo.IME_ACTION_DONE);
+            bodyText.onEditorAction(EditorInfo.IME_ACTION_DONE);
+            if (titleText.getText().toString().equals("") || bodyText.getText().toString().equals("")) {
+                Toast.makeText(getActivity(), "Please fill out all fields!", Toast.LENGTH_LONG).show();
+            } else {
+                String username = ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.getUsername();
+                sendPost(titleText.getText().toString(), bodyText.getText().toString(), username, topic);
+            }
         }
     }
 

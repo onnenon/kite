@@ -44,7 +44,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     private Button retryTopics;
 
     //declare data structures
-    private ArrayList<Topic> topicList = new ArrayList<Topic>();
+    private ArrayList<Topic> topicList = new ArrayList<>();
     private CustomAdapter topicAdapter;
 
     @Nullable
@@ -89,7 +89,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         topicListView.setAdapter(topicAdapter);
 
         //show the action bar and buttons
-        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).show();
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).show();
         setHasOptionsMenu(true);
 
 
@@ -123,24 +123,20 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     //fragment on click handler
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.retry_topics:
-                retryTopics.setVisibility(View.GONE);
-                errMessage.setVisibility(View.GONE);
-                requestTopics();
-                loadingCircle.setVisibility(View.VISIBLE);
-                break;
+        if (v.getId() == R.id.retry_topics) {
+            retryTopics.setVisibility(View.GONE);
+            errMessage.setVisibility(View.GONE);
+            requestTopics();
+            loadingCircle.setVisibility(View.VISIBLE);
         }
     }
 
     //handles click of buttons in the action bar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_refresh:
-                loadingCircle.setVisibility(View.VISIBLE);
-                requestTopics();
-                break;
+        if (item.getItemId() == R.id.menu_refresh) {
+            loadingCircle.setVisibility(View.VISIBLE);
+            requestTopics();
         }
         return true;
     }

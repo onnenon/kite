@@ -5,10 +5,10 @@ import com.team100.kite_master.forum.forum_data_classes.Post;
 
 import java.util.ArrayList;
 
-public class SearchHelper {
+class SearchHelper {
 
 
-    public ArrayList<Post> search(String searchtext, ArrayList<Post> postlist) {
+    ArrayList<Post> search(String searchtext, ArrayList<Post> postlist) {
         ArrayList<Post> results = new ArrayList<>();
         if(searchtext.length() < 1){
             return results;

@@ -10,7 +10,6 @@ public class Reply implements Comparable<Reply> {
     private String replyAuthor;
     private String replyPostID;
     private String replyDate;
-    private boolean postEdited;
 
     //constructor for topics
     public Reply(String id, String body, String author, String postID, String date) {

@@ -31,7 +31,7 @@ public class ForumParser {
 
 
     //convert JSON object from backend to arraylist of topics
-    public ArrayList<Topic> parseTopics(JSONObject resp) throws JSONException {
+    ArrayList<Topic> parseTopics(JSONObject resp) throws JSONException {
         //create output list
         ArrayList<Topic> tops = new ArrayList<>();
         //get JSON array of topics
