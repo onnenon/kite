@@ -12,8 +12,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -58,7 +61,13 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
     TextView postBodyView;
     MenuItem favorite;
     ListView replyListView;
+    EditText replyBox;
+    Button replyButton;
+    FrameLayout border;
+
+
     private CustomAdapter replyAdapter;
+    private String postAuthor;
 
 
     @Nullable
@@ -88,12 +97,16 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         postScrollView = v.findViewById(R.id.post_scroll_view);
         retry = v.findViewById(R.id.retry_topics);
         replyListView = v.findViewById(R.id.reply_list_view);
+        replyBox = v.findViewById(R.id.reply_box);
+        replyButton = v.findViewById(R.id.reply_button);
+        border = v.findViewById(R.id.between_replies_textbox);
 
         //initialize boolean
         isFavorited = false;
 
         //set button on click listener
         retry.setOnClickListener(this);
+        replyButton.setOnClickListener(this);
 
         //hide everything until post is gotten
         postScrollView.setVisibility(View.GONE);
@@ -150,6 +163,14 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
                 errMessage.setVisibility(View.GONE);
                 requestPost(postID);
                 loadingCircle.setVisibility(View.VISIBLE);
+                break;
+            case R.id.reply_button:
+
+                if(replyBox.getText().toString().length() > 0){
+                    sendReply(replyBox.getText().toString());
+                    replyBox.getText().clear();
+                    replyBox.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                }
                 break;
         }
     }
@@ -212,6 +233,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         postTitleView.setText(p.getPostTitle());
         String atAuthor = "@" + p.getPostAuthor();
         postAuthorView.setText(atAuthor);
+        postAuthor = p.getPostAuthor();
         DateUtil d = new DateUtil();
         String date = d.getCleanDate(Long.parseLong(p.getPostTime()), "MM/dd/yy hh:mma");
         postTimeView.setText(date);
@@ -274,6 +296,12 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
     private void setReplyList(ArrayList<Reply> p) {
         //update global topic list
         replyList = new ArrayList<>(p);
+        //hide one of the borders if there arent any replies
+        if(replyList.size() < 1){
+            border.setVisibility(View.GONE);
+        } else {
+            border.setVisibility(View.VISIBLE);
+        }
         //sort topic list in alphabetical order
         Collections.sort(replyList);
         //notify adapter to update its list with the new topics
@@ -283,12 +311,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         //hide loading circle
         loadingCircle.setVisibility(View.GONE);
         //show error message if no posts
-        if (replyList.size() == 0) {
-            errMessage.setText("There are no posts in this topic");
-            errMessage.setVisibility(View.VISIBLE);
-        } else {
-            errMessage.setVisibility(View.GONE);
-        }
+
     }
 
 
@@ -309,6 +332,24 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
             @Override
             public void getError(VolleyError err) {
                 System.out.println("Post List Error");
+            }
+        });
+    }
+
+
+    //send reply
+    private void sendReply(final String body) {
+        System.out.println("SENDING REPLY: " + postID + " | " + postAuthor + " | " + body);
+        NetworkManager.getInstance().sendReply(postID, postAuthor, body, new VolleyListener<String>() {
+            @Override
+            public void getResult(String string) {
+                requestReplies(postID);
+                Toast.makeText(getActivity(), "Reply Sent!", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void getError(VolleyError err) {
+                Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_LONG).show();
             }
         });
     }

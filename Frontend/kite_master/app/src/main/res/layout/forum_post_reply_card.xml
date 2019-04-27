@@ -14,18 +14,30 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#00FFFFFF"
+        android:background="#FFF8F9F8"
         android:elevation="0dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
+
+        <FrameLayout
+            android:id="@+id/frameLayout2"
+            android:layout_width="2dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:background="@color/kiteBackgroundBlue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/text_reply"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/times_new_roman"
+            android:layout_marginTop="6dp"
+            android:fontFamily="sans-serif"
             android:gravity="bottom"
             android:maxLines="1"
             android:text="Title"
@@ -36,13 +48,15 @@
             app:autoSizeMinTextSize="12dp"
             app:autoSizeStepGranularity="2dp"
             app:autoSizeTextType="uniform"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/frameLayout2"
             app:layout_constraintTop_toBottomOf="@+id/text_author" />
 
         <TextView
             android:id="@+id/text_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
             android:gravity="top"
             android:text="Author"
             android:textAlignment="gravity"
@@ -53,7 +67,7 @@
             app:autoSizeMinTextSize="10dp"
             app:autoSizeStepGranularity="2dp"
             app:autoSizeTextType="uniform"
-            app:layout_constraintStart_toStartOf="@+id/text_reply"
+            app:layout_constraintStart_toEndOf="@+id/frameLayout2"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView

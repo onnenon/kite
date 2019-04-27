@@ -286,4 +286,48 @@ public class NetworkManager {
         requestQueue.add(getRequest);
     }
 
+
+    public void sendReply(final String postid, final String author, final String body, final VolleyListener<String> listener) {
+        String URL = url + "/api/v2/replies";
+
+        JSONObject jsonBody = new JSONObject();
+
+        try {
+            jsonBody.put("post_id", postid);
+            jsonBody.put("author", author);
+            jsonBody.put("body", body);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        final String requestBody = jsonBody.toString();
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        ) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                return requestBody.getBytes(StandardCharsets.UTF_8);
+            }
+        };
+        requestQueue.add(postRequest);
+    }
+
+
+
 }
