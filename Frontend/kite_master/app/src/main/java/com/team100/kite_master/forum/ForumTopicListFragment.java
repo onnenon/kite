@@ -168,7 +168,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = getLayoutInflater().inflate(R.layout.forum_topic_list_item, null);
             // initialize text views
-            TextView topicTitle = view.findViewById(R.id.text_title);
+            TextView topicTitle = view.findViewById(R.id.text_reply);
             TextView topicDescription = view.findViewById(R.id.text_description);
             // iterate through list to set topic entries
             topicTitle.setText(topicList.get(i).getName());

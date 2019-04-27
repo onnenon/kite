@@ -2,6 +2,7 @@ package com.team100.kite_master.forum;
 
 
 import com.team100.kite_master.forum.forum_data_classes.Post;
+import com.team100.kite_master.forum.forum_data_classes.Reply;
 import com.team100.kite_master.forum.forum_data_classes.Topic;
 
 import org.json.JSONArray;
@@ -46,7 +47,7 @@ public class ForumParser {
 
 
     //convert JSON object from backend to arraylist of topics
-    public ArrayList<Post> parsePostList(JSONObject resp) throws JSONException {
+    ArrayList<Post> parsePostList(JSONObject resp) throws JSONException {
         //create output list
         ArrayList<Post> receivedPosts = new ArrayList<>();
         //get json array of posts
@@ -66,9 +67,8 @@ public class ForumParser {
                     curPost.getString("date"));
             receivedPosts.add(p);
         }
-       return receivedPosts;
+        return receivedPosts;
     }
-
 
 
     //convert JSON object from backend to arraylist of topics
@@ -93,5 +93,33 @@ public class ForumParser {
         }
         return receivedPosts;
     }
+
+
+    //convert JSON object from backend to arraylist of replies
+    ArrayList<Reply> parseReplies(String postid, JSONObject resp) throws JSONException {
+        //create output list
+        ArrayList<Reply> receivedReplies = new ArrayList<>();
+        //get json array of posts
+        JSONObject jdata = resp.getJSONObject("data");
+        JSONArray jreplies = jdata.getJSONArray("replies");
+        //for each element in the array create a new topic object and add it to the array list
+        for (int i = 0; i < jreplies.length(); i++) {
+            JSONObject curReply = jreplies.getJSONObject(i);
+            if (curReply.getString("post_id").equals(postid)) {
+
+                Reply r = new Reply(
+                        curReply.getString("id"),
+                        curReply.getString("body"),
+                        curReply.getString("author"),
+                        curReply.getString("post_id"),
+                        curReply.getString("date")
+                );
+                receivedReplies.add(r);
+
+            }
+        }
+        return receivedReplies;
+    }
+
 
 }

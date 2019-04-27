@@ -263,4 +263,27 @@ public class NetworkManager {
     }
 
 
+    //=========================================================================================================================
+
+    //REPLIES
+
+    public void requestReplies(final VolleyListener<JSONObject> listener) {
+        String URL = url + "/api/v2/replies";
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        );
+        requestQueue.add(getRequest);
+    }
+
 }

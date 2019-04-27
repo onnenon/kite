@@ -1,13 +1,7 @@
 package com.team100.kite_master.search;
 
-import com.android.volley.VolleyError;
-import com.team100.kite_master.forum.ForumParser;
 import com.team100.kite_master.forum.forum_data_classes.Post;
-import com.team100.kite_master.networking.NetworkManager;
-import com.team100.kite_master.networking.VolleyListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 

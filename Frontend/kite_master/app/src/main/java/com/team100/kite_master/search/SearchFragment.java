@@ -16,16 +16,13 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
-import com.team100.kite_master.forum.ForumNewPostFragment;
 import com.team100.kite_master.forum.ForumParser;
 import com.team100.kite_master.forum.ForumPostFragment;
-import com.team100.kite_master.forum.ForumPostListFragment;
 import com.team100.kite_master.forum.forum_data_classes.DateUtil;
 import com.team100.kite_master.forum.forum_data_classes.Post;
 import com.team100.kite_master.networking.NetworkManager;
@@ -39,7 +36,6 @@ import java.util.Collections;
 import java.util.Objects;
 
 
-
 public class SearchFragment extends Fragment {
 
 
@@ -48,8 +44,6 @@ public class SearchFragment extends Fragment {
     ArrayList<Post> resultList = new ArrayList<>();
     CustomAdapter searchAdapter;
     ListView postListView;
-
-
 
 
     @Nullable
@@ -75,7 +69,6 @@ public class SearchFragment extends Fragment {
                 return false;
             }
         });
-
 
 
         ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen("search");
@@ -117,11 +110,7 @@ public class SearchFragment extends Fragment {
         });
 
 
-
     }
-
-
-
 
 
     //custom topic adapter class
@@ -146,7 +135,7 @@ public class SearchFragment extends Fragment {
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = getLayoutInflater().inflate(R.layout.forum_post_list_card, null);
             // initialize text views
-            TextView topicTitle = view.findViewById(R.id.text_title);
+            TextView topicTitle = view.findViewById(R.id.text_reply);
             TextView topicAuthor = view.findViewById(R.id.text_author);
             TextView topicTime = view.findViewById(R.id.text_time);
             // iterate through list to set topic entries
@@ -161,8 +150,7 @@ public class SearchFragment extends Fragment {
     }
 
 
-
-    private void search(String searchstring){
+    private void search(String searchstring) {
         SearchHelper sh = new SearchHelper();
         resultList = sh.search(searchstring, postList);
         Collections.sort(resultList);
@@ -170,7 +158,6 @@ public class SearchFragment extends Fragment {
         searchBox.onEditorAction(EditorInfo.IME_ACTION_DONE);
 
     }
-
 
 
     //switch to post fragment when one is clicked
@@ -183,7 +170,6 @@ public class SearchFragment extends Fragment {
         ft.replace(R.id.content_frame, fragment).addToBackStack("tag");
         ft.commit();
     }
-
 
 
     //NETWORKING
@@ -207,8 +193,6 @@ public class SearchFragment extends Fragment {
             }
         });
     }
-
-
 
 
 }

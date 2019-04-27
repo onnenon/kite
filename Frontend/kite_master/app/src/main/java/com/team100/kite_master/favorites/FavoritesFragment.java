@@ -136,7 +136,7 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener 
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = getLayoutInflater().inflate(R.layout.forum_post_list_card, null);
             // initialize text views
-            TextView topicTitle = view.findViewById(R.id.text_title);
+            TextView topicTitle = view.findViewById(R.id.text_reply);
             TextView topicAuthor = view.findViewById(R.id.text_author);
             TextView topicTime = view.findViewById(R.id.text_time);
             // iterate through list to set topic entries
