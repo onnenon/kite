@@ -60,9 +60,13 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
         messageText.setBackgroundResource(R.drawable.message_edit_text_layout);
         messageText.setTextColor(BLACK_COLOR);
+        messageText.setHintTextColor(BLACK_COLOR);
         messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE);
 
         postButton = (Button) v.findViewById(R.id.message_button);
+        postButton.setBackgroundResource(R.drawable.message_button_layout);
+        postButton.setTextColor(BLACK_COLOR);
+        postButton.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE);
 
         implementationWS = new WebSocketImplementation(this, username, LOCAL_IP_ADDRESS);
 
