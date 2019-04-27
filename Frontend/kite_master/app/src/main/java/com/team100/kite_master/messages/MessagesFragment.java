@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -52,7 +53,10 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         scrollView = (ScrollView) v.findViewById(R.id.message_scroll_view);
         messageList = (LinearLayout) v.findViewById(R.id.message_linear_layout);
         errorTextView = (TextView) v.findViewById(R.id.error_textView);
+
+
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
+
         postButton = (Button) v.findViewById(R.id.message_button);
 
         implementationWS = new WebSocketImplementation(this, username, LOCAL_IP_ADDRESS);
@@ -80,8 +84,21 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             }
         });
 
+
+
         return v;
     }
+
+    /*
+
+    @Override
+    public void onCreate() {
+
+        // Credit to source: https://stackoverflow.com/questions/1964789/move-layouts-up-when-soft-keyboard-is-shown
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+    }
+
+    */
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

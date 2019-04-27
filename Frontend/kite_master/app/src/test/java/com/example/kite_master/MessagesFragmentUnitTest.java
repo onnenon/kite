@@ -249,7 +249,7 @@ public class MessagesFragmentUnitTest {
     @Test
     public void testRelativeLayoutSetup() {
 
-        RelativeLayout layout = messageFrag.setupRelativeLayout("fadmin"); // NullpointerException?
+        // RelativeLayout layout = messageFrag.setupRelativeLayout("fadmin"); // NullpointerException?
 
         // Setting the margins throws "java.lang.reflect.InvocationTargetException"
 
@@ -262,5 +262,5 @@ public class MessagesFragmentUnitTest {
 
     }
 
-    
+
 }
