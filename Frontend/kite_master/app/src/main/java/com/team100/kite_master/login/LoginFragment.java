@@ -30,6 +30,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     //layout elements
     private Button loginButton;
+    private Button registerButton;
     private EditText loginUsername;
     private EditText loginPassword;
 
@@ -49,6 +50,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         loginUsername = v.findViewById(R.id.login_username);
         loginPassword = v.findViewById(R.id.login_password);
         loginButton = v.findViewById(R.id.login_button);
+        registerButton = v.findViewById(R.id.register_button);
+        registerButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
 
         return v;
@@ -82,6 +85,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 checkIP(loginUsername.getText().toString());
                 loginUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
             }
+        } else if (v.getId() == R.id.register_button){
+            loginPassword.onEditorAction(EditorInfo.IME_ACTION_DONE);
+            loginUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
+            if(loginPassword.getText().toString().length()> 8){
+                register(loginUsername.getText().toString(), loginPassword.getText().toString());
+
+            } else {
+                loginPassword.setText("");
+                Toast.makeText(getActivity(), "8+ characters please", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -96,11 +109,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             loginUsername.setHint("Username");
             loginUsername.setVisibility(View.VISIBLE);
             loginPassword.setVisibility(View.VISIBLE);
+            registerButton.setVisibility(View.VISIBLE);
             loginButton.setText("Login");
         } else {
             loginUsername.setHint("IP Address (ex. 10.0.1.1)");
             loginUsername.setVisibility(View.VISIBLE);
             loginPassword.setVisibility(View.GONE);
+            registerButton.setVisibility(View.GONE);
             loginButton.setText("Set IP");
         }
     }
@@ -155,6 +170,28 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             public void getError(VolleyError err) {
                 if (err.toString().equals("com.android.volley.AuthFailureError")) {
                     Toast.makeText(getActivity(), "Incorrect Password", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_LONG).show();
+                }
+                loginPassword.getText().clear();
+            }
+        });
+    }
+
+
+    //NETWORK
+    private void register(final String username, final String password) {
+        NetworkManager.getInstance().createUser(username, password, new VolleyListener<String>() {
+            @Override
+            public void getResult(String object) {
+                Toast.makeText(getActivity(), "Registered!" + " ", Toast.LENGTH_LONG).show();
+                moveToForumFrag(username, server_ip);
+            }
+
+            @Override
+            public void getError(VolleyError err) {
+                if (err.networkResponse.statusCode == 400) {
+                    Toast.makeText(getActivity(), "This user already exists!", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_LONG).show();
                 }
