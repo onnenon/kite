@@ -3,9 +3,11 @@ package com.team100.kite_master.messages;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
 import com.team100.kite_master.messages.messages_data_classes.Message;
+import com.team100.kite_master.messages.messages_data_classes.MessageLayoutSetup;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -41,8 +44,10 @@ public class MessagesFragment extends Fragment implements OutputHandler {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.messages_fragment, container, false);
+        final int DISTANCE_FROM_CLOSE_EDGE = 30;
+        final int BLACK_COLOR = 0xff000000;
 
+        View v = inflater.inflate(R.layout.messages_fragment, container, false);
 
         userdata = ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.toArray();
         username = userdata[0];
@@ -51,9 +56,19 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         //initialize user interface objects
         scrollView = (ScrollView) v.findViewById(R.id.message_scroll_view);
         messageList = (LinearLayout) v.findViewById(R.id.message_linear_layout);
+
         errorTextView = (TextView) v.findViewById(R.id.error_textView);
+
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
+        messageText.setBackgroundResource(R.drawable.message_edit_text_layout);
+        messageText.setTextColor(BLACK_COLOR);
+        messageText.setHintTextColor(BLACK_COLOR);
+        messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE);
+
         postButton = (Button) v.findViewById(R.id.message_button);
+        postButton.setBackgroundResource(R.drawable.message_button_layout);
+        postButton.setTextColor(BLACK_COLOR);
+        postButton.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE);
 
         implementationWS = new WebSocketImplementation(this, username, LOCAL_IP_ADDRESS);
 
@@ -101,17 +116,27 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             @Override
             public void run() {
 
+                MessageLayoutSetup layoutSetup = new MessageLayoutSetup(getContext(), getUsername());
+
                 Message msg = new Message(username, txt);
                 String messageTime = msg.getMessageTime();
                 String messageString =  msg.getUsername() + ": " + msg.getText();
 
+                // Create a new LinearLayout object
+                LinearLayout timeHolder = layoutSetup.setupMessageHolder(username);
+                LinearLayout messageHolder = layoutSetup.setupMessageHolder(username);
+
                 // Create a message, and set it up
-                TextView time = setupTimeTextView(username, messageTime);
-                RelativeLayout message = setupMessage(username, messageString);
+                TextView time = layoutSetup.setupTimeTextView(username, messageTime);
+                RelativeLayout message = layoutSetup.setupMessage(username, messageString);
 
                 // Add the message to the Linearlayout
-                messageList.addView(time);
-                messageList.addView(message);
+                timeHolder.addView(time);
+                messageHolder.addView(message);
+
+                // Add the messageHolder to the linearLayout
+                messageList.addView(timeHolder);
+                messageList.addView(messageHolder);
 
                 // Credit to this source: https://stackoverflow.com/questions/21926644/get-height-and-width-of-a-layout-programmatically
                 // Scroll to bottom upon receiving new messages
@@ -142,125 +167,6 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
 
 
-    }
-
-    public RelativeLayout setupMessage(String username, String messageString) {
-
-        RelativeLayout messageLayout;
-        TextView messageText;
-
-        messageText = setupMessageTextView(username, messageString);
-
-        messageLayout = setupRelativeLayout(username);
-        messageLayout.addView(messageText);
-
-        return messageLayout;
-    }
-
-    public RelativeLayout setupRelativeLayout(String username) {
-
-        final int DISTANCE_FROM_CLOSE_EDGE = 30;
-        final int DISTANCE_FROM_FAR_EDGE = 240;
-
-        int width;
-        int height;
-
-        TextView messageText;
-        RelativeLayout.LayoutParams relativeParams;
-
-        RelativeLayout messageLayout = new RelativeLayout(getContext());
-
-        // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
-        // Set parameters of relativeLayout object
-        width = RelativeLayout.LayoutParams.WRAP_CONTENT;
-        height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        relativeParams = new RelativeLayout.LayoutParams(width, height);
-        relativeParams.setMargins(DISTANCE_FROM_CLOSE_EDGE, 0, DISTANCE_FROM_CLOSE_EDGE, 0);
-
-        // Position the messages that you yourself send to the right
-        // Position the messages of other users to the left
-        if (username == getUsername()) {
-
-            relativeParams.setMarginStart(DISTANCE_FROM_FAR_EDGE);
-            relativeParams.setMarginEnd(DISTANCE_FROM_CLOSE_EDGE);
-
-            messageLayout.setBackgroundResource(R.drawable.message_layout_this_user);
-        }
-        else {
-
-            relativeParams.setMarginStart(DISTANCE_FROM_CLOSE_EDGE);
-            relativeParams.setMarginEnd(DISTANCE_FROM_FAR_EDGE);
-
-            messageLayout.setBackgroundResource(R.drawable.message_layout);
-        }
-
-        messageLayout.setLayoutParams(relativeParams);
-        messageLayout.requestLayout();
-
-        return messageLayout;
-    }
-
-    public TextView setupTimeTextView(String username, String messageTime) {
-
-        final int DISTANCE_FROM_CLOSE_EDGE = 30;
-        final int DISTANCE_FROM_FAR_EDGE = 240;
-        final int BLACK_COLOR = 0xff000000;
-
-        int width;
-        int height;
-
-        TextView messageText;
-        LinearLayout.LayoutParams layoutParams;
-
-        messageText = new TextView(getContext());
-        messageText.setText(messageTime);
-        // messageText.setTextSize(10.0f);
-        messageText.setTextColor(BLACK_COLOR);
-        messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, 0);
-
-        width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        layoutParams = new LinearLayout.LayoutParams(width, height);
-
-        if (username == getUsername()) {
-
-            layoutParams.setMarginStart(DISTANCE_FROM_FAR_EDGE);
-            layoutParams.setMarginEnd(DISTANCE_FROM_CLOSE_EDGE);
-        }
-        else {
-
-            layoutParams.setMarginStart(DISTANCE_FROM_CLOSE_EDGE);
-            layoutParams.setMarginEnd(DISTANCE_FROM_FAR_EDGE);
-        }
-
-        messageText.setLayoutParams(layoutParams);
-
-        return messageText;
-    }
-
-    public TextView setupMessageTextView(String username, String messageString) {
-
-        final int DISTANCE_FROM_CLOSE_EDGE = 30;
-        final int BLACK_COLOR = 0xff000000;
-
-        int width;
-        int height;
-
-        TextView messageText;
-        LinearLayout.LayoutParams layoutParams;
-
-        messageText = new TextView(getContext());
-        messageText.setText(messageString);
-        messageText.setTextColor(BLACK_COLOR);
-        messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE);
-
-        width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        layoutParams = new LinearLayout.LayoutParams(width, height);
-
-        messageText.setLayoutParams(layoutParams);
-
-        return messageText;
     }
 
 

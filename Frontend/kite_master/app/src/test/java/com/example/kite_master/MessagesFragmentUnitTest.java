@@ -1,12 +1,20 @@
 package com.example.kite_master;
 
+import android.widget.RelativeLayout;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+
 import com.team100.kite_master.messages.MessagesFragment;
 import com.team100.kite_master.messages.messages_data_classes.Message;
 import com.team100.kite_master.messages.WebSocketImplementation;
+import com.team100.kite_master.messages.messages_data_classes.MessageLayoutSetup;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,11 +33,15 @@ public class MessagesFragmentUnitTest {
     private MessagesFragment messageFrag;
     private WebSocketImplementation impWS;
     private Message realMessage;
+    private MessageLayoutSetup layoutSetup;
 
     private MessagesFragment mockMessageFrag;
     private WebSocketImplementation mockImpWS;
     private Message mockMessage;
 
+
+
+    // Setup
     @Before
     public void setup() {
 
@@ -40,6 +52,9 @@ public class MessagesFragmentUnitTest {
 
         impWS = new WebSocketImplementation(messageFrag, messageFrag.getUsername(), messageFrag.getIPaddress());
 
+        realMessage = new Message("fadmin", "Text!");
+        layoutSetup = new MessageLayoutSetup(messageFrag.getContext(), messageFrag.getUsername());
+
         // Mock objects
         mockMessageFrag = mock(MessagesFragment.class);
         mockImpWS = mock(WebSocketImplementation.class);
@@ -48,15 +63,16 @@ public class MessagesFragmentUnitTest {
 
 
 
+    // Message class tests
     @Test
-    public void testUsername() {
+    public void testUsernameMock() {
 
         when(mockMessage.getUsername()).thenReturn("fadmin");
         assertEquals("fadmin", mockMessage.getUsername());
     }
 
     @Test
-    public void testMessage() {
+    public void testMessageMock() {
 
         for (int i = 0; i < 3; i++) {
 
@@ -67,18 +83,117 @@ public class MessagesFragmentUnitTest {
     }
 
     @Test
-    public void testMessageOutput() {
+    public void testMessageGetUsername() {
 
-        String date = "4/20/2019 3:23 PM";
+        assertEquals("fadmin", realMessage.getUsername()); // Username before
+    }
 
-        when(mockMessage.getMessageTime()).thenReturn(date);
+    @Test
+    public void testMessageSetUsername() {
+
+        realMessage.setUsername("UserOne");
+
+        assertEquals("UserOne", realMessage.getUsername()); // Username after
+    }
+
+    @Test
+    public void testGetMessageText() {
+
+        assertEquals("Text!", realMessage.getText()); // Text before
+    }
+
+    @Test
+    public void testSetMessageText() {
+
+        realMessage.setText("new text");
+
+        assertEquals("new text", realMessage.getText()); // Text after
+    }
+
+    @Test
+    public void testGetMessageTime() {
+
+        when(mockMessage.getMessageTime()).thenReturn("1:02 PM");
+        when(mockMessage.getCurrentDateAndTime()).thenReturn("1:02 PM");
+        assertEquals("1:02 PM", mockMessage.getMessageTime());
+        assertEquals("1:02 PM", mockMessage.getCurrentDateAndTime());
+    }
+
+    /*
+
+    @Test
+    public void testMessageOutputReal() {
+
+        String time = "12:07 AM";
+
+        when(mockMessage.getMessageTime()).thenReturn(time);
         when(mockMessage.getUsername()).thenReturn(messageFrag.getUsername()); // "Username"
         when(mockMessage.getText()).thenReturn("A very important message.");
 
-        assertEquals(date + "\n" + "fadmin: A very important message.\n",
+        assertEquals(time + "\n" + "fadmin: A very important message.\n",
                 mockMessage.getMessageTime() + "\n" + mockMessage.getUsername() + ": " + mockMessage.getText() + "\n");
     }
 
+    */
+
+    @Test
+    public void testMessageOutputMock() {
+
+        String time = "12:07 AM";
+
+        when(mockMessage.getMessageTime()).thenReturn(time);
+        when(mockMessage.getUsername()).thenReturn(messageFrag.getUsername()); // "Username"
+        when(mockMessage.getText()).thenReturn("A very important message.");
+
+        assertEquals(time + "\n" + "fadmin: A very important message.\n",
+                mockMessage.getMessageTime() + "\n" + mockMessage.getUsername() + ": " + mockMessage.getText() + "\n");
+    }
+
+    /*
+
+    // MessageLayoutSetup class tests
+    @Test
+    public void MessageLayoutSetupInitializationTest() {
+
+        messageFrag.setUsername("UserOne");
+
+        layoutSetup = new MessageLayoutSetup(messageFrag.getContext(), messageFrag.getUsername());
+
+        // Make sure that the instance variables of layoutSetup and messageFrag are the same.
+        Assert.assertNotNull(messageFrag.getContext());
+        Assert.assertNotNull(layoutSetup.getContext());
+        assertEquals(layoutSetup.getContext(), messageFrag.getContext());
+        assertEquals(layoutSetup.getUsername(), messageFrag.getUsername());
+    }
+
+    @Test
+    public void SetupMessageTextViewTest() {
+
+        String message = "A very important message!";
+
+        TextView textView = layoutSetup.setupMessageTextView(message); // WHY IS CONTEXT NULL???
+
+        assertEquals(message, textView.getText()); // Check that the message is correct
+
+    }
+
+    */
+
+    /*
+
+    @Test
+    public void SetupMessageTextView_DifferentUserTest() {
+
+        TextView textView = layoutSetup.setupMessageTextView("UserOne");
+    }
+
+    */
+
+
+
+
+
+    // Stuff?
     @Test
     public void testRecentMessagesRetrieval() throws JSONException {
 
@@ -116,6 +231,8 @@ public class MessagesFragmentUnitTest {
         assertEquals("4/3/19\nProfessor195: Sucks to be you!\n", secondMessage);
         assertEquals("4/3/19\nTeammate902: Don't talk to my teammate like that!\n", thirdMessage);
     }
+
+
 
 
     // Test not working...
@@ -174,49 +291,21 @@ public class MessagesFragmentUnitTest {
         // verify(mockImpWS, times(1)).output("fadmin", "String");
     }
 
-    /*
-
     @Test
-    public void testMessageTime() {
+    public void testRelativeLayoutSetup() {
 
-        when(messageTest.getMessageTime()).thenReturn(Calendar.getInstance().getTime());
+        // RelativeLayout layout = messageFrag.setupRelativeLayout("fadmin"); // NullpointerException?
 
-        System.out.println(messageTest.getMessageTime());
+        // Setting the margins throws "java.lang.reflect.InvocationTargetException"
 
-        assertEquals(Calendar.getInstance().getTime(), messageTest.getMessageTime());
+
     }
 
     @Test
-    public void testSuccessfulCommunication() throws IOException {
+    public void test() {
 
-        impWS.sendJSONText();
 
-        // Response httpResponse = impWS.getClient().newCall(impWS.getRequest()).execute();
-        Response httpResponse = mock(Response.class);
-
-        when(httpResponse.code()).thenReturn(1000);
-
-        int reponseCode = httpResponse.code();
-
-        assertEquals(1000, httpResponse.code());
     }
-
-    @Test
-    public void testOutput() {
-
-        Date date = Calendar.getInstance().getTime();
-
-        when(mockMessage.getMessageTime()).thenReturn(date);
-        when(mockMessage.getUsername()).thenReturn(messageFrag.getUsername()); // "Username"
-        when(mockMessage.getText()).thenReturn("A very important message.");
-
-        // Assuming only one TextView was created from the result of posting a message.
-        String message = messageFrag.getWebSocketImplementation().getLastMessage(); // FIXME
-
-        assertEquals(date.toString() + "\n" + "Username: A very important message.\n", message);
-    }
-
-    */
 
 
 }
