@@ -115,17 +115,19 @@ public class MessagesFragment extends Fragment implements OutputHandler {
                 String messageString =  msg.getUsername() + ": " + msg.getText();
 
                 // Create a new LinearLayout object
-                RelativeLayout messageHolder = setupMessageHolder(username);
+                LinearLayout timeHolder = setupMessageHolder(username);
+                LinearLayout messageHolder = setupMessageHolder(username);
 
                 // Create a message, and set it up
                 TextView time = setupTimeTextView(username, messageTime);
                 RelativeLayout message = setupMessage(username, messageString);
 
                 // Add the message to the Linearlayout
-                messageHolder.addView(time);
+                timeHolder.addView(time);
                 messageHolder.addView(message);
 
                 // Add the messageHolder to the linearLayout
+                messageList.addView(timeHolder);
                 messageList.addView(messageHolder);
 
                 // Credit to this source: https://stackoverflow.com/questions/21926644/get-height-and-width-of-a-layout-programmatically
@@ -148,7 +150,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         errorTextView.setText(errorText);
     }
 
-    public RelativeLayout setupMessageHolder(String username) {
+    public LinearLayout setupMessageHolder(String username) {
 
         final int DISTANCE_FROM_CLOSE_EDGE = 30;
         final int DISTANCE_FROM_FAR_EDGE = 240;
@@ -156,34 +158,29 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         int width;
         int height;
 
-        RelativeLayout messageHolder;
-        RelativeLayout.LayoutParams relativeParams;
+        LinearLayout messageHolder;
+        LinearLayout.LayoutParams layoutParams;
 
-        messageHolder = new RelativeLayout(getContext());
+        messageHolder = new LinearLayout(getContext());
 
-        width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        width = LinearLayout.LayoutParams.MATCH_PARENT;
         // width = LinearLayout.LayoutParams.MATCH_PARENT;
-        height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        height = LinearLayout.LayoutParams.WRAP_CONTENT;
         // height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        relativeParams = new RelativeLayout.LayoutParams(width, height);
-        relativeParams.setMargins(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, 0);
+        layoutParams = new LinearLayout.LayoutParams(width, height);
 
         // Position the messages that you yourself send to the right
         // Position the messages of other users to the left
         if (username == getUsername()) {
 
-            // messageHolder.setGravity(Gravity.END);
             messageHolder.setGravity(Gravity.RIGHT);
         }
         else {
 
-            // messageHolder.setGravity(Gravity.START);
             messageHolder.setGravity(Gravity.LEFT);
         }
 
-        // messageHolder.setGravity(Gravity.TOP);
-
-        messageHolder.setLayoutParams(relativeParams);
+        messageHolder.setLayoutParams(layoutParams);
         messageHolder.requestLayout();
 
         return messageHolder;
