@@ -2,11 +2,13 @@ package com.team100.kite_master.forum;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -81,6 +83,13 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         errMessage = v.findViewById(R.id.error_message);
         newPostFab = v.findViewById(R.id.new_post_fab);
         retryTopics = v.findViewById(R.id.retry_topics);
+
+
+        //register for context menu if admin or mod
+        if (((MainActivity) Objects.requireNonNull(getActivity())).currentUser.isAdmin() || ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.isMod()) {
+            registerForContextMenu(postListView);
+        }
+
 
         //set on click listeners
         newPostFab.setOnClickListener(this);
@@ -183,6 +192,38 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         return true;
     }
 
+
+    /**
+     * MENU
+     */
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == R.id.list_view) {
+            MenuInflater inflater = Objects.requireNonNull(getActivity()).getMenuInflater();
+            inflater.inflate(R.menu.post_list_context_menu, menu);
+        }
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.delete:
+                System.out.println("DELETING: " + postList.get(info.position).getPostID());
+                deletePost(postList.get(info.position).getPostID());
+                SystemClock.sleep(1000);
+                loadingCircle.setVisibility(View.VISIBLE);
+                requestPostList(topic);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+
     //custom topic adapter class
     class CustomAdapter extends BaseAdapter {
         @Override
@@ -282,4 +323,20 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
             }
         });
     }
+
+    //delete post from database
+    public void deletePost(String postid) {
+        NetworkManager.getInstance().deletePost(postid, new VolleyListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject object) {
+            }
+
+            @Override
+            public void getError(VolleyError err) {
+                System.out.println("Error Deleting Post: " + err.toString());
+            }
+        });
+    }
+
+
 }

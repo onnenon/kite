@@ -2,6 +2,7 @@ package com.team100.kite_master.networking;
 
 import android.content.Context;
 import android.util.Base64;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -157,6 +158,29 @@ public class NetworkManager {
         requestQueue.add(getRequest);
     }
 
+
+    //delete a single user given a username
+    public void deleteTopic(final String topicid, final VolleyListener<JSONObject> listener) {
+
+        String URL = url + "/api/v2/topics/" + topicid;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.DELETE, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        );
+        requestQueue.add(getRequest);
+    }
+
+
     //=========================================================================================================================
 
     //POSTS
@@ -263,6 +287,28 @@ public class NetworkManager {
     }
 
 
+    //delete a single user given a username
+    public void deletePost(final String postid, final VolleyListener<JSONObject> listener) {
+
+        String URL = url + "/api/v2/posts/" + postid;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.DELETE, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        );
+        requestQueue.add(getRequest);
+    }
+
+
     //=========================================================================================================================
 
     //REPLIES
@@ -328,6 +374,27 @@ public class NetworkManager {
         requestQueue.add(postRequest);
     }
 
+
+    //delete a single user given a username
+    public void deleteReply(final String replyid, final VolleyListener<JSONObject> listener) {
+
+        String URL = url + "/api/v2/replies/" + replyid;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.DELETE, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        );
+        requestQueue.add(getRequest);
+    }
 
 
 }

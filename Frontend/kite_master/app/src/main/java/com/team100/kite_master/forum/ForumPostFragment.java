@@ -2,10 +2,12 @@ package com.team100.kite_master.forum;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -125,6 +128,13 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
 
         //request posts
         requestPost(postID);
+
+
+        //register for context menu if admin or mod
+        if (((MainActivity) Objects.requireNonNull(getActivity())).currentUser.isAdmin() || ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.isMod()) {
+            System.out.println("REGISTERED");
+            registerForContextMenu(replyListView);
+        }
 
 
         //set current screen
@@ -253,6 +263,42 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
     private ArrayList<Reply> replyList = new ArrayList<>();
 
 
+
+
+
+    /**
+     * MENU
+     */
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == R.id.reply_list_view) {
+            MenuInflater inflater = Objects.requireNonNull(getActivity()).getMenuInflater();
+            inflater.inflate(R.menu.post_list_context_menu, menu);
+        }
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.delete:
+                System.out.println("DELETING: " + replyList.get(info.position).getReplyID());
+                deleteReply(replyList.get(info.position).getReplyID());
+                SystemClock.sleep(1000);
+                loadingCircle.setVisibility(View.VISIBLE);
+                requestReplies(postID);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+
+
+
     //custom topic adapter class
     class CustomAdapter extends BaseAdapter {
         @Override
@@ -352,5 +398,19 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         });
     }
 
+
+    //requests topic list JSON object from backend
+    public void deleteReply(String replyid) {
+        NetworkManager.getInstance().deleteReply(replyid, new VolleyListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject object) {
+            }
+
+            @Override
+            public void getError(VolleyError err) {
+                System.out.println("Error Deleting Reply: " + err.toString());
+            }
+        });
+    }
 
 }

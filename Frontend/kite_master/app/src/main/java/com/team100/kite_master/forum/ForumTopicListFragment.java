@@ -2,10 +2,12 @@ package com.team100.kite_master.forum;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,6 +44,7 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     private ProgressBar loadingCircle;
     private TextView errMessage;
     private Button retryTopics;
+    private ListView topicListView;
 
     //declare data structures
     private ArrayList<Topic> topicList = new ArrayList<>();
@@ -61,13 +64,16 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
 
         //initialize layout items
         //declare layout items
-        ListView topicListView = v.findViewById(R.id.list_view);
+        topicListView = v.findViewById(R.id.list_view);
         loadingCircle = v.findViewById(R.id.topics_loading);
         errMessage = v.findViewById(R.id.error_message);
         retryTopics = v.findViewById(R.id.retry_topics);
 
         //request topics from the backend
         requestTopics();
+
+        //fill user data
+        requestUser(((MainActivity) Objects.requireNonNull(getActivity())).currentUser.getUsername());
 
         //show loading circle until topics received
         loadingCircle.setVisibility(View.VISIBLE);
@@ -99,6 +105,9 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
 
 
 
+
+
+
         return v;
     }
 
@@ -116,8 +125,8 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         super.onViewCreated(view, savedInstanceState);
         //set title
         Objects.requireNonNull(getActivity()).setTitle("Forum");
-        //gets user data to populate drawer fields with
-        requestUser(((MainActivity) Objects.requireNonNull(getActivity())).currentUser.getUsername());
+        System.out.println("IS HE Admin: " + ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.isAdmin());
+        //register for context menu if admin or mod
     }
 
     //fragment on click handler
@@ -139,6 +148,40 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
             requestTopics();
         }
         return true;
+    }
+
+
+
+
+
+    /**
+     * MENU
+     */
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == R.id.list_view) {
+            MenuInflater inflater = Objects.requireNonNull(getActivity()).getMenuInflater();
+            inflater.inflate(R.menu.post_list_context_menu, menu);
+        }
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.delete:
+                System.out.println("DELETING: " + topicList.get(info.position).getTopicID());
+                deleteTopic(topicList.get(info.position).getTopicID());
+                SystemClock.sleep(1000);
+                loadingCircle.setVisibility(View.VISIBLE);
+                requestTopics();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
 
@@ -202,8 +245,8 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
     public void setUserInfo(User us) {
         //set all the data fields for current user
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setUsername(us.getUsername());
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setAdmin(us.isAdmin());
-        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setMod(us.isMod());
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setAdministrator(us.isAdmin());
+        ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setModerator(us.isMod());
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setPostCount(us.getPostCount());
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setBio(us.getBio());
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setDisplayname(us.getDisplayname());
@@ -211,6 +254,10 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
         ((MainActivity) Objects.requireNonNull(getActivity())).setNavDrawerData(us.getUsername(), us.getDisplayname());
         //set correct userdata array
         userdata = ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.toArray();
+
+        if (((MainActivity) Objects.requireNonNull(getActivity())).currentUser.isAdmin()) {
+            registerForContextMenu(topicListView);
+        }
     }
 
     //NETWORKING
@@ -249,6 +296,21 @@ public class ForumTopicListFragment extends Fragment implements View.OnClickList
             @Override
             public void getError(VolleyError err) {
                 System.out.println("Drawer User Error");
+            }
+        });
+    }
+
+
+    //requests topic list JSON object from backend
+    public void deleteTopic(String topicid) {
+        NetworkManager.getInstance().deleteTopic(topicid, new VolleyListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject object) {
+            }
+
+            @Override
+            public void getError(VolleyError err) {
+                System.out.println("Error Deleting Topic: " + err.toString());
             }
         });
     }

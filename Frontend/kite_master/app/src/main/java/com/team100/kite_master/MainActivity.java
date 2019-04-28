@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.team100.kite_master.favorites.FavoriteStorageHandler;
 import com.team100.kite_master.forum.ForumTopicListFragment;
 import com.team100.kite_master.forum.forum_data_classes.Post;
@@ -24,11 +25,17 @@ import com.team100.kite_master.login.SaveSharedPreference;
 import com.team100.kite_master.messages.MessagesFragment;
 import com.team100.kite_master.networking.NetworkManager;
 import com.team100.kite_master.favorites.FavoritesFragment;
+import com.team100.kite_master.networking.VolleyListener;
 import com.team100.kite_master.search.SearchFragment;
 import com.team100.kite_master.settings.SettingsFragment;
 import com.team100.kite_master.userdata.User;
+import com.team100.kite_master.userdata.UserParser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity
@@ -61,6 +68,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             NetworkManager.getInstance(this);
         }
+
 
 
         //setup toolbar
