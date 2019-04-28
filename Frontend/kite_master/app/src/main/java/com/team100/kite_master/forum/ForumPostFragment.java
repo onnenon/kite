@@ -383,8 +383,9 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
 
     //send reply
     private void sendReply(final String body) {
-        System.out.println("SENDING REPLY: " + postID + " | " + postAuthor + " | " + body);
-        NetworkManager.getInstance().sendReply(postID, postAuthor, body, new VolleyListener<String>() {
+        String author = ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.getUsername();
+        System.out.println("SENDING REPLY: " + postID + " | " + author + " | " + body);
+        NetworkManager.getInstance().sendReply(postID, author, body, new VolleyListener<String>() {
             @Override
             public void getResult(String string) {
                 requestReplies(postID);
