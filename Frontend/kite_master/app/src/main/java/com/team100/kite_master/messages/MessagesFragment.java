@@ -166,8 +166,6 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         this.username = username;
     }
 
-    /*
-
     public LinearLayout getMessageView() {
 
         return this.messageList;
@@ -177,8 +175,6 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         this.messageList = messageView;
     }
-
-    */
 
     public String getIPaddress() {
 

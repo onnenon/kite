@@ -21,9 +21,6 @@ public class MessageLayoutSetup {
 
     public LinearLayout setupMessageHolder(String username) {
 
-        final int DISTANCE_FROM_CLOSE_EDGE = 30;
-        final int DISTANCE_FROM_FAR_EDGE = 240;
-
         int width;
         int height;
 
@@ -84,7 +81,6 @@ public class MessageLayoutSetup {
         // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
         // Set parameters of relativeLayout object
         width = RelativeLayout.LayoutParams.WRAP_CONTENT;
-        // width = RelativeLayout.LayoutParams.MATCH_PARENT;
         height = RelativeLayout.LayoutParams.WRAP_CONTENT;
         relativeParams = new RelativeLayout.LayoutParams(width, height);
         relativeParams.setMargins(DISTANCE_FROM_CLOSE_EDGE, 0, DISTANCE_FROM_CLOSE_EDGE, 0);
@@ -95,7 +91,6 @@ public class MessageLayoutSetup {
 
             relativeParams.setMarginStart(DISTANCE_FROM_FAR_EDGE);
             relativeParams.setMarginEnd(DISTANCE_FROM_CLOSE_EDGE);
-            // messageLayout.setGravity(Gravity.END);
 
             messageLayout.setBackgroundResource(R.drawable.message_layout_this_user);
         }
@@ -103,7 +98,6 @@ public class MessageLayoutSetup {
 
             relativeParams.setMarginStart(DISTANCE_FROM_CLOSE_EDGE);
             relativeParams.setMarginEnd(DISTANCE_FROM_FAR_EDGE);
-            // messageLayout.setGravity(Gravity.START);
 
             messageLayout.setBackgroundResource(R.drawable.message_layout);
         }
@@ -133,7 +127,6 @@ public class MessageLayoutSetup {
         messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, 0);
 
         width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        // width = LinearLayout.LayoutParams.MATCH_PARENT;
         height = LinearLayout.LayoutParams.WRAP_CONTENT;
         layoutParams = new LinearLayout.LayoutParams(width, height);
 
@@ -141,13 +134,11 @@ public class MessageLayoutSetup {
 
             layoutParams.setMarginStart(DISTANCE_FROM_FAR_EDGE);
             layoutParams.setMarginEnd(DISTANCE_FROM_CLOSE_EDGE);
-            // messageText.setGravity(Gravity.END);
         }
         else {
 
             layoutParams.setMarginStart(DISTANCE_FROM_CLOSE_EDGE);
             layoutParams.setMarginEnd(DISTANCE_FROM_FAR_EDGE);
-            // messageText.setGravity(Gravity.START);
         }
 
         messageText.setLayoutParams(layoutParams);
