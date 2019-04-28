@@ -171,4 +171,17 @@ public class MessageLayoutSetup {
 
         return messageText;
     }
+
+
+
+    // Getter methods
+    public Context getContext() {
+
+        return this.context;
+    }
+
+    public String getUsername() {
+
+        return this.username;
+    }
 }

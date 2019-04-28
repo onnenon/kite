@@ -4,14 +4,17 @@ import android.widget.RelativeLayout;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.team100.kite_master.messages.MessagesFragment;
 import com.team100.kite_master.messages.messages_data_classes.Message;
 import com.team100.kite_master.messages.WebSocketImplementation;
+import com.team100.kite_master.messages.messages_data_classes.MessageLayoutSetup;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,11 +33,15 @@ public class MessagesFragmentUnitTest {
     private MessagesFragment messageFrag;
     private WebSocketImplementation impWS;
     private Message realMessage;
+    private MessageLayoutSetup layoutSetup;
 
     private MessagesFragment mockMessageFrag;
     private WebSocketImplementation mockImpWS;
     private Message mockMessage;
 
+
+
+    // Setup
     @Before
     public void setup() {
 
@@ -46,6 +53,7 @@ public class MessagesFragmentUnitTest {
         impWS = new WebSocketImplementation(messageFrag, messageFrag.getUsername(), messageFrag.getIPaddress());
 
         realMessage = new Message("fadmin", "Text!");
+        layoutSetup = new MessageLayoutSetup(messageFrag.getContext(), messageFrag.getUsername());
 
         // Mock objects
         mockMessageFrag = mock(MessagesFragment.class);
@@ -55,6 +63,7 @@ public class MessagesFragmentUnitTest {
 
 
 
+    // Message class tests
     @Test
     public void testUsernameMock() {
 
@@ -104,10 +113,10 @@ public class MessagesFragmentUnitTest {
     @Test
     public void testGetMessageTime() {
 
-        when(mockMessage.getMessageTime()).thenReturn("4/26/2019 1:02 PM");
-        when(mockMessage.getCurrentDateAndTime()).thenReturn("4/26/2019 1:02 PM");
-        assertEquals("4/26/2019 1:02 PM", mockMessage.getMessageTime());
-        assertEquals("4/26/2019 1:02 PM", mockMessage.getCurrentDateAndTime());
+        when(mockMessage.getMessageTime()).thenReturn("1:02 PM");
+        when(mockMessage.getCurrentDateAndTime()).thenReturn("1:02 PM");
+        assertEquals("1:02 PM", mockMessage.getMessageTime());
+        assertEquals("1:02 PM", mockMessage.getCurrentDateAndTime());
     }
 
     /*
@@ -115,13 +124,13 @@ public class MessagesFragmentUnitTest {
     @Test
     public void testMessageOutputReal() {
 
-        String date = "4/20/2019 3:23 PM";
+        String time = "12:07 AM";
 
-        when(mockMessage.getMessageTime()).thenReturn(date);
+        when(mockMessage.getMessageTime()).thenReturn(time);
         when(mockMessage.getUsername()).thenReturn(messageFrag.getUsername()); // "Username"
         when(mockMessage.getText()).thenReturn("A very important message.");
 
-        assertEquals(date + "\n" + "fadmin: A very important message.\n",
+        assertEquals(time + "\n" + "fadmin: A very important message.\n",
                 mockMessage.getMessageTime() + "\n" + mockMessage.getUsername() + ": " + mockMessage.getText() + "\n");
     }
 
@@ -130,25 +139,61 @@ public class MessagesFragmentUnitTest {
     @Test
     public void testMessageOutputMock() {
 
-        String date = "4/20/2019 3:23 PM";
+        String time = "12:07 AM";
 
-        when(mockMessage.getMessageTime()).thenReturn(date);
+        when(mockMessage.getMessageTime()).thenReturn(time);
         when(mockMessage.getUsername()).thenReturn(messageFrag.getUsername()); // "Username"
         when(mockMessage.getText()).thenReturn("A very important message.");
 
-        assertEquals(date + "\n" + "fadmin: A very important message.\n",
+        assertEquals(time + "\n" + "fadmin: A very important message.\n",
                 mockMessage.getMessageTime() + "\n" + mockMessage.getUsername() + ": " + mockMessage.getText() + "\n");
     }
 
+    /*
 
+    // MessageLayoutSetup class tests
+    @Test
+    public void MessageLayoutSetupInitializationTest() {
+
+        messageFrag.setUsername("UserOne");
+
+        layoutSetup = new MessageLayoutSetup(messageFrag.getContext(), messageFrag.getUsername());
+
+        // Make sure that the instance variables of layoutSetup and messageFrag are the same.
+        Assert.assertNotNull(messageFrag.getContext());
+        Assert.assertNotNull(layoutSetup.getContext());
+        assertEquals(layoutSetup.getContext(), messageFrag.getContext());
+        assertEquals(layoutSetup.getUsername(), messageFrag.getUsername());
+    }
 
     @Test
-    public void stuff() {
+    public void SetupMessageTextViewTest() {
+
+        String message = "A very important message!";
+
+        TextView textView = layoutSetup.setupMessageTextView(message); // WHY IS CONTEXT NULL???
+
+        assertEquals(message, textView.getText()); // Check that the message is correct
 
     }
 
+    */
+
+    /*
+
+    @Test
+    public void SetupMessageTextView_DifferentUserTest() {
+
+        TextView textView = layoutSetup.setupMessageTextView("UserOne");
+    }
+
+    */
 
 
+
+
+
+    // Stuff?
     @Test
     public void testRecentMessagesRetrieval() throws JSONException {
 
