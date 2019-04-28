@@ -54,9 +54,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         //initialize user interface objects
         scrollView = (ScrollView) v.findViewById(R.id.message_scroll_view);
-
         messageList = (LinearLayout) v.findViewById(R.id.message_linear_layout);
-        messageList.setGravity(Gravity.END);
 
         errorTextView = (TextView) v.findViewById(R.id.error_textView);
 
@@ -116,13 +114,19 @@ public class MessagesFragment extends Fragment implements OutputHandler {
                 String messageTime = msg.getMessageTime();
                 String messageString =  msg.getUsername() + ": " + msg.getText();
 
+                // Create a new LinearLayout object
+                RelativeLayout messageHolder = setupMessageHolder(username);
+
                 // Create a message, and set it up
                 TextView time = setupTimeTextView(username, messageTime);
                 RelativeLayout message = setupMessage(username, messageString);
 
                 // Add the message to the Linearlayout
-                messageList.addView(time);
-                messageList.addView(message);
+                messageHolder.addView(time);
+                messageHolder.addView(message);
+
+                // Add the messageHolder to the linearLayout
+                messageList.addView(messageHolder);
 
                 // Credit to this source: https://stackoverflow.com/questions/21926644/get-height-and-width-of-a-layout-programmatically
                 // Scroll to bottom upon receiving new messages
@@ -142,6 +146,47 @@ public class MessagesFragment extends Fragment implements OutputHandler {
     public void setErrorText(String errorText) {
 
         errorTextView.setText(errorText);
+    }
+
+    public RelativeLayout setupMessageHolder(String username) {
+
+        final int DISTANCE_FROM_CLOSE_EDGE = 30;
+        final int DISTANCE_FROM_FAR_EDGE = 240;
+
+        int width;
+        int height;
+
+        RelativeLayout messageHolder;
+        RelativeLayout.LayoutParams relativeParams;
+
+        messageHolder = new RelativeLayout(getContext());
+
+        width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        // width = LinearLayout.LayoutParams.MATCH_PARENT;
+        height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        // height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        relativeParams = new RelativeLayout.LayoutParams(width, height);
+        relativeParams.setMargins(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, 0);
+
+        // Position the messages that you yourself send to the right
+        // Position the messages of other users to the left
+        if (username == getUsername()) {
+
+            // messageHolder.setGravity(Gravity.END);
+            messageHolder.setGravity(Gravity.RIGHT);
+        }
+        else {
+
+            // messageHolder.setGravity(Gravity.START);
+            messageHolder.setGravity(Gravity.LEFT);
+        }
+
+        // messageHolder.setGravity(Gravity.TOP);
+
+        messageHolder.setLayoutParams(relativeParams);
+        messageHolder.requestLayout();
+
+        return messageHolder;
     }
 
     public RelativeLayout setupMessage(String username, String messageString) {
@@ -199,6 +244,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         messageLayout.setLayoutParams(relativeParams);
         messageLayout.requestLayout();
+        messageLayout.setGravity(Gravity.BOTTOM);
 
         return messageLayout;
     }
@@ -239,7 +285,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         }
 
         messageText.setLayoutParams(layoutParams);
-
+        messageText.setGravity(Gravity.TOP);
 
         return messageText;
     }
@@ -282,6 +328,8 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         this.username = username;
     }
 
+    /*
+
     public LinearLayout getMessageView() {
 
         return this.messageList;
@@ -291,6 +339,8 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         this.messageList = messageView;
     }
+
+    */
 
     public String getIPaddress() {
 
