@@ -2,6 +2,7 @@ package com.team100.kite_master.networking;
 
 import android.content.Context;
 import android.util.Base64;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -111,13 +112,166 @@ public class NetworkManager {
         requestQueue.add(postRequest);
     }
 
+
     //=========================================================================================================================
 
     //USERS
 
+
+    //create a single user
+    public void createUser(String username, String password, final VolleyListener<String> listener) {
+        String URL = url + "/api/v2/users";
+
+        JSONObject jsonBody = new JSONObject();
+
+        try {
+            jsonBody.put("username", username);
+            jsonBody.put("password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final String requestBody = jsonBody.toString();
+        StringRequest postRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        ) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                return requestBody.getBytes(StandardCharsets.UTF_8);
+            }
+        };
+
+        requestQueue.add(postRequest);
+
+    }
+
+
+
+
     public void requestUserData(String username, final VolleyListener<JSONObject> listener) {
         String URL = url + "/api/v2/users/" + username;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        );
+        requestQueue.add(getRequest);
+    }
+
+    //send put request to update password, bio, admin and mod status
+    public void updatePassword(String username, String password, final VolleyListener<String> listener) {
+
+        String URL = url + "/api/v2/users/" + username;
+
+        JSONObject jsonBody = new JSONObject();
+        try {
+            if (!password.equals("")) jsonBody.put("password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final String requestBody = jsonBody.toString();
+        StringRequest postRequest = new StringRequest(Request.Method.PUT, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        ) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                return requestBody.getBytes(StandardCharsets.UTF_8);
+            }
+        };
+
+        requestQueue.add(postRequest);
+    }
+
+    //send put request to update password, bio, admin and mod status
+    public void updateUser(String username, boolean isMod, boolean isAdmin, final VolleyListener<String> listener) {
+
+        String URL = url + "/api/v2/users/" + username;
+
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("is_admin", isAdmin);
+            jsonBody.put("is_mod", isMod);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final String requestBody = jsonBody.toString();
+        StringRequest postRequest = new StringRequest(Request.Method.PUT, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        ) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                return requestBody.getBytes(StandardCharsets.UTF_8);
+            }
+        };
+
+        requestQueue.add(postRequest);
+    }
+
+
+    //delete a single user given a username
+    public void deleteUser(String username, final VolleyListener<JSONObject> listener) {
+
+        String URL = url + "/api/v2/users/" + username;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.DELETE, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -157,9 +311,93 @@ public class NetworkManager {
         requestQueue.add(getRequest);
     }
 
+
+    public void addTopic(final String name, final String description, final VolleyListener<String> listener) {
+        String URL = url + "/api/v2/topics";
+
+        JSONObject jsonBody = new JSONObject();
+
+        try {
+            jsonBody.put("name", name);
+            jsonBody.put("description", description);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        final String requestBody = jsonBody.toString();
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        ) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                return requestBody.getBytes(StandardCharsets.UTF_8);
+            }
+        };
+        requestQueue.add(postRequest);
+    }
+
+
+    //delete a single user given a username
+    public void deleteTopic(final String topicid, final VolleyListener<JSONObject> listener) {
+
+        String URL = url + "/api/v2/topics/" + topicid;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.DELETE, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        );
+        requestQueue.add(getRequest);
+    }
+
+
     //=========================================================================================================================
 
     //POSTS
+
+    public void requestAllPosts(final VolleyListener<JSONObject> listener) {
+        String URL = url + "/api/v2/posts";
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        );
+        requestQueue.add(getRequest);
+    }
+
 
     public void requestPostList(String topic, final VolleyListener<JSONObject> listener) {
         String URL = url + "/api/v2/topics/" + topic;
@@ -241,6 +479,119 @@ public class NetworkManager {
         };
         requestQueue.add(postRequest);
     }
+
+
+    //delete a single user given a username
+    public void deletePost(final String postid, final VolleyListener<JSONObject> listener) {
+
+        String URL = url + "/api/v2/posts/" + postid;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.DELETE, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        );
+        requestQueue.add(getRequest);
+    }
+
+
+    //=========================================================================================================================
+
+    //REPLIES
+
+    public void requestReplies(final VolleyListener<JSONObject> listener) {
+        String URL = url + "/api/v2/replies";
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        );
+        requestQueue.add(getRequest);
+    }
+
+
+    public void sendReply(final String postid, final String author, final String body, final VolleyListener<String> listener) {
+        String URL = url + "/api/v2/replies";
+
+        JSONObject jsonBody = new JSONObject();
+
+        try {
+            jsonBody.put("post_id", postid);
+            jsonBody.put("author", author);
+            jsonBody.put("body", body);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        final String requestBody = jsonBody.toString();
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        ) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                return requestBody.getBytes(StandardCharsets.UTF_8);
+            }
+        };
+        requestQueue.add(postRequest);
+    }
+
+
+    //delete a single user given a username
+    public void deleteReply(final String replyid, final VolleyListener<JSONObject> listener) {
+
+        String URL = url + "/api/v2/replies/" + replyid;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.DELETE, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.getError(error);
+                    }
+                }
+        );
+        requestQueue.add(getRequest);
+    }
+
+
+
 
 
 }

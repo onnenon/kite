@@ -2,11 +2,13 @@ package com.team100.kite_master.forum;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.R;
 import com.team100.kite_master.forum.forum_data_classes.DateUtil;
 import com.team100.kite_master.forum.forum_data_classes.Post;
@@ -81,6 +84,13 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         newPostFab = v.findViewById(R.id.new_post_fab);
         retryTopics = v.findViewById(R.id.retry_topics);
 
+
+        //register for context menu if admin or mod
+        if (((MainActivity) Objects.requireNonNull(getActivity())).currentUser.isAdmin() || ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.isMod()) {
+            registerForContextMenu(postListView);
+        }
+
+
         //set on click listeners
         newPostFab.setOnClickListener(this);
         retryTopics.setOnClickListener(this);
@@ -99,6 +109,10 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
 
         //show action bar buttons
         setHasOptionsMenu(true);
+
+        //set current screen and nav drawer check
+        ((MainActivity) Objects.requireNonNull(getActivity())).setCurScreen("post_list");
+        ((MainActivity) Objects.requireNonNull(getActivity())).setDrawerItemSelection(0);
 
         return v;
     }
@@ -147,6 +161,8 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.action_buttons, menu);
+        MenuItem favorite = menu.findItem(R.id.menu_post_favorite);
+        favorite.setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -169,14 +185,44 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
     //handles clicks of the refresh button in the action bar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_refresh:
-                loadingCircle.setVisibility(View.VISIBLE);
-                requestPostList(topic);
-                break;
+        if (item.getItemId() == R.id.menu_refresh) {
+            loadingCircle.setVisibility(View.VISIBLE);
+            requestPostList(topic);
         }
         return true;
     }
+
+
+    /**
+     * MENU
+     */
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == R.id.list_view) {
+            MenuInflater inflater = Objects.requireNonNull(getActivity()).getMenuInflater();
+            inflater.inflate(R.menu.post_list_context_menu, menu);
+        }
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.delete:
+                System.out.println("DELETING: " + postList.get(info.position).getPostID());
+                deletePost(postList.get(info.position).getPostID());
+                SystemClock.sleep(1000);
+                loadingCircle.setVisibility(View.VISIBLE);
+                requestPostList(topic);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
 
     //custom topic adapter class
     class CustomAdapter extends BaseAdapter {
@@ -200,7 +246,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = getLayoutInflater().inflate(R.layout.forum_post_list_card, null);
             // initialize text views
-            TextView topicTitle = view.findViewById(R.id.text_title);
+            TextView topicTitle = view.findViewById(R.id.text_reply);
             TextView topicAuthor = view.findViewById(R.id.text_author);
             TextView topicTime = view.findViewById(R.id.text_time);
             // iterate through list to set topic entries
@@ -215,6 +261,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
     }
 
     //sets post list array list and notifies adapter to update
+    @SuppressLint("SetTextI18n")
     private void setPostList(ArrayList<Post> p) {
         //update global topic list
         postList = new ArrayList<>(p);
@@ -276,4 +323,20 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
             }
         });
     }
+
+    //delete post from database
+    public void deletePost(String postid) {
+        NetworkManager.getInstance().deletePost(postid, new VolleyListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject object) {
+            }
+
+            @Override
+            public void getError(VolleyError err) {
+                System.out.println("Error Deleting Post: " + err.toString());
+            }
+        });
+    }
+
+
 }

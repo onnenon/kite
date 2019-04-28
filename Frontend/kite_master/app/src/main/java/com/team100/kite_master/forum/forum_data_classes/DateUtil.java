@@ -22,7 +22,7 @@ public class DateUtil {
 
         long now = getCurMillis();
         if (time > now || time <= 0) {
-            return "";
+            return "just now";
         }
 
         final long diff = now - time;
