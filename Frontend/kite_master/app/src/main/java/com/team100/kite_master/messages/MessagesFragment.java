@@ -3,6 +3,7 @@ package com.team100.kite_master.messages;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,14 +48,16 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         View v = inflater.inflate(R.layout.messages_fragment, container, false);
 
-
         userdata = ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.toArray();
         username = userdata[0];
         LOCAL_IP_ADDRESS = ((MainActivity) Objects.requireNonNull(getActivity())).getServerIP();
 
         //initialize user interface objects
         scrollView = (ScrollView) v.findViewById(R.id.message_scroll_view);
+
         messageList = (LinearLayout) v.findViewById(R.id.message_linear_layout);
+        messageList.setGravity(Gravity.END);
+
         errorTextView = (TextView) v.findViewById(R.id.error_textView);
 
         messageText = (EditText) v.findViewById(R.id.message_edit_text);
@@ -93,21 +96,8 @@ public class MessagesFragment extends Fragment implements OutputHandler {
             }
         });
 
-
-
         return v;
     }
-
-    /*
-
-    @Override
-    public void onCreate() {
-
-        // Credit to source: https://stackoverflow.com/questions/1964789/move-layouts-up-when-soft-keyboard-is-shown
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-    }
-
-    */
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -159,7 +149,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         RelativeLayout messageLayout;
         TextView messageText;
 
-        messageText = setupMessageTextView(username, messageString);
+        messageText = setupMessageTextView(messageString);
 
         messageLayout = setupRelativeLayout(username);
         messageLayout.addView(messageText);
@@ -183,6 +173,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
         // Credit to this source: https://stackoverflow.com/questions/18844418/add-margin-programmatically-to-relativelayout
         // Set parameters of relativeLayout object
         width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        // width = RelativeLayout.LayoutParams.MATCH_PARENT;
         height = RelativeLayout.LayoutParams.WRAP_CONTENT;
         relativeParams = new RelativeLayout.LayoutParams(width, height);
         relativeParams.setMargins(DISTANCE_FROM_CLOSE_EDGE, 0, DISTANCE_FROM_CLOSE_EDGE, 0);
@@ -193,6 +184,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
             relativeParams.setMarginStart(DISTANCE_FROM_FAR_EDGE);
             relativeParams.setMarginEnd(DISTANCE_FROM_CLOSE_EDGE);
+            // messageLayout.setGravity(Gravity.END);
 
             messageLayout.setBackgroundResource(R.drawable.message_layout_this_user);
         }
@@ -200,6 +192,7 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
             relativeParams.setMarginStart(DISTANCE_FROM_CLOSE_EDGE);
             relativeParams.setMarginEnd(DISTANCE_FROM_FAR_EDGE);
+            // messageLayout.setGravity(Gravity.START);
 
             messageLayout.setBackgroundResource(R.drawable.message_layout);
         }
@@ -224,11 +217,11 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
         messageText = new TextView(getContext());
         messageText.setText(messageTime);
-        // messageText.setTextSize(10.0f);
         messageText.setTextColor(BLACK_COLOR);
         messageText.setPadding(DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, DISTANCE_FROM_CLOSE_EDGE, 0);
 
         width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        // width = LinearLayout.LayoutParams.MATCH_PARENT;
         height = LinearLayout.LayoutParams.WRAP_CONTENT;
         layoutParams = new LinearLayout.LayoutParams(width, height);
 
@@ -236,19 +229,22 @@ public class MessagesFragment extends Fragment implements OutputHandler {
 
             layoutParams.setMarginStart(DISTANCE_FROM_FAR_EDGE);
             layoutParams.setMarginEnd(DISTANCE_FROM_CLOSE_EDGE);
+            // messageText.setGravity(Gravity.END);
         }
         else {
 
             layoutParams.setMarginStart(DISTANCE_FROM_CLOSE_EDGE);
             layoutParams.setMarginEnd(DISTANCE_FROM_FAR_EDGE);
+            // messageText.setGravity(Gravity.START);
         }
 
         messageText.setLayoutParams(layoutParams);
 
+
         return messageText;
     }
 
-    public TextView setupMessageTextView(String username, String messageString) {
+    public TextView setupMessageTextView(String messageString) {
 
         final int DISTANCE_FROM_CLOSE_EDGE = 30;
         final int BLACK_COLOR = 0xff000000;
