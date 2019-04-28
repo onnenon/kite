@@ -57,7 +57,6 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
 
     //declare layout items
     ScrollView postScrollView;
-    ImageView postImageView;
     TextView postTitleView;
     TextView postTimeView;
     TextView postAuthorView;
@@ -67,6 +66,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
     EditText replyBox;
     Button replyButton;
     FrameLayout border;
+    FrameLayout betweenline;
 
 
     private CustomAdapter replyAdapter;
@@ -92,7 +92,6 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         //initialize layout elements
         loadingCircle = v.findViewById(R.id.topics_loading);
         errMessage = v.findViewById(R.id.error_message);
-        postImageView = v.findViewById(R.id.single_post_image);
         postTitleView = v.findViewById(R.id.single_post_title);
         postTimeView = v.findViewById(R.id.single_post_time);
         postAuthorView = v.findViewById(R.id.single_post_author);
@@ -103,6 +102,7 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         replyBox = v.findViewById(R.id.reply_box);
         replyButton = v.findViewById(R.id.reply_button);
         border = v.findViewById(R.id.between_replies_textbox);
+        betweenline = v.findViewById(R.id.between_text_replies);
 
         //initialize boolean
         isFavorited = false;
@@ -113,6 +113,11 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
 
         //hide everything until post is gotten
         postScrollView.setVisibility(View.GONE);
+        replyBox.setVisibility(View.GONE);
+        replyButton.setVisibility(View.GONE);
+        border.setVisibility(View.GONE);
+        betweenline.setVisibility(View.GONE);
+
 
 
         //show loading circle until topics received
@@ -341,10 +346,12 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         //update global topic list
         replyList = new ArrayList<>(p);
         //hide one of the borders if there arent any replies
-        if(replyList.size() < 1){
+        if(replyList.size() == 0){
             border.setVisibility(View.GONE);
+            betweenline.setVisibility(View.GONE);
         } else {
             border.setVisibility(View.VISIBLE);
+            betweenline.setVisibility(View.VISIBLE);
         }
         //sort topic list in alphabetical order
         Collections.sort(replyList);
@@ -352,6 +359,10 @@ public class ForumPostFragment extends Fragment implements View.OnClickListener 
         replyAdapter.notifyDataSetChanged();
         //make sure scroll view is showing
         postScrollView.setVisibility(View.VISIBLE);
+        replyBox.setVisibility(View.VISIBLE);
+        replyButton.setVisibility(View.VISIBLE);
+        border.setVisibility(View.VISIBLE);
+        betweenline.setVisibility(View.VISIBLE);
         //hide loading circle
         loadingCircle.setVisibility(View.GONE);
         //show error message if no posts
