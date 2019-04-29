@@ -93,7 +93,7 @@ public class ForumNewPostFragment extends Fragment implements View.OnClickListen
 
     //send new post
     private void sendPost(final String title, final String body, final String author, final String topic) {
-        NetworkManager.getInstance().sendPost(title, body, author, topic, new VolleyListener<String>() {
+        NetworkManager.getInstance().sendPost(title, body, topic, new VolleyListener<String>() {
             @Override
             public void getResult(String string) {
                 confirmAndClose();

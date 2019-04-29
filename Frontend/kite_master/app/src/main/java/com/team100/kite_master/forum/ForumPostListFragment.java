@@ -153,6 +153,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         });
 
         //request the list of posts for the selected topic
+        postListView.setVisibility(View.GONE);
         requestPostList(topic);
     }
 
@@ -173,6 +174,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
             case R.id.retry_topics:
                 retryTopics.setVisibility(View.GONE);
                 errMessage.setVisibility(View.GONE);
+                postListView.setVisibility(View.GONE);
                 requestPostList(topic);
                 loadingCircle.setVisibility(View.VISIBLE);
                 break;
@@ -187,6 +189,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_refresh) {
             loadingCircle.setVisibility(View.VISIBLE);
+            postListView.setVisibility(View.GONE);
             requestPostList(topic);
         }
         return true;
@@ -216,6 +219,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
                 deletePost(postList.get(info.position).getPostID());
                 SystemClock.sleep(1000);
                 loadingCircle.setVisibility(View.VISIBLE);
+                postListView.setVisibility(View.GONE);
                 requestPostList(topic);
                 return true;
             default:
@@ -271,6 +275,7 @@ public class ForumPostListFragment extends Fragment implements View.OnClickListe
         topicAdapter.notifyDataSetChanged();
         //hide loading circle
         loadingCircle.setVisibility(View.GONE);
+        postListView.setVisibility(View.VISIBLE);
         //show error message if no posts
         if (postList.size() == 0) {
             errMessage.setText("There are no posts in this topic");
