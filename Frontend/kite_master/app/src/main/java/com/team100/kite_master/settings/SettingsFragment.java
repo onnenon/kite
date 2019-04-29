@@ -123,7 +123,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                     updateUser(username_change_permissions.getText().toString(), modCheckBox.isChecked(), adminCheckBox.isChecked());
                     username_change_permissions.setText("");
                     modCheckBox.setChecked(false);
-                    modCheckBox.setChecked(false);
+                    adminCheckBox.setChecked(false);
                 } else {
                     Toast.makeText(getActivity(), "Enter a username to update", Toast.LENGTH_LONG).show();
                 }

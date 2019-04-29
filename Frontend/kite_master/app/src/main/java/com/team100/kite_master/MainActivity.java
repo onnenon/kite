@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.team100.kite_master.favorites.FavoriteStorageHandler;
@@ -65,10 +66,10 @@ public class MainActivity extends AppCompatActivity
         //instantiate network manager
         if (SaveSharedPreference.getHostIp(MainActivity.this).length() != 0) {
             NetworkManager.getInstance(this).setUrl(SaveSharedPreference.getHostIp(MainActivity.this));
+            NetworkManager.getInstance(this).setUserdata(SaveSharedPreference.getUserName(MainActivity.this), SaveSharedPreference.getPass(MainActivity.this));
         } else {
             NetworkManager.getInstance(this);
         }
-
 
 
         //setup toolbar
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity
         if (SaveSharedPreference.getUserName(MainActivity.this).length() == 0) {
             displayLoginScreen();
         } else {
-            logIn();
+            updateJWT();
         }
     }
 
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void setDrawerItemSelection(int sel){
+    public void setDrawerItemSelection(int sel) {
         navigationView.getMenu().getItem(sel).setChecked(true);
     }
 
@@ -151,11 +152,29 @@ public class MainActivity extends AppCompatActivity
     private void logIn() {
         currentUser.setUsername(SaveSharedPreference.getUserName(MainActivity.this));
         server_ip = SaveSharedPreference.getHostIp(MainActivity.this);
-        if(SaveSharedPreference.getFavoritesList(MainActivity.this).length() != 0){
+        if (SaveSharedPreference.getFavoritesList(MainActivity.this).length() != 0) {
             favoritePostIDList = fsh.stringToFavID(SaveSharedPreference.getFavoritesList(MainActivity.this));
             favoritePostList = fsh.getAllFavPosts(favoritePostIDList);
         }
+
+
         displaySelectedScreen(R.id.nav_forum);
+    }
+
+
+    //NETWORK
+    private void updateJWT() {
+        NetworkManager.getInstance().login(SaveSharedPreference.getUserName(MainActivity.this), SaveSharedPreference.getPass(MainActivity.this), new VolleyListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject object) {
+                logIn();
+            }
+
+            @Override
+            public void getError(VolleyError err) {
+                logout();
+            }
+        });
     }
 
 
@@ -184,9 +203,17 @@ public class MainActivity extends AppCompatActivity
         return server_ip;
     }
 
-    public void setSavedContextData(String username, String ip) {
+    public void setSavedContextData(String username, String pass, String ip) {
         SaveSharedPreference.setUserName(MainActivity.this, username);
         SaveSharedPreference.setHostIp(MainActivity.this, ip);
+        SaveSharedPreference.setPass(MainActivity.this, pass);
+    }
+
+    public String[] getUserData(){
+        String[] u = new String[2];
+        u[0] = SaveSharedPreference.getUserName(MainActivity.this);
+        u[1] = SaveSharedPreference.getPass(MainActivity.this);
+        return u;
     }
 
 
@@ -226,14 +253,14 @@ public class MainActivity extends AppCompatActivity
             if (favoritePostIDList.contains(f.getPostID())) {
                 System.out.println("REMOVING");
 
-                for(int i = 0; i < favoritePostList.size(); i++){
-                    if(favoritePostList.get(i).getPostID().equals(f.getPostID())){
+                for (int i = 0; i < favoritePostList.size(); i++) {
+                    if (favoritePostList.get(i).getPostID().equals(f.getPostID())) {
                         favoritePostList.remove(i);
                     }
                 }
 
-                for(int i = 0; i < favoritePostIDList.size(); i++){
-                    if(favoritePostIDList.get(i).equals(f.getPostID())){
+                for (int i = 0; i < favoritePostIDList.size(); i++) {
+                    if (favoritePostIDList.get(i).equals(f.getPostID())) {
                         favoritePostIDList.remove(i);
                     }
                 }
@@ -242,8 +269,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-
-
 
 
     public ArrayList<Post> getFavoritePostList() {

@@ -142,13 +142,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void moveToForumFrag(String username, String ip) {
+    private void moveToForumFrag(String username, String pass, String ip) {
         ((MainActivity) Objects.requireNonNull(getActivity())).currentUser.setUsername(username);
         //unlock drawer
         ((MainActivity) Objects.requireNonNull(getActivity())).lockDrawer(false);
         //set current username and ip
-        ((MainActivity) Objects.requireNonNull(getActivity())).setSavedContextData(username, ip);
-        ((MainActivity) Objects.requireNonNull(getActivity())).setSavedContextData(username, ip);
+        ((MainActivity) Objects.requireNonNull(getActivity())).setSavedContextData(username, pass, ip);
         //launch forum fragment
         Fragment fragment = new ForumTopicListFragment();
         FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
@@ -163,7 +162,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             @Override
             public void getResult(JSONObject object) {
                 Toast.makeText(getActivity(), "Logging In!" + " ", Toast.LENGTH_LONG).show();
-                moveToForumFrag(username, server_ip);
+                moveToForumFrag(username, password, server_ip);
             }
 
             @Override
@@ -185,7 +184,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             @Override
             public void getResult(String object) {
                 Toast.makeText(getActivity(), "Registered!" + " ", Toast.LENGTH_LONG).show();
-                moveToForumFrag(username, server_ip);
+                moveToForumFrag(username, password, server_ip);
             }
 
             @Override

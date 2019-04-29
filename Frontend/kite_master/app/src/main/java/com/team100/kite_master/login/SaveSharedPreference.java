@@ -8,6 +8,7 @@ public class SaveSharedPreference
 {
     private static final String PREF_USER_NAME= "username";
     private static final String HOST_IP= "hostip";
+    private static final String PWD= "pass";
     private static final String FAVORITES_LIST = "favoriteslist";
 
     private static SharedPreferences getSharedPreferences(Context ctx) {
@@ -26,6 +27,18 @@ public class SaveSharedPreference
         return getSharedPreferences(ctx).getString(PREF_USER_NAME, "");
     }
 
+
+    public static void setPass(Context ctx, String p)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(PWD, p);
+        editor.apply();
+    }
+
+    public static String getPass(Context ctx)
+    {
+        return getSharedPreferences(ctx).getString(PWD, "");
+    }
 
     public static void setHostIp(Context ctx, String ip)
     {
