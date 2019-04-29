@@ -53,6 +53,7 @@
         android:elevation="10dp"
         android:ems="10"
         android:inputType="textMultiLine"
+        android:maxLines="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />

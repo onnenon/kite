@@ -56,10 +56,60 @@
         app:layout_constraintTop_toBottomOf="@+id/error_message" />
 
 
+    <FrameLayout
+        android:id="@+id/between_replies_textbox"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#5C202020"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/post_scroll_view">
+
+    </FrameLayout>
+
+    <EditText
+        android:id="@+id/reply_box"
+        style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/round_button"
+        android:backgroundTint="#9E575757"
+        android:elevation="10dp"
+        android:ems="10"
+        android:hint="Add a reply..."
+        android:inputType="textPersonName"
+        android:textColor="#9C575757"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/reply_button"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/reply_button"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_background"
+        android:backgroundTint="#9C575757"
+        android:elevation="10dp"
+        android:text="Reply"
+        android:textColor="#9C575757"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/reply_box" />
+
     <ScrollView
         android:id="@+id/post_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/reply_box"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/title_text_constraint"
@@ -74,19 +124,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/single_post_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:scaleType="fitXY"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/mitra_simanta" />
 
 
                 <View
@@ -198,50 +235,6 @@
                 app:layout_constraintTop_toBottomOf="@id/single_post_body">
 
             </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/between_replies_textbox"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#5C202020"
-                app:layout_constraintTop_toBottomOf="@id/reply_list_view">
-
-            </FrameLayout>
-
-            <EditText
-                android:id="@+id/reply_box"
-                style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/round_button"
-                android:backgroundTint="#9E575757"
-                android:elevation="10dp"
-                android:ems="10"
-                android:hint="Add a reply..."
-                android:inputType="textPersonName"
-                android:textColor="#9C575757"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/reply_button"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/between_replies_textbox" />
-
-            <Button
-                android:id="@+id/reply_button"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/button_background"
-                android:backgroundTint="#9C575757"
-                android:elevation="10dp"
-                android:text="Reply"
-                android:textColor="#9C575757"
-                app:layout_constraintBottom_toBottomOf="@+id/reply_box"
-                app:layout_constraintEnd_toEndOf="@+id/reply_list_view"
-                app:layout_constraintTop_toTopOf="@+id/reply_box" />
 
 
         </android.support.constraint.ConstraintLayout>
