@@ -674,7 +674,7 @@ public class NetworkManager {
 
 
     //create a single user
-    public void createUser(String username, String password, final VolleyListener<String> listener) {
+    public void createUser(final String username, final String password, final VolleyListener<String> listener) {
         String URL = url + "/api/v3/users";
 
         JSONObject jsonBody = new JSONObject();
@@ -699,8 +699,10 @@ public class NetworkManager {
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse.statusCode == 401) {
                             updateToken();
+                            createUser(username, password, listener);
                         } else {
                             listener.getError(error);
+
                         }
                     }
                 }
@@ -727,7 +729,7 @@ public class NetworkManager {
     }
 
 
-    public void requestUserData(String username, final VolleyListener<JSONObject> listener) {
+    public void requestUserData(final String username, final VolleyListener<JSONObject> listener) {
         String URL = url + "/api/v3/users/" + username;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
@@ -741,8 +743,10 @@ public class NetworkManager {
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse.statusCode == 401) {
                             updateToken();
+                            requestUserData(username, listener);
                         } else {
                             listener.getError(error);
+
                         }
                     }
                 }
@@ -758,7 +762,7 @@ public class NetworkManager {
     }
 
     //send put request to update password, bio, admin and mod status
-    public void updatePassword(String username, String password, final VolleyListener<String> listener) {
+    public void updatePassword(final String username, final String password, final VolleyListener<String> listener) {
 
         String URL = url + "/api/v3/users/" + username;
 
@@ -782,6 +786,7 @@ public class NetworkManager {
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse.statusCode == 401) {
                             updateToken();
+                            updatePassword(username, password, listener);
                         } else {
                             listener.getError(error);
                         }
@@ -809,7 +814,7 @@ public class NetworkManager {
     }
 
     //send put request to update password, bio, admin and mod status
-    public void updateUser(String username, boolean isMod, boolean isAdmin, final VolleyListener<String> listener) {
+    public void updateUser(final String username, final boolean isMod, final boolean isAdmin, final VolleyListener<String> listener) {
 
         String URL = url + "/api/v3/users/" + username;
 
@@ -834,6 +839,7 @@ public class NetworkManager {
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse.statusCode == 401) {
                             updateToken();
+                            updateUser(username, isMod, isAdmin, listener);
                         } else {
                             listener.getError(error);
                         }
@@ -907,6 +913,7 @@ public class NetworkManager {
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse.statusCode == 401) {
                             updateToken();
+                            requestTopics(listener);
                         } else {
                             listener.getError(error);
                         }
@@ -949,6 +956,7 @@ public class NetworkManager {
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse.statusCode == 401) {
                             updateToken();
+                            addTopic(name,description,listener);
                         } else {
                             listener.getError(error);
                         }
@@ -989,11 +997,6 @@ public class NetworkManager {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        if (error.networkResponse.statusCode == 401) {
-                            updateToken();
-                        } else {
-                            listener.getError(error);
-                        }
                     }
                 }
         ){
@@ -1026,6 +1029,7 @@ public class NetworkManager {
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse.statusCode == 401) {
                             updateToken();
+                            requestAllPosts(listener);
                         } else {
                             listener.getError(error);
                         }
@@ -1043,7 +1047,7 @@ public class NetworkManager {
     }
 
 
-    public void requestPostList(String topic, final VolleyListener<JSONObject> listener) {
+    public void requestPostList(final String topic, final VolleyListener<JSONObject> listener) {
         String URL = url + "/api/v3/topics/" + topic;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
@@ -1057,6 +1061,7 @@ public class NetworkManager {
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse.statusCode == 401) {
                             updateToken();
+                            requestPostList(topic, listener);
                         } else {
                             listener.getError(error);
                         }
@@ -1074,7 +1079,7 @@ public class NetworkManager {
     }
 
 
-    public void requestPost(String post_id, final VolleyListener<JSONObject> listener) {
+    public void requestPost(final String post_id, final VolleyListener<JSONObject> listener) {
         String URL = url + "/api/v3/posts/" + post_id;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
@@ -1088,6 +1093,7 @@ public class NetworkManager {
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse.statusCode == 401) {
                             updateToken();
+                            requestPost(post_id, listener);
                         } else {
                             listener.getError(error);
                         }
@@ -1130,6 +1136,7 @@ public class NetworkManager {
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse.statusCode == 401) {
                             updateToken();
+                            sendPost(title, body, topic, listener);
                         } else {
                             listener.getError(error);
                         }
@@ -1170,11 +1177,6 @@ public class NetworkManager {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        if (error.networkResponse.statusCode == 401) {
-                            updateToken();
-                        } else {
-                            listener.getError(error);
-                        }
                     }
                 }
         ){
