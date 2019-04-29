@@ -1,5 +1,7 @@
 package com.team100.kite_master.forum.forum_data_classes;
 
+import android.support.annotation.NonNull;
+
 public class Topic implements Comparable<Topic>{
 
     private String topicName;
@@ -27,11 +29,11 @@ public class Topic implements Comparable<Topic>{
     //overrides compare to to allow alphabetical sorting of the topic list
     @Override
     public int compareTo(Topic comparetopic) {
-        int cmp = this.getName().compareTo(comparetopic.getName());
-        return cmp;
+        return this.getName().compareTo(comparetopic.getName());
     }
 
     //returns a string containing the topic id and description
+    @NonNull
     @Override
     public String toString(){
         return "|" + topicID+" -> "+topicDescription+"|";
@@ -42,8 +44,8 @@ public class Topic implements Comparable<Topic>{
         String str = name.toLowerCase();
         StringBuilder s = new StringBuilder(str.length());
         String words[] = str.split(" ");
-        for (int i = 0; i < words.length; i++) {
-            s.append(Character.toUpperCase(words[i].charAt(0))).append(words[i].substring(1)).append(" ");
+        for (String word : words) {
+            s.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
         }
         return s.toString();
     }

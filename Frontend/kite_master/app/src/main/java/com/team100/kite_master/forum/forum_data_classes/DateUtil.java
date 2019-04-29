@@ -1,5 +1,7 @@
 package com.team100.kite_master.forum.forum_data_classes;
 
+import android.annotation.SuppressLint;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -20,7 +22,7 @@ public class DateUtil {
 
         long now = getCurMillis();
         if (time > now || time <= 0) {
-            return "";
+            return "just now";
         }
 
         final long diff = now - time;
@@ -49,6 +51,7 @@ public class DateUtil {
         return System.currentTimeMillis();
     }
 
+    @SuppressLint("SimpleDateFormat")
     public String getCleanDate(long milliSeconds, String dateFormat)
     {
         if (milliSeconds < 1000000000000L) {

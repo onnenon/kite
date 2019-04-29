@@ -1,4 +1,4 @@
-package com.team100.kite_master.messages.messages_data_classes;
+package com.team100.kite_master.messages;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.team100.kite_master.messages.OutputHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,8 +24,7 @@ import okhttp3.WebSocketListener;
 
 public class WebSocketImplementation {
 
-    private Activity WSactivity;
-    private Context WScontext;
+    private OutputHandler outputHandler;
 
     private String username;
 
@@ -32,28 +32,18 @@ public class WebSocketImplementation {
     private Request request;
     private WebSocket webSocket;
 
-    private LinearLayout messageView;
-    private TextView errorTextView;
+    public WebSocketImplementation(OutputHandler outputHandler, String username, String IP_ADDRESS) {
 
-    private String lastMessage;
-
-    public WebSocketImplementation(String username, Activity WSactivity, Context WScontext, LinearLayout messageView, TextView errorTextView, String IP_ADDRESS) {
-
-        this.WSactivity = WSactivity;
-        this.WScontext = WScontext;
+        this.outputHandler = outputHandler;
 
         this.username = username;
 
-        this.messageView = messageView;
-        this.errorTextView = errorTextView;
-
         this.client = new OkHttpClient.Builder().readTimeout(3, TimeUnit.SECONDS).build();
-        // this.request = new okhttp3.Request.Builder().url("ws://echo.websocket.org").build();
         this.request = new okhttp3.Request.Builder().url("http://chat." + IP_ADDRESS + ":5000").build();
         this.webSocket = client.newWebSocket(request, new KiteWebSocketListener());
     }
 
-    // Helper methods for this class and outer classes
+    // Websocket communication methods
     public boolean sendJSONText(String TextString) {
 
         JsonObject JsonText = new JsonObject();
@@ -63,7 +53,7 @@ public class WebSocketImplementation {
 
         boolean sent = webSocket.send(JsonText.toString());
 
-        output(username, TextString);
+        outputHandler.output(username, TextString);
 
         return sent;
     }
@@ -80,45 +70,7 @@ public class WebSocketImplementation {
         String stringUsername = jsonUsername.getAsString();
         String stringText = jsonText.getAsString();
 
-        output(stringUsername, stringText);
-    }
-
-    public void output(final String username, final String txt) {
-
-        WSactivity.runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-
-                Message msg = new Message(username, txt);
-                setLastMessage(msg.getMessageTime() + "\n" + msg.getUsername() + ": " + msg.getText() + "\n");
-
-                TextView text = new TextView(WScontext);
-                text.setText(getLastMessage());
-                messageView.addView(text);
-            }
-        });
-    }
-
-    // Getter and setter methods
-    public String getUsername() {
-
-        return username;
-    }
-
-    public void setUsername(String username) {
-
-        this.username = username;
-    }
-
-    public OkHttpClient getClient() {
-
-        return this.client;
-    }
-
-    public okhttp3.Request getRequest() {
-
-        return this.request;
+        outputHandler.output(stringUsername, stringText);
     }
 
     private class KiteWebSocketListener extends WebSocketListener {
@@ -147,23 +99,32 @@ public class WebSocketImplementation {
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, okhttp3.Response response) {
-            errorTextView.setText("Error : " + t.getMessage());
+            outputHandler.setErrorText("Error : " + t.getLocalizedMessage());
         }
     }
 
 
 
-    // For Mockito testing
-    public String getLastMessage() {
+    // Getter and setter methods
+    public String getUsername() {
 
-        return this.lastMessage;
+        return username;
     }
 
-    public void setLastMessage(String msg) {
+    public void setUsername(String username) {
 
-        this.lastMessage = msg;
+        this.username = username;
     }
 
+    public OkHttpClient getClient() {
+
+        return this.client;
+    }
+
+    public okhttp3.Request getRequest() {
+
+        return this.request;
+    }
 
 
 

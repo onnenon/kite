@@ -5,17 +5,68 @@ import java.util.Date;
 
 public class Message {
 
-    private int ID;
     private String username;
     private String text;
-    private Date messageTime;
+    private String date;
 
     public Message(String username, String text) {
 
-        this.ID = ID;
         this.username = username;
         this.text = text;
-        this.messageTime = Calendar.getInstance().getTime();
+        this.date = getCurrentDateAndTime();
+    }
+
+    public String getCurrentDateAndTime() {
+
+        // Initialize time variables
+        Calendar now;
+
+        int hour_int;
+        String hour_string;
+        int minute_int;
+        String minute_string;
+
+        int meridiem_int;
+        String meridiem_string;
+
+        now = Calendar.getInstance();
+
+        // Get the time information
+        hour_int = now.get(Calendar.HOUR);
+        minute_int = now.get(Calendar.MINUTE);
+        meridiem_int = now.get(Calendar.AM_PM);
+
+        // Set the string for hour
+        if (hour_int == 0) {
+
+            hour_string = 12 + "";
+        }
+        else {
+
+            hour_string = hour_int + "";
+        }
+
+        // Set the string for minutes
+        if (minute_int < 10) {
+
+            minute_string = "0" + minute_int;
+        }
+        else {
+
+            minute_string = minute_int + "";
+        }
+
+        // Set the string for meridiem
+        if (meridiem_int == 0) {
+
+            meridiem_string = "AM";
+        }
+        else {
+
+            meridiem_string = "PM";
+        }
+
+        return hour_string + ":" + minute_string + " " + meridiem_string;
     }
 
     // Getter and setter methods
@@ -39,8 +90,8 @@ public class Message {
         this.text = text;
     }
 
-    public Date getMessageTime() {
+    public String getMessageTime() {
 
-        return this.messageTime;
+        return this.date;
     }
 }

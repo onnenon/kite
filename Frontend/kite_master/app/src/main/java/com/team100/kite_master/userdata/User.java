@@ -2,7 +2,7 @@ package com.team100.kite_master.userdata;
 
 public class User {
 
-    private String username;
+    public String username;
     private String displayname;
     private String bio;
     private int postCount;
@@ -65,20 +65,6 @@ public class User {
 
     public boolean isMod() {
         return isModerator;
-    }
-
-    public void setAdmin(boolean b){
-        if(b){
-            setMod(true);
-        }
-        isAdministrator = b;
-    }
-
-    public void setMod(boolean b){
-        if(!b){
-            setAdmin(false);
-        }
-        isModerator = b;
     }
 
 
