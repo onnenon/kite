@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.team100.kite_master.MainActivity;
 import com.team100.kite_master.messages.MessagesFragment;
 import com.team100.kite_master.messages.messages_data_classes.Message;
 import com.team100.kite_master.messages.WebSocketImplementation;
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.when;
 
 public class MessagesFragmentUnitTest {
 
+    private MainActivity main;
     private MessagesFragment messageFrag;
     private WebSocketImplementation impWS;
     private Message realMessage;
@@ -46,6 +48,8 @@ public class MessagesFragmentUnitTest {
     public void setup() {
 
         // Regular objects
+        main = new MainActivity();
+
         messageFrag = new MessagesFragment();
         messageFrag.setUsername("fadmin");
         messageFrag.setIPaddress("kite.onn.sh");
@@ -169,6 +173,8 @@ public class MessagesFragmentUnitTest {
     @Test
     public void SetupMessageTextViewTest() {
 
+        // layoutSetup = new MessageLayoutSetup(messageFrag.getContext(), messageFrag.getUsername());
+
         String message = "A very important message!";
 
         TextView textView = layoutSetup.setupMessageTextView(message); // WHY IS CONTEXT NULL???
@@ -177,23 +183,32 @@ public class MessagesFragmentUnitTest {
 
     }
 
-    */
+    @Test
+    public void SetupTimeTextView() {
 
-    /*
+        TextView textView;
+
+        String username = "UserOne";
+        String timeText = "12:07 AM";
+
+        textView = layoutSetup.setupTimeTextView(username, timeText);
+
+        assertEquals(timeText, textView.getText()); // Check that the time is correct
+    }
 
     @Test
-    public void SetupMessageTextView_DifferentUserTest() {
+    public void SetupRelativeLayoutTest() {
 
-        TextView textView = layoutSetup.setupMessageTextView("UserOne");
+        RelativeLayout relativeLayout;
+
+        String username = "UserOne";
+
+        relativeLayout = layoutSetup.setupRelativeLayout(username);
     }
 
     */
 
-
-
-
-
-    // Stuff?
+    // Experiment stuff
     @Test
     public void testRecentMessagesRetrieval() throws JSONException {
 
@@ -233,6 +248,12 @@ public class MessagesFragmentUnitTest {
     }
 
 
+
+    // WebSocketImplementation tests
+    public void WebSocketImplementationTest() {
+
+
+    }
 
 
     // Test not working...
