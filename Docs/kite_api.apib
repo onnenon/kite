@@ -1,0 +1,399 @@
+FORMAT: 1A
+
+# Kite
+
+The Kite API is used by the Kite Android client to retrieve information.
+
+# Group Authentication 
+
+Resources related to JWT authentication.
+
+## Authentication Collection [/api/auth/login]
+
+### Authenticate [POST]
+
+The `<url>/api/auth/login` endpoint is used to request a JSON web token (JWT) from the server, which will be used to authenticate future requests against protected endpoints.
+This request must include the base 64 encoded username and password in the Basic Auth header of the request. An invalid username or password will result in a 403 response.
+
++ Request (application/json)
+
+    + Headers
+        Authorization: Basic <Base 64 encoded username & password>
+
++ Response 200 (application/json)
+    {
+        "data": {
+            "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmYWRtaW4iLCJpc19hZG1pbiI6dHJ1ZSwiaXNfbW9kIjp0cnVlLCJpYXQiOjE1NTYxNDAwNDF9.ZdcqnanKmdwmsifO69yTXV1e9EiG8dSVgmyXAcstsXU"
+        }
+    }
+
++ Request Invalid Username or Password (application/json)
+
+    + Headers
+        Authorization: Basic <Invalid Username or Password>
+
++ Response 403 (application/json)
+
+    {
+        "errors": {
+            "detail": "Invalid Credentials"
+        }
+    }
+
+# Group Users
+
+Resources related to getting user information.
+
+## User List [/api/v3/users]
+
+### List All Users [GET]
+
+This endpoint is used to get a list of Users and their associated information. It requires a valid JWT to access.
+
++ Request (application/json)
+
+    + Headers
+        Authorization: Bearer <JWT>
+
++ Response 200 (application/json)
+
+    {
+        "status": "success",
+        "data": {
+            "users": [
+                {
+                    "username": "fadmin",
+                    "is_admin": true,
+                    "is_mod": true,
+                    "post_count": 0,
+                    "bio": "",
+                    "displayName": ""
+                },
+                {
+                    "username": "Foo",
+                    "is_admin": false,
+                    "is_mod": false,
+                    "post_count": 0,
+                    "bio": "I'm Foo",
+                    "displayName": ""
+                },
+                {
+                    "username": "Bar",
+                    "is_admin": false,
+                    "is_mod": false,
+                    "post_count": 0,
+                    "bio": "I'm Bar",
+                    "displayName": ""
+                },
+                {
+                    "username": "Alice",
+                    "is_admin": false,
+                    "is_mod": false,
+                    "post_count": 0,
+                    "bio": "Something random",
+                    "displayName": ""
+                },
+                {
+                    "username": "Bob",
+                    "is_admin": false,
+                    "is_mod": false,
+                    "post_count": 0,
+                    "bio": "hmmmmmmmm",
+                    "displayName": ""
+                }
+            ]
+        }
+    }
+
++ Request Invalid or Missing JWT (application/json)
+
+    + Headers
+        Authorization: Bearer <JWT>
+
++ Response 401 (application/json)
+
+    {
+    "status": "fail",
+    "data": {
+        "title": "Invalid or missing JWT"
+    }
+}
+
+### Create User [POST]
+
+This endpoint is used for creating a new user.
+
++ Attributes
+    + username (string, required) - The username to be created
+    + password (string, required) - The user's password
+    + bio (string, optional) - Biographical sentence about the user. 5-100 Characters.
+    + displayName (string, optional) Text string to display as the users name througout the application.
+
++ Request (application/json)
+    
+    + Body
+        { "username": "Bob", "password": "password", "bio": "hmmmmmmmm" }
+
++ Response 200 (application/json)
+
+    {
+        "status": "success",
+        "data": {
+            "message": "user Bob created"
+        }
+    }
+
+## User [/api/v3/users/{username}]
+
++ Parameters
+
+    + username: `Foo` (required, string) - A username
+
+### Get User Info [GET]
+
+Get user information for a specified user. Requires a valid JWT to access.
+
++ Request (application/json)
+
+    + Headers
+        Authorization: Bearer <JWT>
+
++ Response 200 (application/json)
+
+    {
+        "status": "success",
+        "data": {
+            "username": "Foo",
+            "is_admin": false,
+            "is_mod": false,
+            "post_count": 0,
+            "bio": "I'm Foo",
+            "displayName": ""
+        }
+    }
+
++ Request User doesn't exist (application/json)
+
+    + Headers
+        Authorization: Bearer <JWT>
+
++ Response 404 (application/json)
+
+    {
+        "status": "fail",
+        "data": {
+            "title": "user jeff not found"
+        }
+    }
+
+### Update User Info [PUT]
+
+Update user information for a specified user. Requires a valid JWT to access.
+
++ Request (application/json)
+
+    + Headers
+        Authorization: Bearer <JWT>
+
+   + Body
+        { "password": "newpass", "bio": "Update Me", "is_admin": true, "is_mod": false }
+
++ Response 200 (application/json)
+
+    {
+        "status": "success",
+        "data": {
+            "message": "Foo updated"
+        }
+    }
+
++ Request User doesn't exist (application/json)
+
+    + Headers
+        Authorization: Bearer <JWT>
+    
+    + Body
+        { "password": "newpass", "bio": "I Don't exist", "is_admin": true, "is_mod": false }
+
++ Response 404 (application/json)
+
+    {
+        "status": "fail",
+        "data": {
+            "title": "user jeff does not exist"
+        }
+    }
+
+### Delete User [DELETE]
+
+Delete a user. Must be an Admin or the user being deleted.
+
++ Request (application/json)
+
+    + Headers
+        Authorization: Bearer <JWT>
+
++ Response 204
+
++ Request User doesn't exist 
+
+    + Headers
+        Authorization: Bearer <JWT>
+
++ Response 404 (application/json)
+
+    {
+        "status": "fail",
+        "data": {
+            "title": "user jeff does not exist"
+        }
+    }
+
++ Request User does not have required permissions
+
+    + Headers
+        Authorization: Bearer <JWT>
+
++ Response 403 (application/json)
+
+    {
+        "status": "fail",
+        "data": {
+            "title": "Invalid permissions, cannot delete user Alice"
+        }
+    }
+
+
+# Group Topics
+
+## Topic List [/api/v3/topics]
+
+Endpoints related to getting info on all topics, or creating a topic. All endpoints require a valid JWT to access.
+
+### Get Topic List [GET]
+
+Get a list of all topics.
+
++ Request
+    + Headers
+        Authorization: Bearer <JWT>
+
++ Response 200 (application/json)
+    {
+        "status": "success",
+        "data": {
+            "topics": [
+                {
+                    "name": "Cars",
+                    "descript": "Posts about cars."
+                },
+                {
+                    "name": "Music",
+                    "descript": "Posts about Music."
+                },
+                {
+                    "name": "Programming",
+                    "descript": "Posts about Music."
+                }
+            ]
+        }
+    }
+
+### Create a Topic [POST]
+
+Create a new topic.
+
++ Request Topic Already Exists
+    + Headers
+        Authorization: Bearer <JWT>
+
+    + Body
+        { "name": "Programming", "description": "Posts about Music." }
+
++ Response 400 (application/json)
+    {
+        "status": "fail",
+        "data": {
+            "title": "topic Programming exists"
+        }
+    }
+
+
++ Request Topic Already Exists
+    + Headers
+        Authorization: Bearer <JWT>
+
+    + Body
+        { "name": "Programming", "description": "Posts about Music." }
+
++ Response 200 (application/json)
+    {
+        "status": "success",
+        "data": {
+            "message": "topic Programming created"
+        }
+    }
+
+## Topic [/api/v3/topics/{topic_name}]
+
++ Parameters
+
+    + topic_name: `Cars` (required, string) - Name of a topic.
+
+### Get Topic Info [GET]
+
+### Edit a Topic [PUT]
+
+### Delete a Topic [DELETE]
+
+# Group Posts
+
+Endpoints related to creating and viewing post information. Requires a valid JWT to access.
+
+## Post List [/api/v3/posts]
+
+### Get List of Posts [GET]
+
+### Create a Post [POST]
+
+## Post [/api/v3/posts/{post_id}]
+
++ Parameters
+
+    + post_id: `d1d130f6-f506-4291-809f-daafe2a2ba3a` (required, string) - UUID of a post.
+
+### Get Post Info [GET]
+Get information on a specific Post
+
+### Edit a Post [PUT]
+Edit a post. Only the body of the post can be updated, and only by it's creator.
+
+### Delete a Post [DELETE]
+Delete a post. Posts can only be deleted by Admins, Mods, or the user that created the post.
+
+# Group Replies
+
+Endpoints related to creating and viewing reply information. Requires a valid JWT to access.
+
+## Reply List [/api/v3/replies]
+
+### Get List of Replies [GET]
+Get a list of all replys
+
+### Create a Reply [POST]
+Create a reply. Must be associated with a post that exists.
+
+## Reply [/api/v3/replies/{reply_id}]
+
++ Parameters
+
+    + reply_id: `d1d130f6-f506-4291-809f-daafe2a2ba3a` (required, string) - UUID of a reply.
+
+### Get Reply Info [GET]
+Get information about a specific reply.
+
+### Edit a Reply [PUT]
+Edit a reply. Only the body of the reply can be edited.
+
+### Delete a Reply [DELETE]
+Delete a reply. Replies can only be deleted by admins, mods, or the user who created the reply.
