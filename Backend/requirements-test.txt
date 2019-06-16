@@ -1,6 +1,0 @@
-coverage
-pytest
-rednose
-nose
-isort
-black
